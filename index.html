@@ -16,13 +16,18 @@
 <body>
 <header class="topbar">
   <div class="brand">
-    <span class="logo">☰</span>
-    <div>
-      <h1>中玄 · 推演台</h1>
-      <p class="sub">八字排盘 · 良辰吉日 · 流年推演 · 大脑训练</p>
-    </div>
+    <span class="logo">☯</span>
+    <h1>中玄 · 推演台</h1>
   </div>
-  <nav class="tabs" id="mainTabs">
+  <div class="top-right">
+    <span class="cur-page" id="cur-page">排盘</span>
+    <button class="btn nav-toggle" id="nav-toggle">☰ 导航</button>
+  </div>
+</header>
+<div class="nav-mask" id="nav-mask" hidden></div>
+<nav class="nav-pop" id="nav-pop" hidden>
+  <div class="nav-pop-head">快速导航</div>
+  <div class="tabs" id="mainTabs">
     <button class="tab active" data-page="paipan">排盘</button>
     <button class="tab" data-page="zeri">择日</button>
     <button class="tab" data-page="tuiyan">推演</button>
@@ -31,8 +36,8 @@
     <button class="tab" data-page="jieqi">节气</button>
     <button class="tab" data-page="danao">大脑</button>
     <button class="tab" data-page="xunlian">训练</button>
-  </nav>
-</header>
+  </div>
+</nav>
 
 <main>
   <!-- ============ 排盘 ============ -->
