@@ -705,6 +705,16 @@ var UI = (function(){
    * 事件绑定与状态
    * ============================================================ */
   function init(){
+    /* 收缩导航弹窗 */
+    const navPop = $('nav-pop'), navMask = $('nav-mask'), navToggle = $('nav-toggle');
+    const closeNav = () => { navPop.hidden = true; navMask.hidden = true; };
+    if (navToggle) navToggle.onclick = () => {
+      const open = navPop.hidden;
+      navPop.hidden = !open; navMask.hidden = !open;
+    };
+    if (navMask) navMask.onclick = closeNav;
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
+
     /* 页面切换 */
     document.querySelectorAll('#mainTabs .tab').forEach(btn => {
       btn.onclick = () => {
@@ -712,6 +722,8 @@ var UI = (function(){
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
         $('page-' + btn.dataset.page).classList.add('active');
+        const cp = $('cur-page'); if (cp) cp.textContent = btn.textContent;
+        closeNav();
         if (btn.dataset.page === 'danao'){ renderRulesView(); }
         if (btn.dataset.page === 'xunlian'){ renderXunlianStats(); }
         if (btn.dataset.page === 'tuiyan'){ refreshProfiles(); }
