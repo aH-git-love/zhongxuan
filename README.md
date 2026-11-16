@@ -344,4 +344,20 @@ python -m http.server 8765     # 或 Python 自带
 - **iPhone Safari**：分享按钮 →「添加到主屏幕」。
 - 数据仍存本机 localStorage；清除站点数据只丢训练记录与大脑权重，不影响功能。
 
-> 真 APK（独立安装包 / 上架）才需要安卓工具链：JDK 17 + Android SDK + Capacitor / Cordova，把本目录作为 `www` 打进壳里（`npx cap add android` → `./gradlew assembleDebug`）。本应用是纯静态 Web，APK 只是外壳，功能完全一样。
+### 安卓 APK（已打包好，直接装）
+
+| 用途 | 地址 |
+| --- | --- |
+| 手机直接下载（走外网，不用连电脑） | `https://ah-git-love.github.io/zhongxuan/dist/zhongxuan-v1.0-online.apk` |
+| 局域网下载（同一 Wi-Fi） | `http://电脑IP:8765/dist/zhongxuan-v1.0-online.apk` |
+| 网页在线使用（公网永久地址） | `https://ah-git-love.github.io/zhongxuan/` |
+
+APK 说明：v1.0 · 约 1.2MB · 已用新建密钥签名，可直接安装（安装时允许「未知来源」）。它是 **TWA/WebView 在线壳**，打开时加载上面的 GitHub Pages 地址，所以首次打开需要联网；进入后由 Service Worker 接管，断网仍可继续用（全离线缓存）。想让壳指向自己的局域网地址，用 `tools/build_apk3.js` 换 host 重新云打包即可（PWABuilder 云服务，无需本机 Android SDK）：
+
+```bash
+node tools/build_apk3.js "https://你的域名" "自定义名.apk"
+node tools/gh_upload.js          # 重新发布到 GitHub Pages 并云打包固定域名 APK
+node tools/gh_upload_apk.js      # 只把 dist 里的 APK 传上 Pages
+```
+
+> 本机无 JDK / Android SDK / Gradle，APK 通过 PWABuilder 云端（CloudAPK 服务，enqueuePackageJob → 轮询 → downloadPackageZip）生成；GitHub 直连 443 被墙，故发布走 GitHub REST API 逐文件上传而非 git push。
