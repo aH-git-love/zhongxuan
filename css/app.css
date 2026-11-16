@@ -408,3 +408,29 @@ thead th:last-child{ border-top-right-radius:8px; }
   .xk-yun{ font-size:12px; }
   .xk-mt{ font-size:10px; }
 }
+
+/* ============ 布局优化（页脚精简 · 表格横滚 · 留白） ============ */
+html{ scroll-behavior:smooth; }
+
+main{ padding-bottom:32px; }
+
+/* 表格：窄屏只让表格自己横滚，不再带着面板标题一起动 */
+@media (max-width:720px){
+  .panel table{ display:block; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; }
+  .panel table thead, .panel table tbody{ display:table; width:100%; min-width:max-content; }
+}
+td{ word-break:break-word; }
+
+/* 页脚：与内容区同宽，单行紧凑，手机竖排 */
+footer{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  max-width:1100px; margin:0 auto; padding:14px 16px 20px;
+  border-top:1px solid var(--line); color:var(--dim); font-size:12px;
+}
+footer .foot-title{ letter-spacing:3px; color:var(--gold2); font-size:14px; white-space:nowrap; }
+footer .foot-title em{ font-style:normal; font-size:11px; color:var(--dim); margin-left:8px; letter-spacing:1px; }
+footer .foot-dl{ font-size:12px; padding:6px 14px; white-space:nowrap; }
+@media (max-width:520px){
+  footer{ flex-direction:column; align-items:stretch; text-align:center; gap:10px; padding:14px 12px 18px; }
+  footer .foot-dl{ text-align:center; }
+}
