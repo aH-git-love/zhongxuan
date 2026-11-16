@@ -346,13 +346,9 @@ python -m http.server 8765     # 或 Python 自带
 
 ### 安卓 APK（已打包好，直接装）
 
-| 用途 | 地址 |
-| --- | --- |
-| 手机直接下载（走外网，不用连电脑） | `https://ah-git-love.github.io/zhongxuan/dist/zhongxuan-v1.0-online.apk` |
-| 局域网下载（同一 Wi-Fi） | `http://电脑IP:8765/dist/zhongxuan-v1.0-online.apk` |
-| 网页在线使用（公网永久地址） | `https://ah-git-love.github.io/zhongxuan/` |
+**唯一下载地址**：`https://ah-git-love.github.io/zhongxuan/dist/zhongxuan-v1.0-online.apk`
 
-APK 说明：v1.0 · 约 1.2MB · 已用新建密钥签名，可直接安装（安装时允许「未知来源」）。它是 **TWA/WebView 在线壳**，打开时加载上面的 GitHub Pages 地址，所以首次打开需要联网；进入后由 Service Worker 接管，断网仍可继续用（全离线缓存）。想让壳指向自己的局域网地址，用 `tools/build_apk3.js` 换 host 重新云打包即可（PWABuilder 云服务，无需本机 Android SDK）：
+页脚的「⬇ 安卓 APK」按钮也指向同一地址。APK v1.0 · 约 1.2MB · 已签名可直接安装（装时允许「未知来源」）。它是 TWA/WebView 在线壳，打开加载 GitHub Pages 线上版，首次需联网；进入后由 Service Worker 接管，断网仍可继续用。想让壳指向别的域名，用 `tools/build_apk3.js` 换 host 重新云打包即可（PWABuilder 云服务，无需本机 Android SDK）。
 
 ```bash
 node tools/build_apk3.js "https://你的域名" "自定义名.apk"
