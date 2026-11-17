@@ -245,56 +245,170 @@ var UI = (function(){
       </div>`;
   }
 
+  /* ============ 推演页：统一骨架 + 全自动推导 ============ */
+  const SHISHEN_DOMAIN = {
+    '正财':'财帛 · 正途收入', '偏财':'财帛 · 外快投资', '正官':'事业 · 名位职务', '七杀':'事业 · 压力竞争',
+    '正印':'文书 · 学业贵人', '偏印':'技艺 · 偏门侧路', '食神':'才艺 · 享受子女', '伤官':'表达 · 变动创新',
+    '比肩':'同辈 · 合伙自立', '劫财':'破耗 · 竞争分夺'
+  };
+  const cardPolarity = c => {
+    let g = 0, b = 0;
+    (c.points || []).forEach(p => { if (/吉/.test(p)) g++; if (/凶/.test(p)) b++; });
+    return g > b ? 1 : g < b ? -1 : 0;
+  };
+  const dyOfYear = (pan, y) => {
+    const list = (pan.dayun && pan.dayun.list) || [];
+    const age = y - pan.ymd.year + 1;
+    const d = list.find(x => age >= x.startAge && age < x.startAge + 10);
+    return d ? { gz: d.gz, age, from: d.startAge, shiShen: d.shiShen } : null;
+  };
+  const ssOfYear = (pan, y) => {
+    const l = (pan.liunian || []).find(x => x.year === y);
+    return l ? l.shiShen : '';
+  };
+  const tuiyanBrief = pan => `
+    <div class="kv"><span>本命</span><b>${esc(pan.pillars.map(x => x.gz).join(' '))}</b></div>
+    <div class="kv"><span>日主</span><b>${esc(WUXING_GAN[pan.dayGan])}（${esc(pan.strengthLabel)}）</b></div>
+    <div class="kv"><span>格局</span><b>${esc(pan.geju.name)}</b></div>
+    <div class="kv"><span>调候</span><b>${esc((pan.tiaoHou.yong || []).join('、'))}（${esc(pan.tiaoHou.month)}）</b></div>
+    <div class="kv"><span>喜用</span><b>${esc(Object.keys(pan.yongShen).map(k => k + '=' + pan.yongShen[k]).join(' · '))}</b></div>
+    <div class="kv"><span>起运</span><b>${pan.dayun ? pan.dayun.y1 + ' 岁' + (pan.dayun.forward ? '顺行' : '逆行') : '—'}</b></div>
+    <div class="kv"><span>旬空</span><b>${esc(((pan.kongWang && pan.kongWang.zhis) || []).join('、') || '—')}</b></div>
+    <div class="kv"><span>命宫 / 胎元</span><b>${esc((pan.mingGong && pan.mingGong.gz) || '—')} / ${esc((pan.taiYuan && pan.taiYuan.gz) || '—')}</b></div>`;
+
   function renderTuiyan(pan, years, label, mode){
+    if (!pan || !years || !years.length) return '<p class="hint">先排盘（或选一个命例）再推演。</p>';
     if (mode === 'multi') return renderTuiyanMulti(pan, years, label);
     const rows = years.map(y => {
       const r = BAZI.tuiYan(pan, y);
       const lv = r.events.length ? r.events[0].level : 0;
-      const levelTag = lv >= 3 ? '<span class="tag bad">冲</span>' : lv === 2 ? '<span class="tag">害</span>' : lv === 1 ? '<span class="tag good">合</span>' : '<span class="tag">平</span>';
-      return `<div class="card">
-        <h3>${r.year} 年 · ${esc(r.gz)} ${levelTag}</h3>
-        <ul class="chain">
-          ${r.events.map(e => `<li><b>${esc(e.type)}</b> · ${esc(e.target)}<br>${esc(e.detail)}</li>`).join('')}
-        </ul>
-      </div>`;
+      const state = lv >= 3 ? '冲' : lv === 2 ? '害' : lv === 1 ? '合' : '平';
+      const cls = lv >= 3 ? 'ty-bad' : lv === 1 ? 'ty-good' : 'ty-mid';
+      const dy = dyOfYear(pan, y);
+      const ev = r.events.map(e => `${e.type}${e.target}`).join(' / ') || '无冲合刑害';
+      return `<tr>
+        <td><b>${r.year}</b></td>
+        <td class="gz" style="font-size:18px">${esc(r.gz)}</td>
+        <td>${esc(ssOfYear(pan, y) || '—')}</td>
+        <td>${dy ? esc(dy.gz + '运') : '—'}</td>
+        <td><span class="ty-badge ${cls}">${state}</span></td>
+        <td style="text-align:left">${esc(ev)}</td>
+      </tr>`;
     }).join('');
-    return `
-      <div class="panel">
-        <h2>推演 · ${esc(label)}</h2>
-        <p class="hint">本命：${esc(pan.pillars.map(x => x.gz).join(' '))} · 日主${WUXING_GAN[pan.dayGan]}（${pan.strengthLabel}）</p>
-        ${rows}
-        <p class="hint">说明：本推演只列出干支机械互动（冲合刑害 + 流年十神 + 所在大运），不做人身断言，请结合实际取舍。</p>
-      </div>`;
+    const detail = years.map(y => {
+      const r = BAZI.tuiYan(pan, y);
+      return `<details class="pp-more" style="margin-top:8px">
+        <summary>${r.year} 年 · ${esc(r.gz)} · ${r.events.length} 条引动</summary>
+        <table><thead><tr><th>类型</th><th>作用于</th><th>说明</th></tr></thead><tbody>
+          ${r.events.map(e => `<tr><td><span class="ty-badge ${e.level >= 3 ? 'ty-bad' : e.level === 1 ? 'ty-good' : 'ty-mid'}">${esc(e.type)}</span></td><td>${esc(e.target)}</td><td style="text-align:left">${esc(e.detail)}</td></tr>`).join('') || '<tr><td colspan="3" class="hint">该年无冲合刑害引动</td></tr>'}
+        </tbody></table>
+      </details>`;
+    }).join('');
+    return `<div class="panel pp-panel">
+      <h2>简明推演 · ${esc(label)} · ${years[0]}–${years[years.length - 1]}</h2>
+      <div class="pp-top">
+        <div class="pp-main">
+          <div class="pp-cap">流年主表（干支 / 十神 / 所在大运 / 冲合状态 / 引动）</div>
+          <table class="pp-t ty-table"><thead><tr><th>年</th><th>干支</th><th>十神</th><th>大运</th><th>状态</th><th>引动</th></tr></thead><tbody>${rows}</tbody></table>
+        </div>
+        <div class="pp-brief">${tuiyanBrief(pan)}</div>
+      </div>
+      <div class="pp-sec"><h3>逐年引动明细</h3>${detail}</div>
+      <details class="pp-more"><summary>推演口径说明</summary>
+        <p class="hint">只列干支机械互动（冲 / 合 / 刑 / 害 / 破 + 流年十神 + 所在大运），不做人身断言，请结合实际取舍；需要多派互证切「多流派并列」模式。</p>
+      </details>
+    </div>`;
   }
 
-  /* ---- 多流派并列推演（7 派互证） ---- */
+  /* ---- 多流派并列推演（7 派互证 · 自动同向/分歧检测） ---- */
   function renderTuiyanMulti(pan, years, label){
-    const blocks = years.map(y => {
+    if (!pan || !years || !years.length) return '<p class="hint">先排盘（或选一个命例）再推演。</p>';
+    const data = years.map(y => {
       const m = BAZI.multiTuiYan(pan, y);
-      const tagCls = m.score >= 3 ? 'bad' : m.score >= 1 ? 'good' : m.score >= -1 ? '' : m.score >= -3 ? '' : 'bad';
-      return `<div class="card">
-        <h3>${m.year} 年 · <span class="gz-big">${esc(m.gz)}</span>
-          <span class="tag ${tagCls}" style="float:right">${esc(m.label)} · 综合 ${m.score > 0 ? '+' : ''}${m.score}</span></h3>
-        <div class="grid2" style="margin-top:8px">
-          ${m.cards.map(c => `
-            <div class="card" style="border-left:3px solid var(--gold);margin:0">
-              <h3 style="font-size:13px">${esc(c.school)}</h3>
-              <div style="font-size:13px;color:var(--gold2);margin-bottom:6px">${esc(c.title)}</div>
-              <ul class="chain" style="margin-left:-6px">
-                ${c.points.map(pt => `<li style="padding:4px 0 4px 20px;font-size:12.5px">${esc(pt)}</li>`).join('')}
-              </ul>
-            </div>`).join('')}
-        </div>
-      </div>`;
+      const basic = BAZI.tuiYan(pan, y);
+      const evs = (basic.events || []).slice().sort((a, b) => b.level - a.level).slice(0, 2);
+      const pol = m.cards.map(c => cardPolarity(c));
+      return { y, m, evs, pol, dy: dyOfYear(pan, y), ss: ssOfYear(pan, y),
+        good: pol.filter(p => p > 0).length, bad: pol.filter(p => p < 0).length };
+    });
+    /* 逐年基调主表 */
+    const rows = data.map(d => {
+      const m = d.m;
+      const cls = m.score >= 1.5 ? 'ty-good' : m.score <= -1.5 ? 'ty-bad' : 'ty-mid';
+      const strong = Math.abs(m.score) >= 3 ? '强' : Math.abs(m.score) >= 1.5 ? '中' : '弱';
+      const same = d.good >= 4 ? `<span class="ty-same">多派同向吉</span>` : d.bad >= 4 ? `<span class="ty-split">多派同向凶</span>` : (d.good && d.bad) ? '<span class="ty-split">派别分歧</span>' : '<span class="ty-mid">中性</span>';
+      const ev = d.evs.map(e => `${e.type}${e.target}`).join(' / ') || '无冲合刑害';
+      const domain = SHISHEN_DOMAIN[d.ss] || '—';
+      return `<tr>
+        <td><b>${m.year}</b></td>
+        <td class="gz" style="font-size:18px">${esc(m.gz)}</td>
+        <td>${esc(d.ss || '—')}</td>
+        <td>${d.dy ? esc(d.dy.gz + '运') : '—'}</td>
+        <td class="num">${m.score > 0 ? '+' : ''}${m.score}</td>
+        <td><span class="ty-badge ${cls}">${esc(m.label)}</span></td>
+        <td>${strong}</td>
+        <td>${same}</td>
+        <td style="text-align:left">${esc(domain)}</td>
+        <td style="text-align:left">${esc(ev)}</td>
+      </tr>`;
     }).join('');
-    return `
-      <div class="panel">
-        <h2>多流派推演 · ${esc(label)}</h2>
-        <p class="hint">本命：${esc(pan.pillars.map(x => x.gz).join(' '))} · 日主${WUXING_GAN[pan.dayGan]}（${pan.strengthLabel}）· 格局 ${esc(pan.geju.name)} · 调候 ${esc(pan.tiaoHou.yong.join('、'))}</p>
-        <p class="hint">七派并列：扶抑用神法 / 调候用神法 / 关系引动法 / 宫位六亲法 / 盲派串宫压运 / 病药应期法 / 神煞流年法。综合分 = 各派「吉 +1 / 凶 −1」累加，≥3 强吉、≤−3 强凶。</p>
-        ${blocks}
-        <p class="hint">用法：先看综合分定该年基调，再看哪一派给的是强信号（如"药到应期"），最后落到宫位/十神定具体领域。多派同向才下重话。</p>
-      </div>`;
+    /* 派别 × 年份对照矩阵 */
+    const schools = [];
+    data.forEach(d => d.m.cards.forEach(c => { if (!schools.includes(c.school)) schools.push(c.school) }));
+    const matrix = schools.map(s => `<tr>
+      <td class="ty-school">${esc(s)}</td>
+      ${data.map(d => {
+        const idx = d.m.cards.findIndex(c => c.school === s);
+        if (idx < 0) return '<td class="ty-mid">—</td>';
+        const p = d.pol[idx];
+        return `<td>${p > 0 ? '<span class="ty-badge ty-good">吉</span>' : p < 0 ? '<span class="ty-badge ty-bad">凶</span>' : '<span class="ty-badge ty-mid">平</span>'}</td>`;
+      }).join('')}
+    </tr>`).join('');
+    const agreeRow = `<tr><td class="ty-school">同向判定</td>${data.map(d => {
+      const txt = d.good >= 4 ? `同向吉 ${d.good}/${d.m.cards.length}` : d.bad >= 4 ? `同向凶 ${d.bad}/${d.m.cards.length}` : `分歧 ${d.good}吉 ${d.bad}凶`;
+      const cls = d.good >= 4 ? 'ty-good' : d.bad >= 4 ? 'ty-bad' : 'ty-mid';
+      return `<td><span class="ty-badge ${cls}">${txt}</span></td>`;
+    }).join('')}</tr>`;
+    /* 逐年详断（可折叠） */
+    const detail = data.map(d => `<details class="pp-more">
+      <summary>${d.m.year} 年 · ${esc(d.m.gz)} · ${esc(d.m.label)}（综合 ${d.m.score > 0 ? '+' : ''}${d.m.score}）· ${d.m.cards.length} 派</summary>
+      <div class="ty-year-sum">
+        <span>十神 ${esc(d.ss || '—')}</span>
+        <span>落点 ${esc(SHISHEN_DOMAIN[d.ss] || '—')}</span>
+        <span>大运 ${d.dy ? esc(d.dy.gz + '（' + d.dy.from + ' 岁起）') : '—'}</span>
+        <span>同向 ${d.good} 吉 / ${d.bad} 凶</span>
+      </div>
+      <div class="grid2" style="margin-top:8px">
+        ${d.m.cards.map(c => `<div class="card" style="margin:0">
+          <div class="ty-card-hd"><h3 style="margin:0;font-size:13px">${esc(c.school)}</h3>
+            <span class="ty-badge ${cardPolarity(c) > 0 ? 'ty-good' : cardPolarity(c) < 0 ? 'ty-bad' : 'ty-mid'}">${cardPolarity(c) > 0 ? '吉' : cardPolarity(c) < 0 ? '凶' : '平'}</span></div>
+          <div style="font-size:12.5px;color:var(--gold2);margin:5px 0">${esc(c.title)}</div>
+          <ul class="ty-flow">${c.points.map(pt => `<li>${esc(pt)}</li>`).join('')}</ul>
+        </div>`).join('')}
+      </div>
+    </details>`).join('');
+    return `<div class="panel pp-panel">
+      <h2>多流派推演 · ${esc(label)} · ${years[0]}–${years[years.length - 1]}</h2>
+      <div class="pp-top">
+        <div class="pp-main">
+          <div class="pp-cap">流年基调主表（综合分 = 各派吉 +1 / 凶 −1 累加；同向判定自动生成）</div>
+          <table class="pp-t ty-table"><thead><tr>
+            <th>年</th><th>干支</th><th>十神</th><th>大运</th><th>综合</th><th>基调</th><th>强度</th><th>同向</th><th>落点</th><th>引动</th>
+          </tr></thead><tbody>${rows}</tbody></table>
+        </div>
+        <div class="pp-brief">${tuiyanBrief(pan)}</div>
+      </div>
+      <div class="pp-sec">
+        <h3>派别 × 年份对照矩阵（吉 / 凶 / 平 自动归纳，末行为同向判定）</h3>
+        <table class="ty-matrix"><thead><tr><th>流派</th>${data.map(d => `<th>${d.m.year}</th>`).join('')}</tr></thead>
+        <tbody>${matrix}${agreeRow}</tbody></table>
+        <p class="ty-note">判定口径：≥4 派同向即可下重话（多派互证）；「派别分歧」年份只作参考、不下定论；综合分 ±3 以上为强信号、±1.5 为中信号。</p>
+      </div>
+      <div class="pp-sec"><h3>逐年分派详断（点开看七派各自依据）</h3>${detail}</div>
+      <details class="pp-more"><summary>七派与用法说明</summary>
+        <p class="hint">七派：扶抑用神法 / 调候用神法 / 关系引动法 / 宫位六亲法 / 盲派串宫压运 / 病药应期法 / 神煞流年法。用法：先看综合分定该年基调，再看哪一派给强信号，最后落到宫位 / 十神定具体领域；多派同向才下重话，分歧年按保守断。</p>
+      </details>
+    </div>`;
   }
 
   /* ---- 方法论页 ---- */
@@ -725,6 +839,19 @@ var UI = (function(){
    * 事件绑定与状态
    * ============================================================ */
   function init(){
+    /* 主题：宣纸亮 / 墨夜暗（记忆到 localStorage） */
+    const themeBtn = $('theme-btn');
+    const THEME_KEY = 'zx_theme';
+    let theme = 'light';
+    try { theme = localStorage.getItem(THEME_KEY) || 'light'; } catch (e){ theme = 'light'; }
+    const applyTheme = t => {
+      const tt = t === 'dark' ? 'dark' : 'light';
+      if (document.body && document.body.setAttribute) document.body.setAttribute('data-theme', tt);
+      if (themeBtn) themeBtn.textContent = tt === 'dark' ? '☾ 墨夜' : '☀ 宣纸';
+      try { localStorage.setItem(THEME_KEY, tt); } catch (e){ /* 隐私模式忽略 */ }
+    };
+    applyTheme(theme);
+    if (themeBtn) themeBtn.onclick = () => { theme = theme === 'dark' ? 'light' : 'dark'; applyTheme(theme); };
     /* 侧边导航（桌面常驻 / 手机抽屉） */
     const side = $('side'), sideMask = $('side-mask'), navToggle = $('nav-toggle');
     const closeSide = () => {
