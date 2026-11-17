@@ -147,17 +147,23 @@
   <section id="page-tuiyan" class="page">
     <div class="panel" id="pn-tuiyan">
       <h2>流年 · 大运推演</h2>
-      <p class="hint">推演基于已排盘命例（排盘页排盘后可保存；未保存时用当前排盘结果）。</p>
+      <p class="hint">改任何一项都会自动重算（不用点按钮）。年份支持区间写法：<code>2026-2030</code>，或 <code>2026,2028,2031</code>，最多 12 年。</p>
       <div class="form-grid">
         <div class="field"><label>命例</label><select id="ty-profile"></select></div>
-        <div class="field"><label>推演年份（可多填，逗号分隔）</label>
-          <input id="ty-years" type="text" value="2026,2027,2028" placeholder="2026,2027"></div>
+        <div class="field"><label>推演年份（4 位年，支持 2026-2030 区间）</label>
+          <input id="ty-years" type="text" value="2026-2028" placeholder="2026-2030 或 2026,2028" inputmode="numeric"></div>
         <div class="field"><label>推演模式</label>
           <select id="ty-mode">
             <option value="multi">多流派并列（7 派互证）</option>
             <option value="basic">简明版（冲合刑害）</option>
           </select></div>
-        <div class="field actions"><button class="btn primary" id="ty-go">开始推演</button></div>
+        <div class="field actions"><button class="btn primary" id="ty-go">重新推演</button></div>
+        <div class="field wide"><div id="ty-quick" class="ty-quick">
+          <button class="btn" data-span="1">今年</button>
+          <button class="btn" data-span="3">未来 3 年</button>
+          <button class="btn" data-span="5">未来 5 年</button>
+          <button class="btn" data-span="10">未来 10 年</button>
+        </div></div>
       </div>
     </div>
     <div id="ty-result" class="result"></div>
