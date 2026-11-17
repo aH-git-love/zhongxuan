@@ -33,6 +33,9 @@ var UI = (function(){
   const CASE_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
     ? require('./cases.js').CASES_LIB
     : CASES_LIB;
+  const AUTH_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
+    ? require('./auth.js').AUTH
+    : (typeof AUTH !== 'undefined' ? AUTH : null);
   /* 农历月名 → 数字 */
   const LUNAR_MONTH_N = { 正:1, 一:1, 二:2, 三:3, 四:4, 五:5, 六:6, 七:7, 八:8, 九:9, 十:10, 十一:11, 十二:12, 冬:11, 腊:12 };
   const lunarMonthNum = (name) => LUNAR_MONTH_N[String(name).replace('闰','')] || 1;
@@ -758,12 +761,92 @@ var UI = (function(){
     };
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape'){ closeNav(); closeGs(); }
+      if (e.key === 'Escape'){ closeNav(); closeGs(); closeAu(); }
       if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')){
         e.preventDefault();
         if (gsModal.hidden) openGs(); else closeGs();
       }
     });
+
+    /* ============ 登录：游客 / 账号 / 管理员 ============ */
+    const auModal = $('au-modal'), auMask = $('au-mask'), auBody = $('au-body'), auBtn = $('auth-btn');
+    function closeAu(){ if (auModal){ auModal.hidden = true; auMask.hidden = true; } }
+    function refreshAuthBtn(){
+      if (!auBtn || !AUTH_LIB) return;
+      const s = AUTH_LIB.session();
+      auBtn.innerHTML = AUTH_LIB.renderAuthButton(s);
+      auBtn.classList.toggle('logged', !!s);
+      auBtn.classList.toggle('is-admin', !!s && s.role === 'admin');
+    }
+    async function showAuthView(msg){
+      const s = AUTH_LIB.session();
+      if (!s){
+        auBody.innerHTML = AUTH_LIB.renderLoginView(msg);
+        bindLoginForm();
+      } else {
+        let users = null;
+        if (s.role === 'admin'){
+          const r = await AUTH_LIB.listUsers();
+          users = Array.isArray(r) ? r : null;
+        }
+        auBody.innerHTML = AUTH_LIB.renderAccountView(s, users, msg);
+        bindAccountForm();
+      }
+    }
+    function bindLoginForm(){
+      const ggo = $('au-guest-go'), go = $('au-go'), msg = $('au-msg');
+      if (ggo) ggo.onclick = async () => {
+        const nm = ($('au-guest-name') && $('au-guest-name').value) || '';
+        const r = await AUTH_LIB.loginGuest(nm);
+        if (!r.ok){ msg.textContent = r.error; return; }
+        refreshAuthBtn(); closeAu();
+      };
+      const doLogin = async () => {
+        const nm = ($('au-name') && $('au-name').value) || '';
+        const pw = ($('au-pass') && $('au-pass').value) || '';
+        const r = await AUTH_LIB.login(nm, pw);
+        if (!r.ok){ msg.textContent = r.error || '登录失败'; return; }
+        refreshAuthBtn(); closeAu();
+      };
+      if (go) go.onclick = doLogin;
+      if ($('au-pass')) $('au-pass').onkeydown = e => { if (e.key === 'Enter') doLogin(); };
+    }
+    function bindAccountForm(){
+      const msg = $('au-msg');
+      const say = m => { if (msg) msg.textContent = m; };
+      if ($('au-pass-go')) $('au-pass-go').onclick = async () => {
+        const r = await AUTH_LIB.changePass(($('au-old') || {}).value || '', ($('au-new') || {}).value || '');
+        say(r.ok ? '口令已更新' : r.error);
+      };
+      if ($('au-add')) $('au-add').onclick = async () => {
+        const r = await AUTH_LIB.addUser(($('au-new-name') || {}).value || '', ($('au-new-pass') || {}).value || '', ($('au-new-role') || {}).value || 'user');
+        if (r.ok){ await showAuthView('已新增用户'); } else say(r.error);
+      };
+      auBody.querySelectorAll('[data-del]').forEach(b => {
+        b.onclick = async () => {
+          const r = await AUTH_LIB.delUser(b.dataset.del);
+          if (r.ok) await showAuthView('已删除 ' + b.dataset.del); else say(r.error);
+        };
+      });
+      if ($('au-logout')) $('au-logout').onclick = async () => {
+        await AUTH_LIB.logout(); refreshAuthBtn(); await showAuthView('已退出');
+      };
+    }
+    if (auBtn) auBtn.onclick = async () => {
+      auModal.hidden = false; auMask.hidden = false; closeNav(); closeGs();
+      await showAuthView('');
+    };
+    if ($('au-close')) $('au-close').onclick = closeAu;
+    if (auMask) auMask.onclick = closeAu;
+
+    if (AUTH_LIB){
+      refreshAuthBtn();
+      AUTH_LIB.detect().then(() => AUTH_LIB.verify()).then(() => {
+        refreshAuthBtn();
+        const st = $('au-mode-state');
+        if (st) st.textContent = AUTH_LIB.modeOf() === 'server' ? '服务端会话' : '本地会话';
+      });
+    }
 
     /* 页面切换 */
     document.querySelectorAll('#mainTabs .tab').forEach(btn => {
