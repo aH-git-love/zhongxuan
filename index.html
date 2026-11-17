@@ -21,10 +21,19 @@
   </div>
   <div class="top-right">
     <span class="cur-page" id="cur-page">排盘</span>
+    <button class="btn auth-btn" id="auth-btn" title="登录 / 账号"><span class="auth-txt">未登录</span></button>
     <button class="btn gs-btn" id="gs-open" title="Ctrl + K">🔍 搜索</button>
     <button class="btn nav-toggle" id="nav-toggle">☰ 导航</button>
   </div>
 </header>
+<div class="gs-mask" id="au-mask" hidden></div>
+<div class="gs-modal au-modal" id="au-modal" hidden>
+  <div class="gs-bar">
+    <span class="gs-icon">👤</span><b id="au-title">登录</b>
+    <button class="btn gs-close" id="au-close">关闭</button>
+  </div>
+  <div class="gs-body" id="au-body"></div>
+</div>
 <div class="gs-mask" id="gs-mask" hidden></div>
 <div class="gs-modal" id="gs-modal" hidden>
   <div class="gs-bar">
@@ -464,6 +473,7 @@
 <script src="js/xuankong.js"></script>
 <script src="js/liuyao.js"></script>
 <script src="js/cases.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/trainer.js"></script>
 <script src="js/app.js"></script>
 <script>
