@@ -21,9 +21,19 @@
   </div>
   <div class="top-right">
     <span class="cur-page" id="cur-page">排盘</span>
+    <button class="btn gs-btn" id="gs-open" title="Ctrl + K">🔍 搜索</button>
     <button class="btn nav-toggle" id="nav-toggle">☰ 导航</button>
   </div>
 </header>
+<div class="gs-mask" id="gs-mask" hidden></div>
+<div class="gs-modal" id="gs-modal" hidden>
+  <div class="gs-bar">
+    <span class="gs-icon">🔍</span>
+    <input id="gs-input" type="text" placeholder="全局搜索：页面 / 大脑规则 / 实断案例 / 推演方法 / 术数知识（如：应期、回头克、玄空、择日）" autocomplete="off">
+    <button class="btn gs-close" id="gs-close">Esc</button>
+  </div>
+  <div class="gs-body" id="gs-body"></div>
+</div>
 <div class="nav-mask" id="nav-mask" hidden></div>
 <nav class="nav-pop" id="nav-pop" hidden>
   <div class="nav-pop-head">快速导航</div>
@@ -42,7 +52,7 @@
 <main>
   <!-- ============ 排盘 ============ -->
   <section id="page-paipan" class="page active">
-    <div class="panel">
+    <div class="panel" id="pn-paipan">
       <h2>生辰八字排盘</h2>
       <div class="form-grid">
         <div class="field"><label>姓名（选填）</label><input id="pp-name" type="text" placeholder="张三"></div>
@@ -81,7 +91,7 @@
 
   <!-- ============ 择日 ============ -->
   <section id="page-zeri" class="page">
-    <div class="panel">
+    <div class="panel" id="pn-zeri">
       <h2>良辰吉日 · 择日</h2>
       <div class="form-grid">
         <div class="field"><label>事项</label>
@@ -101,7 +111,7 @@
       </div>
     </div>
     <div id="zr-result" class="result"></div>
-    <div class="panel">
+    <div class="panel" id="pn-month">
       <h2>整月吉凶日历</h2>
       <p class="hint">按月铺开，色标显示每天宜忌倾向（金=大吉、绿=可用、灰=常日、红=凶日），点击某天查看当日黄历详情。</p>
       <div class="form-grid">
@@ -132,7 +142,7 @@
 
   <!-- ============ 推演 ============ -->
   <section id="page-tuiyan" class="page">
-    <div class="panel">
+    <div class="panel" id="pn-tuiyan">
       <h2>流年 · 大运推演</h2>
       <p class="hint">推演基于已排盘命例（排盘页排盘后可保存；未保存时用当前排盘结果）。</p>
       <div class="form-grid">
@@ -152,7 +162,7 @@
 
   <!-- ============ 方法论（推演方式库） ============ -->
   <section id="page-method" class="page">
-    <div class="panel">
+    <div class="panel" id="pn-method">
       <h2>推演方式库 · 网上推演方式全归纳</h2>
       <p class="hint">整理自子平九经（滴天髓 / 子平真诠 / 三命通会 / 渊海子平 / 穷通宝鉴 / 神峰通考 / 千里命稿 / 协纪辨方书 / 果老星宗）与网上主流命理工具的推演口径：正格体系（扶抑 / 调候 / 格局 / 通关 / 病药 / 专旺从格 / 气势 / 三得）、结构关系（刑冲合害破会夹拱 / 空亡墓库 / 宫位六亲 / 十神类象 / 纳音 / 神煞 / 命宫胎元身宫 / 小运）、运岁应期（大运 / 流年引动 / 应期定位 / 流月流日）、盲派象法（串宫压运 / 宾主做功 / 干支象法 / 动态分析）。</p>
       <div class="form-grid">
@@ -179,7 +189,7 @@
 
   <!-- ============ 术数（道家玄门知识库） ============ -->
   <section id="page-yishu" class="page">
-    <div class="panel">
+    <div class="panel" id="pn-yishu">
       <h2>道家术数 · 玄门八卦与奇门六爻知识库</h2>
       <p class="hint">整理自《周易·说卦传》《烟波钓叟歌》《遁甲演义》《卜筮正宗》《梅花易数》《六壬大全》等典籍：八经卦（先天为体、后天为用）、洛书九宫、奇门八门九星八神三奇六仪、定局表与格局、六爻六亲六神、梅花起卦体用、六壬十二天将与四课三传、道家五术（山医命相卜）。</p>
       <div class="form-grid">
@@ -245,7 +255,7 @@
       <div id="ys-geju"></div>
       <div id="ys-yongshen"></div>
     </div>
-    <div class="panel">
+    <div class="panel" id="pn-mh">
       <h2>六爻：六亲 · 六神 · 断卦规则 · 用神</h2>
       <div id="ys-liuyao"></div>
     </div>
@@ -261,7 +271,7 @@
       <h2>道家五术：山医命相卜</h2>
       <div id="ys-wushu"></div>
     </div>
-    <div class="panel">
+    <div class="panel" id="pn-ziwei">
       <h2>紫微斗数：十四主星 · 十二宫 · 四化 · 安星</h2>
       <p class="hint">《紫微斗数全书》口径：寅宫起正月顺数生月、月宫起子时逆数生时安命宫；命宫纳音定五行局；紫微系逆布、天府系顺布；三方四正合看格局。</p>
       <div id="ys-ziwei"></div>
@@ -284,7 +294,7 @@
       <p class="hint">《八宅明镜》口径：命卦以年份数字根速算（男 11−根、女 4+根，得 5 男寄坤女寄艮）；宅卦看大门朝向；八方吉凶按大游年歌。</p>
       <div id="ys-bazhai"></div>
     </div>
-    <div class="panel">
+    <div class="panel" id="pn-xk">
       <h2>玄空：三元九运与飞星</h2>
       <p class="hint">《沈氏玄空学》口径：运星入中顺飞布九宫，坐向双星分山星（人丁）向星（财禄）；年紫白 = 9 −（年份后两位数字根）。</p>
       <div id="ys-xuankong"></div>
@@ -300,7 +310,7 @@
       </div>
       <div id="xk-result" class="result"></div>
     </div>
-    <div class="panel">
+    <div class="panel" id="pn-ly">
       <h2>六爻摇卦排盘（京房纳甲）</h2>
       <p class="hint">三枚铜钱摇六次自下而上装卦：背数 3=老阳○（动）、2=少阴、1=少阳、0=老阴×（动）。自动装干支、六亲、六神、世应，并标月破暗动、伏神、变卦。日干支与月建取今日。</p>
       <div class="form-grid">
@@ -340,7 +350,7 @@
 
   <!-- ============ 节气 ============ -->
   <section id="page-jieqi" class="page">
-    <div class="panel">
+    <div class="panel" id="pn-jieqi">
       <h2>24 节气精查</h2>
       <div class="form-grid">
         <div class="field"><label>年份</label><input id="jq-y" type="number" value="2026"></div>
@@ -353,7 +363,7 @@
 
   <!-- ============ 大脑 ============ -->
   <section id="page-danao" class="page">
-    <div class="panel">
+    <div class="panel" id="pn-danao">
       <h2>大脑 · 决策推理引擎</h2>
       <p class="hint">描述你遇到的问题，大脑会给出：问题定性 → 匹配规则 → 冲突检查 → 处理步骤。规则权重随你的反馈自学习。</p>
       <div class="form-grid">
@@ -380,7 +390,7 @@
       </div>
       <div id="dq-result"></div>
     </div>
-    <div class="panel">
+    <div class="panel" id="pn-cases">
       <h2>实断案例库 · 典籍原案照断（22 案）</h2>
       <p class="hint">六爻 16 案取自《增删卜易》真实断例（月建日辰 · 卦象 · 断语 · 事后应验），另附玄空/奇门/紫微/择日/八字算法算例 6 案。练法见规则 E04：先遮住断语自断，再对照应验拆差。</p>
       <div class="form-grid">
@@ -390,7 +400,7 @@
       </div>
       <div id="cs-list" class="cs-list"></div>
     </div>
-    <div class="panel">
+    <div class="panel" id="pn-rules">
       <h2>规则库（自学习权重）</h2>
       <div class="field actions"><button class="btn" id="dn-reset">重置权重</button></div>
       <div id="dn-rules"></div>
@@ -399,7 +409,7 @@
 
   <!-- ============ 训练 ============ -->
   <section id="page-xunlian" class="page">
-    <div class="panel">
+    <div class="panel" id="pn-xl">
       <h2>思维逻辑训练</h2>
       <div class="form-grid">
         <div class="field"><label>模式</label>
