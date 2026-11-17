@@ -381,12 +381,13 @@ python -m http.server 8765     # 或 Python 自带
 
 ### 安卓 APK（已打包好，直接装）
 
-**唯一下载地址**：`https://ah-git-love.github.io/zhongxuan/dist/zhongxuan-v1.0-online.apk`
+**唯一下载地址**：`https://ah-git-love.github.io/zhongxuan/dist/zhongxuan-v1.1-online.apk`
 
-页脚的「⬇ 安卓 APK」按钮也指向同一地址。APK v1.0 · 约 1.2MB · 已签名可直接安装（装时允许「未知来源」）。它是 TWA/WebView 在线壳，打开加载 GitHub Pages 线上版，首次需联网；进入后由 Service Worker 接管，断网仍可继续用。想让壳指向别的域名，用 `tools/build_apk3.js` 换 host 重新云打包即可（PWABuilder 云服务，无需本机 Android SDK）。
+页脚的「⬇ 安卓 APK」按钮也指向同一地址。APK v1.1 · 约 1.2MB · 已签名可直接安装（装时允许「未知来源」）。它是 TWA/WebView 在线壳，打开加载 GitHub Pages 线上版，首次需联网；进入后由 Service Worker 接管，断网仍可继续用。想让壳指向别的域名，用 `tools/build_apk3.js` 换 host 重新云打包即可（PWABuilder 云服务，无需本机 Android SDK）。
 
 ```bash
-node tools/build_apk3.js "https://你的域名" "自定义名.apk"
+node tools/build_apk4.js "https://你的域名" "自定义名.apk"
+node tools/pick_apk.js dist/xxx-src.zip dist/xxx.apk   # 云打包返回的 zip 里提取 APK
 node tools/gh_upload.js          # 重新发布到 GitHub Pages 并云打包固定域名 APK
 node tools/gh_upload_apk.js      # 只把 dist 里的 APK 传上 Pages
 ```
