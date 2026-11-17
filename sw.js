@@ -1,6 +1,6 @@
 /* 中玄 · 推演台 —— Service Worker（离线缓存，PWA 用）
  * 仅在 http/https 下注册；file:// 双击打开时不生效，也不影响使用。 */
-const CACHE = 'zhongxuan-v8';
+const CACHE = 'zhongxuan-v9';
 const ASSETS = [
   './', './index.html',
   './css/app.css',
