@@ -473,6 +473,31 @@ footer .foot-dl{ font-size:12px; padding:6px 14px; white-space:nowrap; }
 .ly-dong{ color:var(--red); margin-left:6px; }
 .ly-shi{ color:var(--gold2); }
 .ly-ying{ color:var(--blue); }
+/* ============ 实断案例库 ============ */
+.cs-list{ display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+.cs-card{
+  background:var(--panel2); border:1px solid var(--line); border-radius:10px;
+  padding:10px 14px; font-size:13px;
+}
+.cs-card summary{
+  cursor:pointer; list-style:none; display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+  color:var(--txt); font-size:14px;
+}
+.cs-card summary::-webkit-details-marker{ display:none; }
+.cs-card summary::before{ content:"▸ "; color:var(--gold2); }
+.cs-card[open] summary::before{ content:"▾ "; }
+.cs-card summary b{ color:var(--gold2); }
+.cs-time{ color:var(--dim); font-size:12px; margin-left:auto; }
+.cs-meta{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+.cs-yao{ margin:4px 0 8px; width:auto; }
+.cs-yao td{ padding:2px 10px; font-size:13px; white-space:nowrap; }
+.cs-line{ line-height:1.8; color:var(--txt); }
+.cs-line b{ color:var(--gold2); margin-right:4px; }
+.cs-yan{ color:#7fd49a; }
+@media (max-width:520px){
+  .cs-card{ padding:8px 10px; }
+  .cs-time{ margin-left:0; flex-basis:100%; }
+}
 .nav-pop .tabs{ display:flex; flex-direction:column; gap:6px; flex-wrap:nowrap; }
 .nav-pop .tab{
   width:100%; text-align:left; padding:10px 14px; border-radius:8px;
