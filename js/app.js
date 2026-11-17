@@ -266,6 +266,42 @@ var UI = (function(){
     const l = (pan.liunian || []).find(x => x.year === y);
     return l ? l.shiShen : '';
   };
+  /* 年份输入解析：支持 "2026,2027" / "2026-2030" / "2026 2027" 混写，去重排序，限 1~12 年 */
+  function parseYears(str){
+    const out = [];
+    String(str == null ? '' : str).split(/[,，;；、\s]+/).filter(Boolean).forEach(tok => {
+      const m = /^(\d{4})\s*[-~—–至到]\s*(\d{4})$/.exec(tok);
+      if (m){
+        const a = +m[1], b = +m[2];
+        for (let y = Math.min(a, b); y <= Math.max(a, b) && out.length < 24; y++) out.push(y);
+      } else if (/^\d{4}$/.test(tok)) out.push(+tok);
+    });
+    return [...new Set(out.filter(y => y >= 1900 && y <= 2200))].sort((a, b) => a - b).slice(0, 12);
+  }
+  /* 结论条：把"哪年最强 / 哪年最弱 / 分歧年 / 总体倾向"提炼成一句话 */
+  function tyVerdict(data){
+    const total = data.reduce((s, d) => s + d.m.score, 0);
+    const sorted = data.slice().sort((a, b) => b.m.score - a.m.score);
+    const best = sorted[0], worst = sorted[sorted.length - 1];
+    const splits = data.filter(d => d.good < 4 && d.bad < 4 && d.good && d.bad).map(d => d.m.year);
+    const strong = data.filter(d => Math.abs(d.m.score) >= 3).length;
+    const tilt = total >= 3 ? '总体偏吉' : total <= -3 ? '总体偏凶' : '总体中性';
+    const tiltCls = total >= 3 ? 'ty-good' : total <= -3 ? 'ty-bad' : 'ty-mid';
+    const parts = [];
+    if (best) parts.push(`${best.m.year} 年${best.m.score > 0 ? '最强' : '相对最强'}（${best.m.score > 0 ? '+' : ''}${best.m.score} · ${best.m.label}）`);
+    if (worst && worst !== best) parts.push(`${worst.m.year} 年${worst.m.score < 0 ? '最弱' : '相对最弱'}（${worst.m.score > 0 ? '+' : ''}${worst.m.score}）`);
+    if (splits.length) parts.push(`分歧年 ${splits.join('、')}（保守断）`);
+    return `<div class="ty-verdict">
+      <div class="ty-v-main">结论：<b>${esc(parts.join('；') || '无显著信号')}</b></div>
+      <div class="ty-v-tags">
+        <span class="ty-badge ${tiltCls}">${tilt}</span>
+        <span>综合 ${total > 0 ? '+' : ''}${total}</span>
+        <span>覆盖 ${data.length} 年</span>
+        ${strong ? `<span>强信号 ${strong} 个</span>` : ''}
+        ${splits.length ? `<span>分歧 ${splits.length} 个</span>` : ''}
+      </div>
+    </div>`;
+  }
   const tuiyanBrief = pan => `
     <div class="kv"><span>本命</span><b>${esc(pan.pillars.map(x => x.gz).join(' '))}</b></div>
     <div class="kv"><span>日主</span><b>${esc(WUXING_GAN[pan.dayGan])}（${esc(pan.strengthLabel)}）</b></div>
@@ -287,12 +323,12 @@ var UI = (function(){
       const dy = dyOfYear(pan, y);
       const ev = r.events.map(e => `${e.type}${e.target}`).join(' / ') || '无冲合刑害';
       return `<tr>
-        <td><b>${r.year}</b></td>
-        <td class="gz" style="font-size:18px">${esc(r.gz)}</td>
-        <td>${esc(ssOfYear(pan, y) || '—')}</td>
-        <td>${dy ? esc(dy.gz + '运') : '—'}</td>
-        <td><span class="ty-badge ${cls}">${state}</span></td>
-        <td style="text-align:left">${esc(ev)}</td>
+        <td data-l="年"><b>${r.year}</b></td>
+        <td data-l="干支" class="gz" style="font-size:18px">${esc(r.gz)}</td>
+        <td data-l="十神">${esc(ssOfYear(pan, y) || '—')}</td>
+        <td data-l="大运">${dy ? esc(dy.gz + '运') : '—'}</td>
+        <td data-l="状态"><span class="ty-badge ${cls}">${state}</span></td>
+        <td data-l="引动" style="text-align:left">${esc(ev)}</td>
       </tr>`;
     }).join('');
     const detail = years.map(y => {
@@ -304,8 +340,26 @@ var UI = (function(){
         </tbody></table>
       </details>`;
     }).join('');
+    /* 简明模式结论条：变动最大年 / 冲合计数 */
+    const stats = years.map(y => {
+      const r = BAZI.tuiYan(pan, y);
+      const chong = r.events.filter(e => e.level >= 3).length;
+      const he = r.events.filter(e => e.level === 1).length;
+      return { y, chong, he, n: r.events.length };
+    });
+    const top = stats.slice().sort((a, b) => b.chong - a.chong)[0];
+    const stable = stats.filter(s => s.n === 0).map(s => s.y);
     return `<div class="panel pp-panel">
-      <h2>简明推演 · ${esc(label)} · ${years[0]}–${years[years.length - 1]}</h2>
+      <h2>简明推演 · ${esc(label)} · ${years[0]}${years.length > 1 ? '–' + years[years.length - 1] : ''}</h2>
+      <div class="ty-verdict">
+        <div class="ty-v-main">结论：<b>${top && top.chong ? top.y + ' 年变动最大（' + top.chong + ' 处冲）' : '所列年份无强冲击'}${stable.length ? '；' + stable.slice(0, 4).join('、') + ' 年平稳' : ''}</b></div>
+        <div class="ty-v-tags">
+          <span>共 ${years.length} 年</span>
+          <span>冲 ${stats.reduce((s, x) => s + x.chong, 0)}</span>
+          <span>合 ${stats.reduce((s, x) => s + x.he, 0)}</span>
+          ${stable.length ? `<span>平稳 ${stable.length} 年</span>` : ''}
+        </div>
+      </div>
       <div class="pp-top">
         <div class="pp-main">
           <div class="pp-cap">流年主表（干支 / 十神 / 所在大运 / 冲合状态 / 引动）</div>
@@ -331,25 +385,25 @@ var UI = (function(){
       return { y, m, evs, pol, dy: dyOfYear(pan, y), ss: ssOfYear(pan, y),
         good: pol.filter(p => p > 0).length, bad: pol.filter(p => p < 0).length };
     });
-    /* 逐年基调主表 */
+    /* 逐年基调主表（结论优先：判定合并基调 + 同向，引动下放到矩阵下方要点） */
     const rows = data.map(d => {
       const m = d.m;
       const cls = m.score >= 1.5 ? 'ty-good' : m.score <= -1.5 ? 'ty-bad' : 'ty-mid';
       const strong = Math.abs(m.score) >= 3 ? '强' : Math.abs(m.score) >= 1.5 ? '中' : '弱';
-      const same = d.good >= 4 ? `<span class="ty-same">多派同向吉</span>` : d.bad >= 4 ? `<span class="ty-split">多派同向凶</span>` : (d.good && d.bad) ? '<span class="ty-split">派别分歧</span>' : '<span class="ty-mid">中性</span>';
-      const ev = d.evs.map(e => `${e.type}${e.target}`).join(' / ') || '无冲合刑害';
-      const domain = SHISHEN_DOMAIN[d.ss] || '—';
+      const same = d.good >= 5 ? `<span class="ty-same">同向吉 ${d.good}/${d.m.cards.length}</span>`
+        : d.bad >= 5 ? `<span class="ty-split">同向凶 ${d.bad}/${d.m.cards.length}</span>`
+        : d.good >= 4 ? `<span class="ty-same">偏同向吉 ${d.good}</span>`
+        : d.bad >= 4 ? `<span class="ty-split">偏同向凶 ${d.bad}</span>`
+        : (d.good && d.bad) ? '<span class="ty-split">分歧</span>' : '<span class="ty-mid">中性</span>';
       return `<tr>
-        <td><b>${m.year}</b></td>
-        <td class="gz" style="font-size:18px">${esc(m.gz)}</td>
-        <td>${esc(d.ss || '—')}</td>
-        <td>${d.dy ? esc(d.dy.gz + '运') : '—'}</td>
-        <td class="num">${m.score > 0 ? '+' : ''}${m.score}</td>
-        <td><span class="ty-badge ${cls}">${esc(m.label)}</span></td>
-        <td>${strong}</td>
-        <td>${same}</td>
-        <td style="text-align:left">${esc(domain)}</td>
-        <td style="text-align:left">${esc(ev)}</td>
+        <td data-l="年"><b>${m.year}</b></td>
+        <td data-l="干支" class="gz" style="font-size:18px">${esc(m.gz)}</td>
+        <td data-l="十神">${esc(d.ss || '—')}</td>
+        <td data-l="大运">${d.dy ? esc(d.dy.gz + '运') : '—'}</td>
+        <td data-l="综合" class="num">${m.score > 0 ? '+' : ''}${m.score}</td>
+        <td data-l="判定"><span class="ty-badge ${cls}">${esc(m.label)} · ${strong}</span></td>
+        <td data-l="同向">${same}</td>
+        <td data-l="落点" style="text-align:left">${esc(SHISHEN_DOMAIN[d.ss] || '—')}</td>
       </tr>`;
     }).join('');
     /* 派别 × 年份对照矩阵 */
@@ -387,26 +441,37 @@ var UI = (function(){
         </div>`).join('')}
       </div>
     </details>`).join('');
+    const keyPoints = data.map(d => `<div class="ty-point">
+      <b>${d.m.year}</b><span class="ty-badge ${d.m.score >= 1.5 ? 'ty-good' : d.m.score <= -1.5 ? 'ty-bad' : 'ty-mid'}">${esc(d.m.label)}</span>
+      <small>${d.evs.length ? d.evs.map(e => esc(e.type + e.target + '（' + e.detail + '）')).join('；') : '无冲合刑害'}</small>
+    </div>`).join('');
     return `<div class="panel pp-panel">
-      <h2>多流派推演 · ${esc(label)} · ${years[0]}–${years[years.length - 1]}</h2>
+      <h2>多流派推演 · ${esc(label)} · ${years[0]}${years.length > 1 ? '–' + years[years.length - 1] : ''}</h2>
+      ${tyVerdict(data)}
       <div class="pp-top">
         <div class="pp-main">
-          <div class="pp-cap">流年基调主表（综合分 = 各派吉 +1 / 凶 −1 累加；同向判定自动生成）</div>
+          <div class="pp-cap">流年基调主表（综合分 = 各派吉 +1 / 凶 −1；判定含强弱；同向判定自动生成）</div>
           <table class="pp-t ty-table"><thead><tr>
-            <th>年</th><th>干支</th><th>十神</th><th>大运</th><th>综合</th><th>基调</th><th>强度</th><th>同向</th><th>落点</th><th>引动</th>
+            <th>年</th><th>干支</th><th>十神</th><th>大运</th><th>综合</th><th>判定</th><th>同向</th><th>落点</th>
           </tr></thead><tbody>${rows}</tbody></table>
         </div>
         <div class="pp-brief">${tuiyanBrief(pan)}</div>
       </div>
       <div class="pp-sec">
         <h3>派别 × 年份对照矩阵（吉 / 凶 / 平 自动归纳，末行为同向判定）</h3>
-        <table class="ty-matrix"><thead><tr><th>流派</th>${data.map(d => `<th>${d.m.year}</th>`).join('')}</tr></thead>
-        <tbody>${matrix}${agreeRow}</tbody></table>
-        <p class="ty-note">判定口径：≥4 派同向即可下重话（多派互证）；「派别分歧」年份只作参考、不下定论；综合分 ±3 以上为强信号、±1.5 为中信号。</p>
+        <div class="ty-mwrap">
+          <table class="ty-matrix"><thead><tr><th class="ty-school-hd">流派</th>${data.map(d => `<th>${d.m.year}</th>`).join('')}</tr></thead>
+          <tbody>${matrix}${agreeRow}</tbody></table>
+        </div>
+        <p class="ty-note">判定口径：≥5 派同向为强同向、4 派为偏同向（可下重话）；「分歧」年份只作参考、不下定论；综合分 ±3 以上为强信号、±1.5 为中信号。</p>
+      </div>
+      <div class="pp-sec">
+        <h3>逐年要点（自动提取该年最强引动）</h3>
+        <div class="ty-points">${keyPoints}</div>
       </div>
       <div class="pp-sec"><h3>逐年分派详断（点开看七派各自依据）</h3>${detail}</div>
       <details class="pp-more"><summary>七派与用法说明</summary>
-        <p class="hint">七派：扶抑用神法 / 调候用神法 / 关系引动法 / 宫位六亲法 / 盲派串宫压运 / 病药应期法 / 神煞流年法。用法：先看综合分定该年基调，再看哪一派给强信号，最后落到宫位 / 十神定具体领域；多派同向才下重话，分歧年按保守断。</p>
+        <p class="hint">七派：扶抑用神法 / 调候用神法 / 关系引动法 / 宫位六亲法 / 盲派串宫压运 / 病药应期法 / 神煞流年法。用法：先看结论条定基调，再看哪一派给强信号，最后落到宫位 / 十神定具体领域；多派同向才下重话，分歧年按保守断。</p>
       </details>
     </div>`;
   }
@@ -960,7 +1025,7 @@ var UI = (function(){
         closeSide();
         if (btn.dataset.page === 'danao'){ renderRulesView(); }
         if (btn.dataset.page === 'xunlian'){ renderXunlianStats(); }
-        if (btn.dataset.page === 'tuiyan'){ refreshProfiles(); }
+        if (btn.dataset.page === 'tuiyan'){ refreshProfiles(); runTuiyan(); }
       };
     });
 
@@ -995,8 +1060,10 @@ var UI = (function(){
     function saveProfiles(list){ try { localStorage.setItem(PROFILES_KEY, JSON.stringify(list)); } catch(e){} }
     function refreshProfiles(){
       const list = loadProfiles();
+      const cur = $('ty-profile').value;
       $('ty-profile').innerHTML = `<option value="__current">（当前排盘结果）</option>` +
         list.map((p, i) => `<option value="${i}">${esc(p.name)}</option>`).join('');
+      if (cur && $('ty-profile').querySelector('option[value="' + cur + '"]')) $('ty-profile').value = cur;
     }
     $('pp-save').onclick = () => {
       if (!currentPan) return;
@@ -1101,20 +1168,36 @@ var UI = (function(){
       });
     };
 
-    /* ============ 推演 ============ */
-    $('ty-go').onclick = () => {
-      const sel = $('ty-profile').value;
+    /* ============ 推演（改输入即自动重算，无需点按钮） ============ */
+    function runTuiyan(){
+      const sel = $('ty-profile') ? $('ty-profile').value : '__current';
       let pan = currentPan, label = '（当前排盘）';
-      if (sel !== '__current'){
+      if (sel && sel !== '__current'){
         const list = loadProfiles();
-        if (!list[+sel]) { alert('命例不存在，请先在排盘页保存'); return; }
+        if (!list[+sel]) return;
         pan = BAZI.paiPan(list[+sel].input);
         label = list[+sel].name;
       }
-      if (!pan) { alert('请先到"排盘"页排盘，或保存命例'); return; }
-      const years = $('ty-years').value.split(/[,,\s]+/).map(Number).filter(y => y > 100 && y < 3000);
-      if (!years.length) { alert('请填入有效年份'); return; }
+      if (!pan){ $('ty-result').innerHTML = '<p class="hint">还没有命例——先到「排盘」页排一盘，或保存一个命例，再回来推演（选好命例后会自动计算）。</p>'; return; }
+      const years = parseYears($('ty-years').value);
+      if (!years.length){ $('ty-result').innerHTML = '<p class="hint">年份填 4 位数字，可写区间：如 2026-2030，或 2026,2028。</p>'; return; }
       $('ty-result').innerHTML = renderTuiyan(pan, years, label, $('ty-mode').value);
+    }
+    let tyTimer = null;
+    const tyDebounce = () => { clearTimeout(tyTimer); tyTimer = setTimeout(runTuiyan, 260); };
+    if ($('ty-go')) $('ty-go').onclick = runTuiyan;
+    if ($('ty-years')) $('ty-years').oninput = tyDebounce;
+    if ($('ty-mode')) $('ty-mode').onchange = runTuiyan;
+    if ($('ty-profile')) $('ty-profile').onchange = runTuiyan;
+    /* 快捷年份 */
+    const tyQuick = $('ty-quick');
+    if (tyQuick) tyQuick.onclick = e => {
+      const b = e.target.closest ? e.target.closest('[data-span]') : null;
+      if (!b || !$('ty-years')) return;
+      const n = +b.dataset.span;
+      const thisYear = new Date().getFullYear();
+      $('ty-years').value = n <= 1 ? String(thisYear) : `${thisYear}-${thisYear + n - 1}`;
+      runTuiyan();
     };
 
     /* ============ 方法论（推演方式库） ============ */
@@ -1766,7 +1849,7 @@ var UI = (function(){
 
   /* 浏览器加载即初始化；Node 下只导出纯渲染函数 */
   return { esc, pad2, validYMD, renderPaipan, renderZeri, renderHuangli, renderTuiyan,
-    renderTuiyanMulti, renderMethods, renderSop, renderMethodRules, renderCross,
+    renderTuiyanMulti, parseYears, renderMethods, renderSop, renderMethodRules, renderCross,
     renderJieqi, renderDanao, renderRules, init,
     renderYishuSearch, renderBagua, renderJiuGong, renderBaMen, renderJiuXing, renderBaShen,
     renderQiYi, renderGeju, renderYongshen, renderLiuyao, renderMeihua, renderMeihuaResult,
