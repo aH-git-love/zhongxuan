@@ -12,12 +12,6 @@ var UI = (function(){
   const YISHU_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
     ? require('./yishu.js').YISHU
     : YISHU;
-  const BRAIN_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
-    ? require('./brain.js').BRAIN
-    : (typeof BRAIN !== 'undefined' ? BRAIN : null);
-  const METHODS_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
-    ? require('./methods.js').METHODS
-    : (typeof METHODS !== 'undefined' ? METHODS : null);
   const DANAO3D_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
     ? require('./danao3d.js').DANAO3D
     : DANAO3D;
@@ -84,104 +78,115 @@ var UI = (function(){
     const jy0 = birthDate.getUTCFullYear(), jm0 = birthDate.getUTCMonth() + 1;
 
     const firstAge = pan.dayun.list[0].startAge;
+    /* 当前年龄（虚岁计，仅用于高亮当下所处大运） */
+    const today = new Date();
+    const curAge = Math.max(1, today.getFullYear() - pan.ymd.year + 1);
     const dayunRows = pan.dayun.list.map(dy => {
       const ageRange = `${dy.startAge}-${dy.startAge + 9}岁`;
-      const step = Math.round((dy.startAge - firstAge) / 10); /* 每步大运 10 年 */
+      const step = Math.round((dy.startAge - firstAge) / 10);
       const jy = jy0 + step * 10;
-      return `<tr><td>${ageRange}</td><td class="gz">${esc(dy.gz)}</td><td>${esc(dy.shiShen)}</td><td style="font-size:13px">${jy}-${pad2(jm0)}<br><span style="color:var(--dim);font-size:12px">起运 ${dy.startAge} 岁</span></td></tr>`;
+      const now = curAge >= dy.startAge && curAge < dy.startAge + 10;
+      return `<tr class="${now ? 'pp-now' : ''}"><td>${ageRange}${now ? ' · 当前' : ''}</td><td class="gz">${esc(dy.gz)}</td><td>${esc(dy.shiShen)}</td><td>${jy}-${pad2(jm0)}<br><span style="color:var(--dim);font-size:12px">起运 ${dy.startAge} 岁</span></td></tr>`;
     }).join('');
 
     const lnRows = pan.liunian.map(ln => {
       const events = BAZI.tuiYan(pan, ln.year).events.filter(e => e.level > 0).map(e => esc(e.detail));
       const evtTags = events.length ? events.map(e => `<span class="tag">${e}</span>`).join(' ') : '<span style="color:var(--dim)">无显著冲合</span>';
-      return `<tr><td>${ln.year}</td><td class="gz">${esc(ln.gz)}</td><td>${esc(ln.shiShen)}</td><td style="text-align:left">${evtTags}</td></tr>`;
+      return `<tr><td>${ln.year}</td><td class="gz">${esc(ln.gz)}</td><td>${esc(ln.shiShen)}</td><td class="pp-evt">${evtTags}</td></tr>`;
     }).join('');
 
     const yongText = [pan.yongShen.印, pan.yongShen.比, pan.yongShen.克, pan.yongShen.泄, pan.yongShen.耗].filter(Boolean).join('、') || '中和局';
 
-    /* ---- 多流派扩展卡：格局 / 调候 / 空亡 / 命宫胎元 / 小运 / 原局关系 ---- */
+    /* ---- 多流派扩展：格局 / 调候 / 空亡 / 命宫胎元 / 小运 / 原局关系 ---- */
     const geju = pan.geju;
     const relRows = (pan.relations || []).map(r => `
       <div class="kv"><span>${esc(r.pillars)}</span><b style="text-align:right;max-width:70%">${esc(r.relations.map(x => x.desc).join('、'))}</b></div>`).join('') || '<div class="kv"><span>关系</span><b>无明显刑冲合害</b></div>';
     const xiaoYunTags = (pan.xiaoYun || []).slice(0, 8).map(x => `<span class="tag">${x.age}岁 ${esc(x.gz)}</span>`).join('');
 
+    /* 四柱主表：列 = 年月日时，行 = 十神 / 干支 / 藏干 / 藏干十神 / 纳音 / 五行 / 长生 */
+    const pHead = p.map((x, i) => `<th class="${i === 2 ? 'pp-day' : ''}">${x.name}${i === 2 ? '<small>日主</small>' : ''}</th>`).join('');
+
     return `
-      <div class="panel">
+      <div class="panel pp-panel">
         <h2>命例 · ${esc(input.name || '未命名')}</h2>
-        <div class="grid2">
-          <div class="card">
-            <h3>基本信息</h3>
-            <div class="kv"><span>公历</span><b>${pan.ymd.year}-${pad2(pan.ymd.month)}-${pad2(pan.ymd.day)} ${pad2(input.hour)}:${pad2(input.minute)}</b></div>
-            <div class="kv"><span>农历</span><b>${lunar ? lunar.lunarYear + ' 年 ' + (lunar.isLeap ? '闰' : '') + lunar.month + ' 月 ' + lunar.day + ' 日' : '—'}</b></div>
-            <div class="kv"><span>生肖</span><b>${SX[p[0].zhi]}</b></div>
+        <div class="pp-top">
+          <div class="pp-main">
+            <div class="pp-cap">四柱命局</div>
+            <table class="pp-t">
+              <thead><tr><th class="pp-lbl"></th>${pHead}</tr></thead>
+              <tbody>
+                <tr><td class="pp-lbl">十神</td>${p.map(x => `<td>${esc(x.zhishen)}</td>`).join('')}</tr>
+                <tr class="pp-gz"><td class="pp-lbl">干支</td>${p.map((x, i) => `<td class="${i === 2 ? 'pp-day' : ''}">${esc(x.gz)}</td>`).join('')}</tr>
+                <tr><td class="pp-lbl">藏干</td>${p.map(x => `<td>${x.cang.map(c => c.ch).join('')}</td>`).join('')}</tr>
+                <tr><td class="pp-lbl">藏干十神</td>${p.map(x => `<td style="font-size:12px">${x.cangShiShen.join('/')}</td>`).join('')}</tr>
+                <tr><td class="pp-lbl">纳音</td>${p.map(x => `<td style="font-size:12px">${esc(x.nayin)}</td>`).join('')}</tr>
+                <tr><td class="pp-lbl">五行</td>${p.map(x => `<td>${x.wuxing}</td>`).join('')}</tr>
+                <tr><td class="pp-lbl">长生</td>${p.map(x => `<td style="font-size:12px">${x.changsheng}</td>`).join('')}</tr>
+              </tbody>
+            </table>
+            <div class="pp-note">公历 ${pan.ymd.year}-${pad2(pan.ymd.month)}-${pad2(pan.ymd.day)} ${pad2(input.hour)}:${pad2(input.minute)}　·　农历 ${lunar ? lunar.lunarYear + ' 年' + (lunar.isLeap ? '闰' : '') + lunar.month + '月' + lunar.day + '日' : '—'}　·　生肖 ${SX[p[0].zhi]}</div>
+          </div>
+          <div class="pp-brief">
             <div class="kv"><span>日主</span><b>${esc(p[2].gz.slice(0, 1))}（${WUXING_GAN[p[2].gan]}）</b></div>
-            <div class="kv"><span>日主旺衰</span><b>${pan.strengthLabel}（同党占比 ${(pan.strength * 100).toFixed(0)}%）</b></div>
-            <div class="kv"><span>三得法（滴天髓）</span><b>${pan.sanDe.deLing ? '得令' : '失令'} · ${pan.sanDe.deDi ? '得地' : '失地'} · ${pan.sanDe.deShi ? '得势' : '失势'} → ${pan.sanDe.label}</b></div>
-            <div class="kv"><span>喜用神（简化）</span><b>${esc(yongText)}</b></div>
-          </div>
-          <div class="card">
-            <h3>五行分布（含藏干加权）</h3>
-            ${wxBars}
-          </div>
-          <div class="card">
-            <h3>格局（月令取格）</h3>
+            <div class="kv"><span>旺衰</span><b>${pan.strengthLabel} · ${(pan.strength * 100).toFixed(0)}%</b></div>
+            <div class="kv"><span>三得</span><b>${pan.sanDe.deLing ? '得令' : '失令'}·${pan.sanDe.deDi ? '得地' : '失地'}·${pan.sanDe.deShi ? '得势' : '失势'}</b></div>
+            <div class="kv"><span>喜用神</span><b>${esc(yongText)}</b></div>
             <div class="kv"><span>格局</span><b>${esc(geju.name)}</b></div>
-            <div class="kv"><span>取格依据</span><b style="text-align:right;max-width:70%">${esc(geju.note)}</b></div>
-            <div class="kv"><span>成格之相</span><b style="text-align:right;max-width:70%">${esc(geju.cheng)}</b></div>
-            <div class="kv"><span>破格之因</span><b style="text-align:right;max-width:70%">${esc(geju.breaker)}</b></div>
-          </div>
-          <div class="card">
-            <h3>调候 · 命宫 · 胎元（穷通宝鉴 / 果老星宗）</h3>
-            <div class="kv"><span>调候用神</span><b>${esc(pan.tiaoHou.yong.join('、'))}（${esc(pan.tiaoHou.month)}）</b></div>
-            <div class="kv"><span>命宫</span><b>${esc(pan.mingGong.gz)}（${ZHI_ARR[pan.mingGong.zhi]}宫）</b></div>
+            <div class="kv"><span>调候</span><b>${esc(pan.tiaoHou.yong.join('、'))}</b></div>
+            <div class="kv"><span>命宫</span><b>${esc(pan.mingGong.gz)}</b></div>
             <div class="kv"><span>胎元</span><b>${esc(pan.taiYuan.gz)}</b></div>
-            <div class="kv"><span>旬空（空亡）</span><b>${esc(pan.kongWang.zhis.join('、'))}${pan.kongWang.hit.length ? ' · 落空：' + esc(pan.kongWang.hit.join('、')) : '（命局无落空）'}</b></div>
-          </div>
-          <div class="card">
-            <h3>小运（起运前逐年，渊海子平）</h3>
-            <div style="line-height:2.2">${xiaoYunTags}</div>
-            <p class="hint">阳男阴女顺行 / 阴男阳女逆行，从时柱起一年一位；起运后以大运为准。</p>
-          </div>
-          <div class="card">
-            <h3>原局干支关系（刑冲合害破会夹拱）</h3>
-            ${relRows}
+            <div class="kv"><span>旬空</span><b>${esc(pan.kongWang.zhis.join('、'))}${pan.kongWang.hit.length ? '（落空 ' + esc(pan.kongWang.hit.join('、')) + '）' : ''}</b></div>
           </div>
         </div>
 
-        <div class="card" style="margin-top:10px">
-          <h3>四柱</h3>
+        <div class="pp-sec pp-wx">
+          <h3>五行分布（含藏干加权）</h3>
+          ${wxBars}
+        </div>
+
+        <div class="pp-sec pp-dayun">
+          <h3>大运（起运 ${pan.dayun.y1} 年 ${pan.dayun.months} 月 ${pan.dayun.days2} 天 · ${pan.dayun.forward ? '顺排' : '逆排'} · 交运 ${jy0}-${pad2(jm0)}）</h3>
           <table>
-            <tr><td class="gz-sub"></td>${p.map(x => `<td class="gz-sub">${x.name}</td>`).join('')}</tr>
-            ${pillarRow('干支', 'gz-big')}
-            ${pillarRow('十神')}
-            ${pillarRow('藏干')}
-            ${pillarRow('藏干十神')}
-            ${pillarRow('纳音')}
-            ${pillarRow('五行')}
-            ${pillarRow('长生')}
+            <thead><tr><th>年龄区间</th><th>干支</th><th>日主十神</th><th>交运年月</th></tr></thead>
+            <tbody>${dayunRows}</tbody>
           </table>
         </div>
 
-        <div class="card">
+        <div class="pp-sec pp-ln">
+          <h3>近十年流年</h3>
+          <table>
+            <thead><tr><th>年份</th><th>干支</th><th>十神</th><th>与本命互动</th></tr></thead>
+            <tbody>${lnRows}</tbody>
+          </table>
+        </div>
+
+        <div class="pp-sec">
           <h3>神煞</h3>
           <div>${shenTags}</div>
         </div>
 
-        <div class="card">
-          <h3>大运（起运：${pan.dayun.y1} 年 ${pan.dayun.months} 月 ${pan.dayun.days2} 天，${pan.dayun.forward ? '顺排' : '逆排'}，交运约 ${jy0}-${pad2(jm0)}）</h3>
-          <table>
-            <tr><th>年龄区间</th><th>干支</th><th>日主十神</th><th>交运年月</th></tr>
-            ${dayunRows}
-          </table>
-        </div>
-
-        <div class="card">
-          <h3>近十年流年</h3>
-          <table>
-            <tr><th>年份</th><th>干支</th><th>十神</th><th>与本命互动</th></tr>
-            ${lnRows}
-          </table>
-        </div>
+        <details class="pp-more">
+          <summary>更多：格局取用 · 原局干支关系 · 小运</summary>
+          <div class="grid2">
+            <div class="card">
+              <h3>格局（月令取格）</h3>
+              <div class="kv"><span>取格依据</span><b style="text-align:right;max-width:70%">${esc(geju.note)}</b></div>
+              <div class="kv"><span>成格之相</span><b style="text-align:right;max-width:70%">${esc(geju.cheng)}</b></div>
+              <div class="kv"><span>破格之因</span><b style="text-align:right;max-width:70%">${esc(geju.breaker)}</b></div>
+              <div class="kv"><span>调候用神</span><b>${esc(pan.tiaoHou.yong.join('、'))}（${esc(pan.tiaoHou.month)}）</b></div>
+              <div class="kv"><span>三得法（滴天髓）</span><b>${pan.sanDe.label}</b></div>
+            </div>
+            <div class="card">
+              <h3>原局干支关系（刑冲合害破会）</h3>
+              ${relRows}
+            </div>
+            <div class="card">
+              <h3>小运（起运前逐年，渊海子平）</h3>
+              <div style="line-height:2.2">${xiaoYunTags}</div>
+              <p class="hint">阳男阴女顺行 / 阴男阳女逆行，从时柱起一年一位；起运后以大运为准。</p>
+            </div>
+          </div>
+        </details>
       </div>`;
   }
 
@@ -720,52 +725,21 @@ var UI = (function(){
    * 事件绑定与状态
    * ============================================================ */
   function init(){
-    /* 收缩导航弹窗 */
-    const navPop = $('nav-pop'), navMask = $('nav-mask'), navToggle = $('nav-toggle');
-    const closeNav = () => { navPop.hidden = true; navMask.hidden = true; };
+    /* 侧边导航（桌面常驻 / 手机抽屉） */
+    const side = $('side'), sideMask = $('side-mask'), navToggle = $('nav-toggle');
+    const closeSide = () => {
+      if (side) side.classList.remove('open');
+      if (sideMask) sideMask.hidden = true;
+    };
     if (navToggle) navToggle.onclick = () => {
-      const open = navPop.hidden;
-      navPop.hidden = !open; navMask.hidden = !open;
+      const open = !side.classList.contains('open');
+      side.classList.toggle('open', open);
+      if (sideMask) sideMask.hidden = !open;
     };
-    if (navMask) navMask.onclick = closeNav;
-
-    /* 全局搜索弹窗 */
-    const gsModal = $('gs-modal'), gsMask = $('gs-mask'), gsInput = $('gs-input'), gsBody = $('gs-body');
-    const closeGs = () => { gsModal.hidden = true; gsMask.hidden = true; };
-    const openGs = () => {
-      gsModal.hidden = false; gsMask.hidden = false; closeNav();
-      gsInput.focus(); gsInput.select && gsInput.select();
-      if (!gsInput.value) gsBody.innerHTML = renderGlobalSearch([], '');
-      else gsBody.innerHTML = renderGlobalSearch(globalSearch(gsInput.value), gsInput.value);
-    };
-    const goTo = (page, anchor) => {
-      const tab = document.querySelector('#mainTabs .tab[data-page="' + page + '"]');
-      if (tab) tab.click();
-      const el = anchor ? document.getElementById(anchor) : document.getElementById('page-' + page);
-      if (el && el.scrollIntoView){
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        if (el.classList) { el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1900); }
-      }
-    };
-    if ($('gs-open')) $('gs-open').onclick = openGs;
-    if ($('gs-close')) $('gs-close').onclick = closeGs;
-    if (gsMask) gsMask.onclick = closeGs;
-    if (gsInput) gsInput.oninput = () => {
-      gsBody.innerHTML = renderGlobalSearch(globalSearch(gsInput.value), gsInput.value);
-    };
-    if (gsBody) gsBody.onclick = (e) => {
-      const it = e.target.closest ? e.target.closest('.gs-item') : null;
-      if (!it) return;
-      goTo(it.dataset.page, it.dataset.anchor);
-      closeGs();
-    };
+    if (sideMask) sideMask.onclick = closeSide;
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape'){ closeNav(); closeGs(); closeAu(); }
-      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')){
-        e.preventDefault();
-        if (gsModal.hidden) openGs(); else closeGs();
-      }
+      if (e.key === 'Escape'){ closeSide(); closeAu(); }
     });
 
     /* ============ 登录：游客 / 账号 / 管理员 ============ */
@@ -833,7 +807,7 @@ var UI = (function(){
       };
     }
     if (auBtn) auBtn.onclick = async () => {
-      auModal.hidden = false; auMask.hidden = false; closeNav(); closeGs();
+      auModal.hidden = false; auMask.hidden = false; closeSide();
       await showAuthView('');
     };
     if ($('au-close')) $('au-close').onclick = closeAu;
@@ -856,7 +830,7 @@ var UI = (function(){
         btn.classList.add('active');
         $('page-' + btn.dataset.page).classList.add('active');
         const cp = $('cur-page'); if (cp) cp.textContent = btn.textContent;
-        closeNav();
+        closeSide();
         if (btn.dataset.page === 'danao'){ renderRulesView(); }
         if (btn.dataset.page === 'xunlian'){ renderXunlianStats(); }
         if (btn.dataset.page === 'tuiyan'){ refreshProfiles(); }
@@ -1428,49 +1402,6 @@ var UI = (function(){
     </div>`;
   }
 
-  /* ============ 全局搜索（页面 / 规则 / 案例 / 方法 / 术数知识） ============ */
-  const GS_PAGES = [
-    { page:'paipan',  label:'排盘 · 生辰八字',     anchor:'pn-paipan',  kw:'排盘 八字 四柱 生辰 命 大运 十神 五行' },
-    { page:'zeri',    label:'择日 · 良辰吉日',     anchor:'pn-zeri',    kw:'择日 吉日 黄历时辰 建除 黄道 开市 嫁娶' },
-    { page:'tuiyan',  label:'推演 · 流年大运',     anchor:'pn-tuiyan',  kw:'流年 大运 推演 多流派' },
-    { page:'method',  label:'方法 · 推演方式库',   anchor:'pn-method',  kw:'方法 流派 方式 扶抑 调候 通关' },
-    { page:'yishu',   label:'术数 · 知识与排盘台', anchor:'pn-yishu',   kw:'术数 奇门 紫微 玄空 六爻 梅花 六壬 相学 五格 合婚 太岁' },
-    { page:'jieqi',   label:'节气 · 24 节气精查',  anchor:'pn-jieqi',   kw:'节气 立春 冬至 夏至 交接' },
-    { page:'danao',   label:'大脑 · 决策与案例',   anchor:'pn-danao',   kw:'大脑 规则 案例 决策 训练 3D' },
-    { page:'xunlian', label:'训练 · 思维逻辑',     anchor:'pn-xl',      kw:'训练 练习 题目 错题本' }
-  ];
-
-  function globalSearch(q){
-    const k = String(q || '').trim().toLowerCase();
-    if (!k) return [];
-    const out = [];
-    const pages = GS_PAGES.filter(p => (p.label + ' ' + p.kw).toLowerCase().includes(k));
-    if (pages.length) out.push({ group: '页面', items: pages.map(p => ({ label: p.label, sub: '跳转 ' + p.page + ' 页', page: p.page, anchor: p.anchor })) });
-    if (BRAIN_LIB){
-      const rules = BRAIN_LIB.RULES.filter(r =>
-        (r.id + ' ' + r.title + ' ' + r.keywords.join(' ') + ' ' + r.scene + ' ' + r.condition).toLowerCase().includes(k)).slice(0, 8);
-      if (rules.length) out.push({ group: '大脑规则', items: rules.map(r => ({ label: r.id + ' · ' + r.title, sub: r.scene + ' · ' + r.keywords.slice(0, 4).join(' / '), page: 'danao', anchor: 'pn-danao' })) });
-    }
-    const cases = CASE_LIB.list('全部', k).slice(0, 8);
-    if (cases.length) out.push({ group: '实断案例', items: cases.map(c => ({ label: c.id + ' · ' + c.ask + '（' + c.ben + (c.bian ? ' → ' + c.bian : '') + '）', sub: c.time + ' · ' + c.src, page: 'danao', anchor: 'pn-cases' })) });
-    if (METHODS_LIB && METHODS_LIB.LIST){
-      const ms = METHODS_LIB.LIST.filter(m =>
-        (m.id + ' ' + m.name + ' ' + (m.school || '') + ' ' + (m.principle || '')).toLowerCase().includes(k)).slice(0, 8);
-      if (ms.length) out.push({ group: '推演方法', items: ms.map(m => ({ label: m.id + ' · ' + m.name, sub: m.school || '', page: 'method', anchor: 'pn-method' })) });
-    }
-    const yh = (YISHU_LIB.search(q).hits || []).slice(0, 8);
-    if (yh.length) out.push({ group: '术数知识库', items: yh.map(h => ({ label: h.name + '（' + h.group + '）', sub: (h.text || '').slice(0, 46) + '…', page: 'yishu', anchor: 'pn-yishu' })) });
-    return out;
-  }
-
-  function renderGlobalSearch(groups, q){
-    if (!q || !String(q).trim()) return '<p class="gs-empty">输入关键词，搜页面 / 大脑规则 / 实断案例 / 推演方法 / 术数知识库。</p>';
-    if (!groups || !groups.length) return '<p class="gs-empty">没有命中，换个词（如：应期、回头克、玄空、择日、紫微、案例）。</p>';
-    return groups.map(g => `<div class="gs-group">${esc(g.group)}${g.items.length ? '（' + g.items.length + '）' : ''}</div>` +
-      g.items.map(it => `<div class="gs-item" data-page="${it.page}" data-anchor="${it.anchor || ''}">
-        <b>${esc(it.label)}</b><small>${esc(it.sub || '')}</small></div>`).join('')).join('');
-  }
-
   /* ============ 实断案例库（纯渲染） ============ */
   function renderCases(list){
     if (!list || !list.length) return '<p class="hint">没有匹配的案例，换个关键词（如：财、病、婚、讼、应期、回头克）。</p>';
@@ -1497,8 +1428,7 @@ var UI = (function(){
     renderQiYi, renderGeju, renderYongshen, renderLiuyao, renderMeihua, renderMeihuaResult,
     renderLiuren, renderWushu, renderDianji, renderZiwei, renderBazhai, renderXuankong,
     renderXiangxue, renderWuge, renderHehun, renderTaisui, renderWuyun,
-    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan, renderCases,
-    globalSearch, renderGlobalSearch };
+    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan, renderCases };
 })();
 
 if (typeof document !== 'undefined' && document.readyState !== 'loading') UI.init();
