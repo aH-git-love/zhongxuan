@@ -381,6 +381,16 @@
       <div id="dq-result"></div>
     </div>
     <div class="panel">
+      <h2>实断案例库 · 典籍原案照断（22 案）</h2>
+      <p class="hint">六爻 16 案取自《增删卜易》真实断例（月建日辰 · 卦象 · 断语 · 事后应验），另附玄空/奇门/紫微/择日/八字算法算例 6 案。练法见规则 E04：先遮住断语自断，再对照应验拆差。</p>
+      <div class="form-grid">
+        <div class="field"><label>体系筛选</label><select id="cs-sys"></select></div>
+        <div class="field"><label>关键词</label><input id="cs-kw" type="text" placeholder="如：悔婚 / 回头克 / 应期 / 官讼"></div>
+        <div class="field actions"><button class="btn primary" id="cs-go">检索</button></div>
+      </div>
+      <div id="cs-list" class="cs-list"></div>
+    </div>
+    <div class="panel">
       <h2>规则库（自学习权重）</h2>
       <div class="field actions"><button class="btn" id="dn-reset">重置权重</button></div>
       <div id="dn-rules"></div>
@@ -443,6 +453,7 @@
 <script src="js/ziwei.js"></script>
 <script src="js/xuankong.js"></script>
 <script src="js/liuyao.js"></script>
+<script src="js/cases.js"></script>
 <script src="js/trainer.js"></script>
 <script src="js/app.js"></script>
 <script>
