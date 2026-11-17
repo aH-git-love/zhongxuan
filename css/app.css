@@ -483,3 +483,45 @@ td{ word-break:break-word; }
   .pp-t .pp-lbl{ font-size:10px; }
 }
 
+
+/* ============ 紫微十二宫盘 ============ */
+.zw-board{
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:repeat(4,minmax(86px,auto));
+  gap:4px;
+}
+.zw-cell{
+  border:1px solid var(--line); border-radius:6px; padding:6px 7px; background:var(--panel2);
+  display:flex; flex-direction:column; gap:3px; font-size:12px; min-width:0;
+}
+.zw-cell-hd{ display:flex; gap:6px; align-items:baseline; }
+.zw-pname{ color:var(--gold2); font-size:12px; letter-spacing:1px; }
+.zw-gz{ margin-left:auto; color:var(--dim); font-size:11px; }
+.zw-stars{ line-height:1.95; font-size:12px; word-break:break-word; }
+.zw-dy{ margin-top:auto; font-size:10.5px; color:var(--dim); }
+.zw-cur{ color:var(--gold2); margin-left:4px; font-weight:600; }
+.zw-ming{ border-color:var(--gold); background:rgba(200,169,74,.07); }
+.zw-now{ box-shadow:inset 0 0 0 1px rgba(200,169,74,.45); }
+.zw-shen{ color:var(--blue); font-size:10px; margin-left:2px; }
+.zw-empty{ color:#495061; }
+.zw-center{
+  grid-area:2/2/4/4; border:1px dashed var(--line); border-radius:6px; padding:10px 12px;
+  display:flex; flex-direction:column; justify-content:center; gap:4px;
+  background:#12151b; font-size:12px; min-width:0;
+}
+.zw-c-ju{ color:var(--gold2); font-size:15px; letter-spacing:2px; }
+.zw-c-line{ color:var(--dim); }
+.zw-c-sh{ color:var(--gold2); }
+@media (max-width:720px){
+  .zw-board{ grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:repeat(4,minmax(70px,auto)); gap:3px; }
+  .zw-cell{ padding:4px 5px; }
+  .zw-stars{ font-size:11px; line-height:1.7; }
+  .zw-center{ padding:6px; font-size:11px; }
+  .zw-c-ju{ font-size:13px; }
+}
+
+/* 三盘卡片标题（panel 内的 card 层） */
+.card.pp-panel h3{
+  font-size:14px; color:var(--gold2); letter-spacing:2px; margin-bottom:10px;
+  padding-bottom:7px; border-bottom:1px solid var(--line); font-weight:600;
+}
+.card.pp-panel .pp-t, .card.pp-panel table{ font-size:13px; }
