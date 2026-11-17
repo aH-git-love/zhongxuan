@@ -1014,20 +1014,108 @@ var UI = (function(){
       });
     }
 
-    /* 页面切换 */
-    document.querySelectorAll('#mainTabs .tab').forEach(btn => {
+    /* ============ 体系切换：中玄 / 塔罗 ============ */
+    const sysBtns = document.querySelectorAll('#sys-switch .sys-btn');
+    function setSys(s){
+      const sys = s === 'tarot' ? 'tarot' : 'zx';
+      if (document.body && document.body.setAttribute) document.body.setAttribute('data-sys', sys);
+      document.querySelectorAll('.side-nav').forEach(n => {
+        n.hidden = sys === 'tarot' ? n.id !== 'tarotTabs' : n.id !== 'mainTabs';
+      });
+      document.querySelectorAll('#sys-switch .sys-btn').forEach(b => {
+        if (b.classList) b.classList.toggle('active', b.dataset.sys === sys);
+      });
+      const sh = $('side-head');
+      if (sh) sh.textContent = sys === 'tarot' ? '塔罗导航' : '功能导航';
+      const first = document.querySelector((sys === 'tarot' ? '#tarotTabs' : '#mainTabs') + ' .tab');
+      if (first && first.click) first.click();
+      try { localStorage.setItem('zx_sys', sys); } catch (e){ /* 隐私模式忽略 */ }
+    }
+    sysBtns.forEach(b => { b.onclick = () => setSys(b.dataset.sys); });
+
+    /* 页面切换（两套导航通用） */
+    document.querySelectorAll('.side-nav .tab').forEach(btn => {
       btn.onclick = () => {
-        document.querySelectorAll('#mainTabs .tab').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.side-nav .tab').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
-        $('page-' + btn.dataset.page).classList.add('active');
+        const pg = $('page-' + btn.dataset.page);
+        if (pg) pg.classList.add('active');
         const cp = $('cur-page'); if (cp) cp.textContent = btn.textContent;
         closeSide();
-        if (btn.dataset.page === 'danao'){ renderRulesView(); }
-        if (btn.dataset.page === 'xunlian'){ renderXunlianStats(); }
-        if (btn.dataset.page === 'tuiyan'){ refreshProfiles(); runTuiyan(); }
+        const pid = btn.dataset.page;
+        if (pid === 'danao'){ renderRulesView(); }
+        if (pid === 'xunlian'){ renderXunlianStats(); }
+        if (pid === 'tuiyan'){ refreshProfiles(); runTuiyan(); }
+        if (pid === 'tlib'){ renderTarotLibView(); }
+        if (pid === 'tspread' && $('ts-list')) $('ts-list').innerHTML = renderTarotSpreads();
+        if (pid === 'tbasic' && $('tb-body')) $('tb-body').innerHTML = renderTarotBasics();
       };
     });
+    let sysInit = 'zx';
+    try { sysInit = localStorage.getItem('zx_sys') || 'zx'; } catch (e){ sysInit = 'zx'; }
+    setSys(sysInit);
+
+    /* ============ 塔罗抽牌台 ============ */
+    if ($('tr-spread')) $('tr-spread').innerHTML = TAROT_LIB.SPREADS.map(s =>
+      `<option value="${s.id}">${esc(s.name)}（${s.positions.length} 张）</option>`).join('');
+    if ($('tr-spread')) $('tr-spread').value = 'three';
+    let lastDraw = null;
+    function doTarotDraw(){
+      if (!TAROT_LIB) return;
+      const revRate = +($('tr-rev') ? $('tr-rev').value : 0.35);
+      const res = TAROT_LIB.draw({
+        spreadId: $('tr-spread') ? $('tr-spread').value : 'three',
+        question: $('tr-q') ? $('tr-q').value.trim() : '',
+        reverseRate: revRate, allowReverse: revRate > 0
+      });
+      lastDraw = res;
+      if ($('tr-result')) $('tr-result').innerHTML = renderTarotDraw(res);
+    }
+    if ($('tr-draw')) $('tr-draw').onclick = doTarotDraw;
+    if ($('tr-again')) $('tr-again').onclick = doTarotDraw;
+    if ($('tr-spread')) $('tr-spread').onchange = () => { if (lastDraw) doTarotDraw(); };
+    if ($('tr-copy')) $('tr-copy').onclick = () => {
+      if (!lastDraw){ alert('先抽一次牌'); return; }
+      const an = TAROT_LIB.analyze(lastDraw);
+      const v = TAROT_LIB.verdict(lastDraw, an);
+      const lines = [
+        '【中玄 · 塔罗】' + lastDraw.spread.name + (lastDraw.question ? '｜' + lastDraw.question : ''),
+        '结论：' + v.line,
+        '加权分 ' + an.score + '｜大牌 ' + an.majorRatio + '%｜逆位 ' + an.revCount + '/' + lastDraw.cards.length + '｜主导元素 ' + an.domEl,
+        ''
+      ];
+      lastDraw.cards.forEach(c => {
+        lines.push(`${c.pos.name}：${c.card.name}${c.rev ? '（逆位）' : '（正位）'} — ${c.rev ? c.card.rev : c.card.up}`);
+      });
+      if (an.notes.length){ lines.push('', '结构：' + an.notes.join('；')); }
+      if (an.advices.length){ lines.push('', '建议：'); an.advices.forEach((a, i) => lines.push((i + 1) + '. ' + a)); }
+      const text = lines.join('\n');
+      const done = () => alert('结论已复制，去粘贴吧');
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+      } else fallbackCopy(text, done);
+    };
+    function fallbackCopy(text, done){
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); ta.remove(); done();
+      } catch (e){ alert('复制失败，请手动选择文字'); }
+    }
+    /* 牌库 */
+    if ($('tl-group')) $('tl-group').innerHTML = TAROT_LIB.groups().map(g => `<option>${esc(g)}</option>`).join('');
+    function renderTarotLibView(){
+      if (!$('tl-list')) return;
+      $('tl-list').innerHTML = renderTarotLibrary($('tl-group') ? $('tl-group').value : '全部', $('tl-kw') ? $('tl-kw').value : '');
+    }
+    if ($('tl-group')) $('tl-group').onchange = renderTarotLibView;
+    if ($('tl-kw')) $('tl-kw').oninput = renderTarotLibView;
+    /* 首次进入塔罗时渲染静态页 */
+    if ($('ts-list')) $('ts-list').innerHTML = renderTarotSpreads();
+    if ($('tb-body')) $('tb-body').innerHTML = renderTarotBasics();
+    if ($('tl-list')) renderTarotLibView();
 
     /* 默认日期 */
     const now = new Date();
@@ -1829,6 +1917,172 @@ var UI = (function(){
     </div>`;
   }
 
+  /* ============ 塔罗：抽牌 / 牌库 / 牌阵 / 入门 ============ */
+  const TAROT_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
+    ? require('./tarot.js').TAROT
+    : (typeof TAROT !== 'undefined' ? TAROT : null);
+  const ROMAN = ['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
+
+  function trCardFace(c, rev, posName, idx){
+    const card = c;
+    const big = card.arcana === '大牌';
+    return `<div class="tr-card${rev ? ' tr-rev' : ''}">
+      <div class="tr-pos">${esc(posName || '')}</div>
+      <div class="tr-face">
+        <span class="tr-sym">${big ? esc(ROMAN[card.num] || '') : card.sym}</span>
+        <b>${esc(card.name)}</b>
+        <small>${big ? '大牌 · ' + esc(card.el) + ' · ' + esc(card.planet || '') : esc(card.suitName) + ' · ' + esc(card.el) + ' · ' + esc(String(card.num))}</small>
+      </div>
+      <div class="tr-kw">${esc(rev ? card.rev : card.up)}</div>
+      ${rev ? '<span class="tr-rv">逆</span>' : ''}
+      ${idx ? `<span class="tr-idx">${idx}</span>` : ''}
+    </div>`;
+  }
+
+  function renderTarotDraw(result){
+    if (!result || !result.cards || !result.cards.length) return '<p class="hint">先选择牌阵再抽牌。</p>';
+    const an = TAROT_LIB.analyze(result);
+    const v = TAROT_LIB.verdict(result, an);
+    const spread = result.spread;
+    const boardCls = spread.id === 'cross' ? 'tr-board tr-cross' : 'tr-board';
+    const cardsHtml = result.cards.map((c, i) => {
+      const inner = trCardFace(c.card, c.rev, c.pos.name, i + 1);
+      if (spread.id === 'cross') return inner.replace('class="tr-card', `style="grid-area:tp${i + 1}" class="tr-card`);
+      return inner;
+    }).join('');
+    const rows = result.cards.map(c => `<tr>
+      <td>${esc(c.pos.name)}</td>
+      <td><b>${esc(c.card.name)}</b>${c.rev ? ' <span class="tag red">逆</span>' : ''}<br><small style="color:var(--dim2)">${esc(c.card.suitName)} · ${esc(c.card.el)}</small></td>
+      <td>${c.rev ? '<span class="ty-badge ty-bad">逆</span>' : '<span class="ty-badge ty-good">正</span>'}</td>
+      <td style="text-align:left">${esc(c.rev ? c.card.rev : c.card.up)}</td>
+      <td style="text-align:left">${esc(c.card.advice || '')}</td>
+    </tr>`).join('');
+    const elLine = Object.keys(an.elements).map(k => `${k} ${an.elements[k]}`).join(' · ') || '—';
+    const suitLine = Object.keys(an.suits).filter(k => k !== '大阿尔卡纳').map(k => `${k} ${an.suits[k]}`).join(' · ') || '—';
+    return `<div class="panel pp-panel">
+      <h2>塔罗抽牌 · ${esc(spread.name)}${result.question ? ' · ' + esc(result.question) : ''}</h2>
+      <div class="ty-verdict">
+        <div class="ty-v-main">结论：<b>${esc(v.line)}</b>${v.best ? `；最强位 ${esc(v.best)}` : ''}${v.worst ? `；最弱位 ${esc(v.worst)}` : ''}</div>
+        <div class="ty-v-tags">
+          <span class="ty-badge ${an.norm >= 0.35 ? 'ty-good' : an.norm <= -0.35 ? 'ty-bad' : 'ty-mid'}">${esc(an.tone)}</span>
+          <span>加权分 ${an.score > 0 ? '+' : ''}${an.score}</span>
+          <span>大牌 ${an.majorRatio}%</span>
+          <span>逆位 ${an.revCount}/${result.cards.length}</span>
+          <span>主导元素 ${esc(an.domEl)}</span>
+          ${an.missEl.length ? `<span>缺 ${esc(an.missEl.join('、'))}</span>` : ''}
+        </div>
+      </div>
+      <div class="pp-top">
+        <div class="pp-main">
+          <div class="pp-cap">牌阵（${result.cards.length} 张 · 逆位左上角标「逆」）</div>
+          <div class="${boardCls}">${cardsHtml}</div>
+        </div>
+        <div class="pp-brief">
+          <div class="kv"><span>问题</span><b>${esc(result.question || '未填写')}</b></div>
+          <div class="kv"><span>牌阵</span><b>${esc(spread.name)}</b></div>
+          <div class="kv"><span>张数 / 逆位</span><b>${result.cards.length} 张 · ${an.revCount} 逆</b></div>
+          <div class="kv"><span>大牌占比</span><b>${an.majorRatio}%</b></div>
+          <div class="kv"><span>元素分布</span><b>${esc(elLine)}</b></div>
+          <div class="kv"><span>花色分布</span><b>${esc(suitLine)}</b></div>
+          <div class="kv"><span>主导花色</span><b>${esc(an.domSuit)}</b></div>
+          <div class="kv"><span>随机种子</span><b>${esc(String(result.seed))}</b></div>
+        </div>
+      </div>
+      <div class="pp-sec">
+        <h3>逐牌解读（正逆位分开给义）</h3>
+        <table class="ty-table"><thead><tr><th>位置</th><th>牌</th><th>正逆</th><th>核心义</th><th>提示</th></tr></thead><tbody>${rows}</tbody></table>
+      </div>
+      <div class="pp-sec">
+        <h3>元素 · 花色 · 结构自动统计</h3>
+        <div class="ty-points">
+          ${an.notes.map(n => `<div class="ty-point"><small style="flex:1 1 100%">${esc(n)}</small></div>`).join('') || '<div class="ty-point"><small style="flex:1 1 100%">结构均衡，无突出偏向</small></div>'}
+        </div>
+      </div>
+      <div class="pp-sec">
+        <h3>建议（从抽到的牌里自动提炼，最多三条）</h3>
+        <ol class="ty-flow">${(an.advices.length ? an.advices : ['先把问题收窄成一个能回答的句子，再抽一次']).map(a => `<li>${esc(a)}</li>`).join('')}</ol>
+      </div>
+      <details class="pp-more">
+        <summary>牌阵位置语义 · 逆位流派 · 使用边界</summary>
+        <table><thead><tr><th>位</th><th>位置</th><th>该位要看什么</th></tr></thead><tbody>
+          ${spread.positions.map((p, i) => `<tr><td>${i + 1}</td><td>${esc(p.name)}</td><td style="text-align:left">${esc(p.desc)}</td></tr>`).join('')}
+        </tbody></table>
+        <p class="hint">逆位四种通行读法：① 遮蔽（正位义被挡住）② 内化（义向内发生，不外显）③ 能量阻滞（该能量过强或过弱）④ 反义（取其相反）。本引擎的逆位分数按「阻滞 + 内化」口径给值，概不简单取反。牌不预言必然，只描述当下能量结构与最可能的走向；医疗、法律、财务等实质决策请找对应专业人士，塔罗只用来厘清自己的判断。</p>
+      </details>
+    </div>`;
+  }
+
+  function renderTarotLibrary(filter, kw){
+    const list = TAROT_LIB.search(kw).filter(c => {
+      if (!filter || filter === '全部') return true;
+      if (filter === '大牌') return c.arcana === '大牌';
+      if (filter === '小牌') return c.arcana === '小牌';
+      return c.suitName === filter;
+    });
+    if (!list.length) return '<p class="hint">没有命中的牌，换个词（如：权杖、逆位、结束、承诺）。</p>';
+    return `<p class="hint">共 ${list.length} 张 · 点开看正逆位完整义与提示。数据基准：Rider–Waite–Smith（1909 公版）+ Waite《The Pictorial Key to the Tarot》。</p>` +
+      list.map(c => `<details class="card tr-lib">
+        <summary><b>${esc(c.name)}</b>${c.en ? ' <small>' + esc(c.en) + '</small>' : ''}
+          <span class="tag gold">${esc(c.arcana)}</span><span class="tag">${esc(c.suitName)}</span><span class="tag blue">${esc(c.el)}</span></summary>
+        <div class="kv"><span>正位</span><b>${esc(c.up)}</b></div>
+        <div class="kv"><span>逆位</span><b>${esc(c.rev)}</b></div>
+        <div class="kv"><span>提示</span><b>${esc(c.advice)}</b></div>
+        ${c.numMeaning ? `<div class="kv"><span>数位</span><b>${esc(c.numMeaning)}</b></div>` : ''}
+        ${c.planet ? `<div class="kv"><span>对应</span><b>${esc(c.el)} · ${esc(c.planet)}</b></div>` : ''}
+      </details>`).join('');
+  }
+
+  function renderTarotSpreads(){
+    return TAROT_LIB.SPREADS.map(s => `<div class="card">
+      <h3>${esc(s.name)} <span class="tag gold" style="float:right">${s.positions.length} 张</span></h3>
+      <p class="hint" style="margin-bottom:8px">${esc(s.desc)}</p>
+      <table><thead><tr><th>位</th><th>位置</th><th>看什么</th></tr></thead><tbody>
+        ${s.positions.map((p, i) => `<tr><td>${i + 1}</td><td>${esc(p.name)}</td><td style="text-align:left">${esc(p.desc)}</td></tr>`).join('')}
+      </tbody></table>
+      <div class="kv"><span>适合问</span><b>${esc(s.need)}</b></div>
+    </div>`).join('');
+  }
+
+  function renderTarotBasics(){
+    const el = TAROT_LIB.SUITS.map(s => `<tr><td>${esc(s.name)}</td><td>${esc(s.el)}</td><td style="text-align:left">${esc(s.domain)}</td></tr>`).join('');
+    const nums = Object.keys(TAROT_LIB.NUM_MEANING).map(k => `<tr><td>${k}</td><td style="text-align:left">${esc(TAROT_LIB.NUM_MEANING[k])}</td></tr>`).join('');
+    const courts = Object.keys(TAROT_LIB.COURT_MEANING).map(k => `<tr><td>${esc(k)}</td><td style="text-align:left">${esc(TAROT_LIB.COURT_MEANING[k])}</td></tr>`).join('');
+    return `<div class="card">
+      <h3>为什么是 78 张</h3>
+      <p class="hint">22 张大阿尔卡纳（编号 0–21，讲人生大主题与命运转折）+ 56 张小阿尔卡纳（四花色 × 14 张：A–10 加 侍从/骑士/王后/国王，讲具体的生活事件）。大牌多＝主题由命运层面主导；小牌多＝事在人为，落在日常细节。</p>
+    </div>
+    <div class="card"><h3>四花色的元素与领域</h3>
+      <table><thead><tr><th>花色</th><th>元素</th><th>主领域</th></tr></thead><tbody>${el}</tbody></table>
+      <p class="hint">元素缺失或过旺，是解阵的关键线索：火＝行动、水＝情感、风＝思维、土＝落地。</p>
+    </div>
+    <div class="card"><h3>数字 1–10 的骨架义</h3>
+      <table><tbody>${nums}</tbody></table>
+    </div>
+    <div class="card"><h3>宫廷牌四阶</h3>
+      <table><tbody>${courts}</tbody></table>
+      <p class="hint">宫廷牌可指人（某个年龄/气质的角色），也可指态度（你此刻用哪种姿态应对）。同一张牌在「指人」与「指态度」之间，看问题类型决定。</p>
+    </div>
+    <div class="card"><h3>逆位四种读法（选定一种，别混着用）</h3>
+      <ol class="ty-flow">
+        <li><b>遮蔽</b>：正位的意思被挡在暗处，还在，只是没显出来。</li>
+        <li><b>内化</b>：这张牌的能量向内发生（比如「太阳逆」＝喜悦在内心里，不外显）。</li>
+        <li><b>能量阻滞</b>：该能量过强或过弱，需要调节（比如「权杖十逆」＝终于肯卸担子）。</li>
+        <li><b>反义</b>：直接取相反义（比如「恶魔逆」＝解脱）。</li>
+      </ol>
+      <p class="hint">本引擎按「阻滞 + 内化」口径给逆位分值，并在逐牌表里给出逆位专属义，不简单取反。</p>
+    </div>
+    <div class="card"><h3>怎么问才准（三个硬规矩）</h3>
+      <ol class="ty-flow">
+        <li><b>一个问题只问一次</b>：同一问题反复抽，抽到的是你的焦虑，不是答案。</li>
+        <li><b>问自己能影响的</b>：「他会不会回来」不如「我该怎么面对这段关系」。</li>
+        <li><b>给时间范围</b>：默认三个月内；超过半年的问题，牌面信息会失效。</li>
+      </ol>
+    </div>
+    <div class="card"><h3>与中玄的分工</h3>
+      <p class="hint">八字/紫微看的是「结构与长期节奏」（一生的旺衰、大运流年）；塔罗看的是「此刻的能量与选择」（一件事、一个月、一段关系）。体系的边界要守住：不混断、不互相背书。中玄那边的四柱、紫微、玄空、六爻结论，和塔罗结论打架时，各自按各自口径说，最后落到「你现在能做什么」。</p>
+    </div>`;
+  }
+
   /* ============ 实断案例库（纯渲染） ============ */
   function renderCases(list){
     if (!list || !list.length) return '<p class="hint">没有匹配的案例，换个关键词（如：财、病、婚、讼、应期、回头克）。</p>';
@@ -1855,7 +2109,8 @@ var UI = (function(){
     renderQiYi, renderGeju, renderYongshen, renderLiuyao, renderMeihua, renderMeihuaResult,
     renderLiuren, renderWushu, renderDianji, renderZiwei, renderBazhai, renderXuankong,
     renderXiangxue, renderWuge, renderHehun, renderTaisui, renderWuyun,
-    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan, renderCases };
+    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan, renderCases,
+    renderTarotDraw, renderTarotLibrary, renderTarotSpreads, renderTarotBasics };
 })();
 
 if (typeof document !== 'undefined' && document.readyState !== 'loading') UI.init();
