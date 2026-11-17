@@ -1,12 +1,12 @@
 /* 中玄 · 推演台 —— Service Worker（离线缓存，PWA 用）
  * 仅在 http/https 下注册；file:// 双击打开时不生效，也不影响使用。 */
-const CACHE = 'zhongxuan-v10';
+const CACHE = 'zhongxuan-v11';
 const ASSETS = [
   './', './index.html',
   './css/app.css',
   './js/core.js', './js/astro.js', './js/bazi.js', './js/almanac.js',
   './js/methods.js', './js/yishu.js', './js/qimen.js', './js/brain.js',
-  './js/danao3d.js', './js/ziwei.js', './js/xuankong.js', './js/liuyao.js', './js/cases.js', './js/auth.js', './js/trainer.js', './js/app.js',
+  './js/danao3d.js', './js/ziwei.js', './js/xuankong.js', './js/liuyao.js', './js/tarot.js', './js/cases.js', './js/auth.js', './js/trainer.js', './js/app.js',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png',
   './manifest.webmanifest'
 ];
