@@ -15,38 +15,20 @@
 </head>
 <body>
 <header class="topbar">
+  <button class="btn nav-toggle" id="nav-toggle" aria-label="打开导航">☰</button>
   <div class="brand">
     <span class="logo">☯</span>
     <h1>中玄 · 推演台</h1>
+    <span class="sub" id="cur-page">排盘</span>
   </div>
   <div class="top-right">
-    <span class="cur-page" id="cur-page">排盘</span>
     <button class="btn auth-btn" id="auth-btn" title="登录 / 账号"><span class="auth-txt">未登录</span></button>
-    <button class="btn gs-btn" id="gs-open" title="Ctrl + K">🔍 搜索</button>
-    <button class="btn nav-toggle" id="nav-toggle">☰ 导航</button>
   </div>
 </header>
-<div class="gs-mask" id="au-mask" hidden></div>
-<div class="gs-modal au-modal" id="au-modal" hidden>
-  <div class="gs-bar">
-    <span class="gs-icon">👤</span><b id="au-title">登录</b>
-    <button class="btn gs-close" id="au-close">关闭</button>
-  </div>
-  <div class="gs-body" id="au-body"></div>
-</div>
-<div class="gs-mask" id="gs-mask" hidden></div>
-<div class="gs-modal" id="gs-modal" hidden>
-  <div class="gs-bar">
-    <span class="gs-icon">🔍</span>
-    <input id="gs-input" type="text" placeholder="全局搜索：页面 / 大脑规则 / 实断案例 / 推演方法 / 术数知识（如：应期、回头克、玄空、择日）" autocomplete="off">
-    <button class="btn gs-close" id="gs-close">Esc</button>
-  </div>
-  <div class="gs-body" id="gs-body"></div>
-</div>
-<div class="nav-mask" id="nav-mask" hidden></div>
-<nav class="nav-pop" id="nav-pop" hidden>
-  <div class="nav-pop-head">快速导航</div>
-  <div class="tabs" id="mainTabs">
+
+<aside class="side" id="side">
+  <div class="side-head">功能导航</div>
+  <nav class="side-nav" id="mainTabs">
     <button class="tab active" data-page="paipan">排盘</button>
     <button class="tab" data-page="zeri">择日</button>
     <button class="tab" data-page="tuiyan">推演</button>
@@ -55,8 +37,19 @@
     <button class="tab" data-page="jieqi">节气</button>
     <button class="tab" data-page="danao">大脑</button>
     <button class="tab" data-page="xunlian">训练</button>
+  </nav>
+  <div class="side-foot">离线可用 · 数据存本机</div>
+</aside>
+<div class="side-mask" id="side-mask" hidden></div>
+
+<div class="gs-mask" id="au-mask" hidden></div>
+<div class="gs-modal au-modal" id="au-modal" hidden>
+  <div class="gs-bar">
+    <span class="gs-icon">👤</span><b id="au-title">登录</b>
+    <button class="btn gs-close" id="au-close">关闭</button>
   </div>
-</nav>
+  <div class="gs-body" id="au-body"></div>
+</div>
 
 <main>
   <!-- ============ 排盘 ============ -->
