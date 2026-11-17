@@ -923,7 +923,7 @@ var UI = (function(){
         lunarMonth: lunarMonthNum(lun.month), lunarDay: lun.day,
         yearGan: pan.pillars[0].gan, hour: h, gender
       });
-      $('zw-result').innerHTML = renderZiweiPan(zi);
+      $('zw-result').innerHTML = renderZiweiPan(zi, Math.max(1, now.getFullYear() - y + 1));
     };
 
     /* ============ 玄空宅命盘 ============ */
@@ -1279,7 +1279,7 @@ var UI = (function(){
   }
 
   /* ============ 紫微排盘卡（纯渲染） ============ */
-  function renderZiweiPan(zi){
+  function renderZiweiPan(zi, age){
     if (!zi) return '<p class="hint">生日或时刻不合法，排不出来。请检查日期与 0-23 点时刻。</p>';
     const tag = s => {
       const lv = s.brightness ? s.brightness.level : '';
@@ -1287,18 +1287,87 @@ var UI = (function(){
       const tagHtml = lv ? `<sup class="${lvCls.trim()}">${esc(lv)}</sup>` : '';
       return (s.sihua ? `<b class="zw-sh">${esc(s.name)}<sup>${esc(s.sihua)}</sup></b>` : esc(s.name)) + tagHtml;
     };
+    /* 十二宫按地支固定上盘：巳午未申 / 辰…酉 / 卯…戌 / 寅丑子亥，中宫 2×2 */
+    const POS = { '巳':[1,1],'午':[1,2],'未':[1,3],'申':[1,4],'辰':[2,1],'酉':[2,4],
+                  '卯':[3,1],'戌':[3,4],'寅':[4,1],'丑':[4,2],'子':[4,3],'亥':[4,4] };
+    const palOf = idx => zi.palaces.find(p => p.idx === idx);
+    const curDy = (typeof age === 'number' && age > 0)
+      ? zi.palaces.findIndex((p, i) => age >= zi.dayun[i].start && age <= zi.dayun[i].end) : -1;
+    const cells = zi.palaces.map((p, i) => {
+      const pos = POS[p.zhi] || [1, 1];
+      const isMing = p.name === '命宫';
+      const isShen = zi.shenGong.zhi === p.zhi;
+      const isCur = i === curDy;
+      return `<div class="zw-cell${isMing ? ' zw-ming' : ''}${isCur ? ' zw-now' : ''}" style="grid-row:${pos[0]};grid-column:${pos[1]}">
+        <div class="zw-cell-hd"><span class="zw-pname">${esc(p.name)}</span>${isShen ? '<sup class="zw-shen">身</sup>' : ''}<span class="zw-gz">${esc(p.gan + p.zhi)}</span></div>
+        <div class="zw-stars">${p.stars.length ? p.stars.map(tag).join(' ') : '<span class="zw-empty">—</span>'}</div>
+        <div class="zw-dy">${zi.dayun[i].start}-${zi.dayun[i].end}${isCur ? '<b class="zw-cur">当前</b>' : ''}</div>
+      </div>`;
+    }).join('');
+    /* 四化自动落宫：年干四化星 → 落在哪一宫（据此看应期与轻重） */
+    const shList = ['禄','权','科','忌'].map(k => {
+      const star = zi.sihua[k];
+      const pl = zi.palaces.find(p => p.stars.some(s => s.name === star));
+      const br = pl && pl.stars.find(s => s.name === star).brightness;
+      return { k, star, palace: pl ? pl.name + '（' + pl.gan + pl.zhi + '）' : '未入宫',
+        br: br ? br.level : '', rank: br ? br.rank : 3 };
+    });
+    const shRows = shList.map(r => `<tr>
+      <td><b class="tag gold">化${r.k}</b></td><td class="gz" style="font-size:16px">${esc(r.star)}</td>
+      <td>${esc(r.palace)}</td>
+      <td class="${r.rank >= 5 ? 'zw-miao' : r.rank <= 1 ? 'zw-xian' : 'zw-ping'}">${esc(r.br || '平')}</td>
+    </tr>`).join('');
+    /* 三方四正（命宫 + 三合 + 对宫） */
+    const mingIdx = zi.mingGong.idx;
+    const sanfang = [0, 4, 8, 6].map(d => palOf((mingIdx + d) % 12)).filter(Boolean).map(p =>
+      `<div class="xk-dir-cell"><b>${esc(p.name)}</b><small>${esc(p.gan + p.zhi)}：${p.stars.length ? p.stars.map(s => esc(s.name) + (s.brightness ? `<i class="zw-ping">${esc(s.brightness.level)}</i>` : '')).join(' ') : '空宫'}</small></div>`).join('');
     const rows = zi.palaces.map((p, i) => `<tr>
       <td class="gz">${esc(p.name)}</td>
       <td>${esc(p.gan + p.zhi)}</td>
       <td style="text-align:left">${p.stars.length ? p.stars.map(tag).join('　') : '—'}</td>
-      <td>${zi.dayun[i].start}-${zi.dayun[i].end}</td>
+      <td>${zi.dayun[i].start}-${zi.dayun[i].end}${i === curDy ? ' <b class="zw-cur">当前</b>' : ''}</td>
     </tr>`).join('');
-    const sh = ['禄','权','科','忌'].map(k => `${zi.sihua[k]}${k}`).join('·');
-    return `<div class="card">
-      <h3>命宫 ${esc(zi.mingGong.gz)} · ${esc(zi.ju.wx)}${zi.ju.n}局<span class="tag gold" style="float:right">${esc(zi.gender)} · ${esc(zi.yearGan)}年干 · 大限 ${zi.ju.n} 岁起${zi.forward ? '顺行' : '逆行'}</span></h3>
-      <p class="hint">身宫在「${esc(zi.shenGong.zhi)}」；紫微落「${esc(zi.zwZhi)}」、天府落「${esc(zi.tfZhi)}」；年干四化：${esc(sh)}（星名右上角标出禄权科忌）；星名后小标为庙旺利陷——<b class="zw-miao">庙旺</b>主星得地有力、<b class="zw-xian">落陷</b>主星失地打折（通行简表，派别略有差异）。</p>
-      <table><thead><tr><th>宫名</th><th>干支</th><th>主星（四化 · 庙旺利陷）</th><th>大限</th></tr></thead><tbody>${rows}</tbody></table>
-      <p class="hint">三方四正看格局见大脑规则 Z03；主星象义见上方「十四主星」面板；庙旺利陷定星力强弱，四化定应期轻重，先看庙旺再谈四化；两套体系结论打架见 G10。</p>
+    const shText = shList.map(r => r.star + r.k).join('·');
+    return `<div class="card pp-panel">
+      <h3>紫微命盘 · 命宫 ${esc(zi.mingGong.gz)} · ${esc(zi.ju.wx)}${zi.ju.n}局</h3>
+      <div class="pp-top">
+        <div class="pp-main">
+          <div class="pp-cap">十二宫盘（命宫 / 身宫 / 当前大限已标）</div>
+          <div class="zw-board">
+            ${cells}
+            <div class="zw-center">
+              <div class="zw-c-ju">${esc(zi.ju.wx)}${zi.ju.n}局</div>
+              <div class="zw-c-line">命宫 ${esc(zi.mingGong.gz)}</div>
+              <div class="zw-c-line">身宫 ${esc(zi.shenGong.zhi)}</div>
+              <div class="zw-c-line">紫微 ${esc(zi.zwZhi)} · 天府 ${esc(zi.tfZhi)}</div>
+              <div class="zw-c-line zw-c-sh">${esc(shText)}</div>
+              <div class="zw-c-line" style="color:var(--dim)">${esc(zi.gender)} · ${esc(zi.yearGan)}年干 · ${zi.forward ? '顺行' : '逆行'}</div>
+            </div>
+          </div>
+        </div>
+        <div class="pp-brief">
+          <div class="kv"><span>命宫</span><b>${esc(zi.mingGong.gz)}</b></div>
+          <div class="kv"><span>身宫</span><b>${esc(zi.shenGong.zhi)}</b></div>
+          <div class="kv"><span>五行局</span><b>${esc(zi.ju.wx)}${zi.ju.n}局（${zi.ju.n} 岁起限）</b></div>
+          <div class="kv"><span>大限</span><b>${zi.forward ? '顺行' : '逆行'}</b></div>
+          <div class="kv"><span>当前大限</span><b>${curDy >= 0 ? esc(zi.palaces[curDy].name) + ' ' + zi.dayun[curDy].start + '-' + zi.dayun[curDy].end + ' 岁' : '—'}</b></div>
+          <div class="kv"><span>紫微 / 天府</span><b>${esc(zi.zwZhi)} / ${esc(zi.tfZhi)}</b></div>
+          <div class="kv"><span>年干四化</span><b>${esc(shText)}</b></div>
+        </div>
+      </div>
+      <div class="pp-sec">
+        <h3>四化定位（星名右上标禄权科忌，此处按宫列出）</h3>
+        <table><thead><tr><th>四化</th><th>星</th><th>落宫</th><th>庙旺利陷</th></tr></thead><tbody>${shRows}</tbody></table>
+      </div>
+      <div class="pp-sec">
+        <h3>三方四正（命 / 三合 / 对宫，看格局用）</h3>
+        <div class="xk-dir">${sanfang}</div>
+      </div>
+      <details class="pp-more">
+        <summary>十二宫明细表 · 庙旺利陷说明</summary>
+        <table><thead><tr><th>宫名</th><th>干支</th><th>主星（四化 · 庙旺利陷）</th><th>大限</th></tr></thead><tbody>${rows}</tbody></table>
+        <p class="hint">星名后小标为庙旺利陷——<b class="zw-miao">庙旺</b>主星得地有力、<b class="zw-xian">落陷</b>主星失地打折（通行简表，派别略有差异）。三方四正看格局见大脑规则 Z03；主星象义见术数页「十四主星」面板；庙旺定星力、四化定应期轻重，先看庙旺再谈四化；两套体系结论打架见 G10。</p>
+      </details>
     </div>`;
   }
 
@@ -1356,6 +1425,16 @@ var UI = (function(){
     };
     const rows = [[4,9,2],[3,5,7],[8,1,6]].map(row =>
       '<div class="xk-row">' + row.map(p => cell(x.grid.find(g => g.palace === p))).join('') + '</div>').join('');
+
+    /* 自动推导：当运旺星落宫（山星 / 向星）与判局解释 */
+    const wangShan = x.grid.filter(g => g.shan === x.yun).map(g => g.name + '宫');
+    const wangXiang = x.grid.filter(g => g.xiang === x.yun).map(g => g.name + '宫');
+    const judgeNote = x.judge === '旺山旺向' ? '旺星到山到向，丁财两旺，为上局'
+      : x.judge === '上山下水' ? '山星下水、向星上山，丁财两损，宜静不宜动、以形势补救'
+      : x.judge === '双星到向' ? '旺星齐到向首，利财不利丁，前方宜有水'
+      : x.judge === '双星到坐' ? '旺星齐到坐山，利丁不利财，坐后宜有山'
+      : '旺星未归正位，结合山水形势另断';
+
     /* 流月断方位表 */
     let dirHtml = '';
     if (zb && zb.yearPan && zb.monthPan){
@@ -1365,40 +1444,178 @@ var UI = (function(){
         dirHtml = `<h4 style="margin:12px 0 6px;font-size:13px;color:var(--gold2);letter-spacing:2px">本月宜动方位（前 8）</h4>
         <div class="xk-dir">${dir.good.map(r => `<div class="xk-dir-cell"><b>${esc(r.name)}</b>${lv(r.level)}<small>${esc(r.palaceName)}宫 · ${r.reasons.join('·') || '中性'}</small></div>`).join('')}</div>
         <h4 style="margin:12px 0 6px;font-size:13px;color:var(--gold2);letter-spacing:2px">本月忌动方位（后 8）</h4>
-        <div class="xk-dir">${dir.bad.map(r => `<div class="xk-dir-cell"><b>${esc(r.name)}</b>${lv(r.level)}<small>${esc(r.palaceName)}宫 · ${r.reasons.join('·') || '中性'}</small></div>`).join('')}</div>
-        <p class="hint">评分为合成口径：年紫白（吉 +2/凶 −2）+ 月紫白（吉 +2/凶 −2）+ 宅盘山向星当运得气（+3/+2）+ 上山下水坐向（−1）；「宜动」≥4、「可动」≥1、「慎动」其余、「忌动」≤−3。动土修造以凶星到位、太岁与三煞方位为硬约束，本表仅作叠加参考。</p>`;
+        <div class="xk-dir">${dir.bad.map(r => `<div class="xk-dir-cell"><b>${esc(r.name)}</b>${lv(r.level)}<small>${esc(r.palaceName)}宫 · ${r.reasons.join('·') || '中性'}</small></div>`).join('')}</div>`;
       }
     }
-    return `<div class="card">
-      <h3>${x.yun} 运 · ${esc(x.mountain)}山${esc(x.facing)}向 · ${esc(x.judge)}<span class="tag gold" style="float:right">${x.year ? esc(String(x.year)) + ' 年造 · ' : ''}${esc(x.mi.yuan)}元龙（坐 ${x.mi.yin ? '阴' : '阳'}）· ${esc(x.fi.yuan)}元龙（向 ${x.fi.yin ? '阴' : '阳'}）</span></h3>
-      <p class="hint">山星 ${x.shanStart} 入中${x.mi.yin ? '逆' : '顺'}飞（${esc(x.mi.name)}），向星 ${x.xiangStart} 入中${x.fi.yin ? '逆' : '顺'}飞（${esc(x.fi.name)}）；每格上排左「山星」右「向星」，中为运星，下为二十四山与宫名；金色数字 = 当运旺星。${zb && zb.yearStar ? `年紫白 ${zb.yearStar} 入中${zb.yearLuck === '吉' ? '（吉）' : zb.yearLuck === '凶' ? '（凶）' : ''}` : ''}${zb && zb.monthStar ? `，月紫白 ${zb.monthStar} 入中${zb.monthLuck === '吉' ? '（吉）' : zb.monthLuck === '凶' ? '（凶）' : ''}；★ 吉星（1/6/8）、✖ 凶星（2/5/7）、无标平星（3/4/9）` : ''}。</p>
-      <div class="xk-grid">${rows}</div>
-      ${dirHtml}
-      <p class="hint">${esc(x.judge)}${x.judge === '旺山旺向' ? '：旺星到山到向，丁财两旺，为上局' : x.judge === '上山下水' ? '：山星下水、向星上山，丁财两损，宜静不宜动、以形势补救' : x.judge === '双星到向' ? '：旺星齐到向首，利财不利丁，前方宜有水' : x.judge === '双星到坐' ? '：旺星齐到坐山，利丁不利财，坐后宜有山' : '：旺星未归正位，结合山水形势另断'}；年月紫白为流年流月叠加层，吉星到方可动、凶星到位避动土；三元九运与年紫白见上方玄空面板。</p>
+    const zbText = zb && zb.yearStar
+      ? `年 ${zb.yearStar} 入中（${zb.yearLuck}）${zb.monthStar ? ' · 月 ' + zb.monthStar + ' 入中（' + zb.monthLuck + '）' : ''}`
+      : '未叠加';
+    return `<div class="card pp-panel">
+      <h3>玄空宅命盘 · ${x.yun} 运 · ${esc(x.mountain)}山${esc(x.facing)}向 · ${esc(x.judge)}</h3>
+      <div class="pp-top">
+        <div class="pp-main">
+          <div class="pp-cap">九宫飞星盘（上排左山星右向星 · 中运星 · 下二十四山与宫名 · 金色为当运旺星）</div>
+          <div class="xk-grid">${rows}</div>
+        </div>
+        <div class="pp-brief">
+          <div class="kv"><span>元运</span><b>${x.yun} 运</b></div>
+          <div class="kv"><span>坐向</span><b>${esc(x.mountain)}山${esc(x.facing)}向</b></div>
+          <div class="kv"><span>判局</span><b>${esc(x.judge)}</b></div>
+          <div class="kv"><span>坐元龙</span><b>${esc(x.mi.yuan)}元·${x.mi.yin ? '阴' : '阳'}（山星 ${x.shanStart} 入中${x.mi.yin ? '逆' : '顺'}飞）</b></div>
+          <div class="kv"><span>向元龙</span><b>${esc(x.fi.yuan)}元·${x.fi.yin ? '阴' : '阳'}（向星 ${x.xiangStart} 入中${x.fi.yin ? '逆' : '顺'}飞）</b></div>
+          <div class="kv"><span>山星旺落</span><b>${wangShan.join('、') || '—'}</b></div>
+          <div class="kv"><span>向星旺落</span><b>${wangXiang.join('、') || '—'}</b></div>
+          <div class="kv"><span>紫白叠加</span><b>${esc(zbText)}</b></div>
+          ${x.year ? `<div class="kv"><span>造年</span><b>${esc(String(x.year))} 年</b></div>` : ''}
+        </div>
+      </div>
+      <div class="pp-sec">
+        <h3>判局解读</h3>
+        <p class="hint" style="margin:0">${esc(x.judge)}：${esc(judgeNote)}。年月紫白为流年流月叠加层，吉星到方可动、凶星到位避动土；三元九运与年紫白见术数页「三元九运」面板。</p>
+      </div>
+      ${dirHtml ? `<div class="pp-sec"><h3>流月断方位（自动叠加年紫白 + 月紫白 + 宅盘得当运）</h3>${dirHtml}
+        <p class="hint" style="margin-top:8px">评分为合成口径：年紫白（吉 +2/凶 −2）+ 月紫白（吉 +2/凶 −2）+ 宅盘山向星当运得气（+3/+2）+ 上山下水坐向（−1）；「宜动」≥4、「可动」≥1、「慎动」其余、「忌动」≤−3。动土修造以凶星到位、太岁与三煞方位为硬约束，本表仅作叠加参考。</p></div>` : ''}
     </div>`;
   }
 
-  /* ============ 六爻摇卦排盘卡（纯渲染） ============ */
+  /* ============ 六爻摇卦排盘卡（纯渲染 · 自动推导用神与应期） ============ */
   function renderLiuyaoPan(ly){
     if (!ly) return '<p class="hint">六爻输入不合法（需 6 个 6/7/8/9），排不出来。</p>';
     const sym = y => y.yin ? '▅　▅　▅' : '▅▅▅▅▅';
+    const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+    const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+    const LIUHE = { 子:'丑', 丑:'子', 寅:'亥', 亥:'寅', 卯:'戌', 戌:'卯', 辰:'酉', 酉:'辰', 巳:'申', 申:'巳', 午:'未', 未:'午' };
+    const SHENG = { 木:'火', 火:'土', 土:'金', 金:'水', 水:'木' };
+    const KE = { 木:'土', 土:'水', 水:'火', 火:'金', 金:'木' };
+    const wxRel = (me, other) => {
+      if (!me || !other) return '';
+      if (me === other) return '同';
+      if (SHENG[other] === me) return '生';
+      if (SHENG[me] === other) return '泄';
+      if (KE[other] === me) return '克';
+      if (KE[me] === other) return '耗';
+      return '';
+    };
+    const monthWx = LIUYAO_LIB.ZHI_WX[ly.monthZhi] || '';
+    const dayWx = LIUYAO_LIB.ZHI_WX[ly.dayZhi] || '';
+    /* 旬空：由日干支推旬空两支（甲子旬戌亥空 …） */
+    const gi = GAN.indexOf(ly.dayGan), zi = ZHI.indexOf(ly.dayZhi);
+    const xkIdx = (((zi - gi) % 12) + 12) % 12;
+    const xunKong = gi >= 0 && zi >= 0 ? [ZHI[(xkIdx + 10) % 12], ZHI[(xkIdx + 11) % 12]] : [];
+    const isKong = y => xunKong.includes(y.zhi);
+
     const rows = ly.yao.slice().reverse().map(y => `<tr>
-      <td>${y.pos === 1 ? ly.sixGods ? esc(ly.sixGods[0]) : '—' : esc(ly.sixGods[y.pos - 1])}</td>
+      <td>${y.pos === 1 ? (ly.sixGods ? esc(ly.sixGods[0]) : '—') : esc(ly.sixGods[y.pos - 1])}</td>
       <td>${esc(y.liuqin)}</td>
       <td class="gz">${esc(y.gan + y.zhi)}<small>${esc(y.zhiWx)}</small></td>
       <td><span class="${y.yin ? 'ly-yin' : 'ly-yang'}">${sym(y)}</span>${y.dong ? `<b class="ly-dong">${esc(y.dongType)}</b>` : ''}</td>
       <td>${y.shi ? '<b class="ly-shi">世</b>' : y.ying ? '<b class="ly-ying">应</b>' : ''}</td>
-      <td>${y.yuepo ? '<span class="tag red">月破</span>' : ''}${y.andong ? '<span class="tag blue">暗动</span>' : ''}</td>
+      <td>${y.yuepo ? '<span class="tag red">月破</span>' : ''}${y.andong ? '<span class="tag blue">暗动</span>' : ''}${isKong(y) ? '<span class="tag">旬空</span>' : ''}</td>
     </tr>`).join('');
+
+    /* 六冲卦 / 六合卦（本卦与变卦各判一次） */
+    const CHONG_GUA = ['乾为天','坤为地','震为雷','巽为风','坎为水','离为火','艮为山','兑为泽','天雷无妄','雷天大壮'];
+    const HE_GUA = ['天地否','地天泰','雷地豫','地雷复','水泽节','泽水困','山火贲','火山旅'];
+    const judeGua = n => !n ? '' : CHONG_GUA.includes(n) ? '六冲卦' : HE_GUA.includes(n) ? '六合卦' : '常卦';
+    const benJudge = judeGua(ly.name), bianJudge = ly.bian ? judeGua(ly.bian) : '';
+
+    /* 自动推导①：用神定位（六亲出现在哪几爻 + 与月建日令关系） */
+    const LIUQIN5 = ['父母','兄弟','子孙','妻财','官鬼'];
+    const yongRows = LIUQIN5.map(q => {
+      const hits = ly.yao.map(y => (y.liuqin === q ? y : null)).filter(Boolean);
+      if (!hits.length) return `<tr><td>${q}</td><td colspan="3" style="color:var(--dim)">卦中无此六亲（看伏神：${(ly.missing || []).filter(m => m.liuqin === q).map(m => m.gan + m.zhi + '伏' + m.from + '爻').join('、') || '无'}）</td></tr>`;
+      const parts = hits.map(y => {
+        const rel = [wxRel(y.zhiWx, monthWx) ? '月' + wxRel(y.zhiWx, monthWx) : '', wxRel(y.zhiWx, dayWx) ? '日' + wxRel(y.zhiWx, dayWx) : ''].filter(Boolean).join('·');
+        return `<b>${y.pos}爻</b> ${esc(y.gan + y.zhi)} ${y.shi ? '世' : y.ying ? '应' : ''}${y.dong ? '（动）' : ''}<small style="color:var(--dim)"> ${rel}</small>`;
+      }).join('<br>');
+      return `<tr><td>${q}</td><td>${hits.length} 处</td><td style="text-align:left">${parts}</td></tr>`;
+    }).join('');
+
+    /* 自动推导②：应期推算（动爻值日 / 逢合 / 逢冲；旬空爻出空） */
+    const dongs = ly.yao.filter(y => y.dong);
+    const targets = [];
+    dongs.forEach(y => {
+      targets.push({ label: `${y.pos}爻${y.liuqin}${y.gan + y.zhi}动`, zhi: y.zhi, kind: '值日' });
+      targets.push({ label: `${y.pos}爻${y.liuqin}动`, zhi: LIUHE[y.zhi], kind: '逢合' });
+      targets.push({ label: `${y.pos}爻${y.liuqin}动`, zhi: ZHI[(ZHI.indexOf(y.zhi) + 6) % 12], kind: '逢冲' });
+    });
+    const kongYao = ly.yao.filter(y => isKong(y) && !y.dong);
+    kongYao.forEach(y => {
+      targets.push({ label: `${y.pos}爻${y.liuqin}${y.gan + y.zhi}旬空`, zhi: y.zhi, kind: '出空（值日）' });
+      targets.push({ label: `${y.pos}爻${y.liuqin}旬空`, zhi: ZHI[(ZHI.indexOf(y.zhi) + 6) % 12], kind: '出空（冲实）' });
+    });
+    /* 若 ALMANAC 可用，扫未来 60 天找出对应日干支 */
+    let yqRows = '';
+    if (targets.length){
+      const ALM = (typeof require !== 'undefined' && typeof module !== 'undefined')
+        ? require('./almanac.js').ALMANAC
+        : (typeof ALMANAC !== 'undefined' ? ALMANAC : null);
+      const found = {};
+      if (ALM){
+        const today = new Date();
+        for (let i = 0; i < 60; i++){
+          const d = new Date(today.getTime() + i * 86400000);
+          let info = null;
+          try { info = ALM.dayInfo(d.getFullYear(), d.getMonth() + 1, d.getDate()) } catch (e){ info = null }
+          if (!info) continue;
+          const zhiName = typeof info.dayZhi === 'number' ? ZHI[info.dayZhi] : info.dayZhi;
+          const ganName = typeof info.dayGan === 'number' ? GAN[info.dayGan] : info.dayGan;
+          if (!zhiName) continue;
+          targets.forEach(t => {
+            if (!t || t.zhi !== zhiName) return;
+            const key = t.label + '|' + t.kind + '|' + t.zhi;
+            if (!found[key]) found[key] = [];
+            if (found[key].length < 2) found[key].push(`${d.getMonth() + 1}/${d.getDate()} ${ganName || ''}${zhiName}`);
+          });
+        }
+      }
+      const seen = {};
+      yqRows = targets.filter(t => {
+        const key = t.label + '|' + t.kind + '|' + t.zhi;
+        if (seen[key]) return false; seen[key] = 1; return true;
+      }).map(t => {
+        const key = t.label + '|' + t.kind + '|' + t.zhi;
+        const dates = (found && found[key] && found[key].length) ? found[key].join('、') : '—';
+        return `<tr><td>${esc(t.label)}</td><td>${esc(t.kind)}</td><td class="gz" style="font-size:16px">${esc(t.zhi)}日</td><td>${esc(dates)}</td></tr>`;
+      }).join('');
+      if (!yqRows) yqRows = '<tr><td colspan="4" style="color:var(--dim)">无动爻亦无旬空，以用神旺衰与月日冲合定应期（如静待逢冲逢值之月日）。</td></tr>';
+    }
+
     const fushi = ly.missing.length
       ? ly.missing.map(m => `${esc(m.liuqin)}（伏神 ${esc(m.gan + m.zhi)}，本宫首卦第 ${m.from} 爻）`).join('；')
       : '六亲齐全，无伏神';
-    const bian = ly.bian ? `变卦「${esc(ly.bian)}」` : '无动爻，不变卦';
-    return `<div class="card">
-      <h3>${esc(ly.name)}<span class="tag gold" style="float:right">${esc(ly.gong)}宫（${esc(ly.gongWx)}）· 世 ${ly.shi} 应 ${ly.ying}${ly.monthZhi ? ' · 月建 ' + esc(ly.monthZhi) : ''}${ly.dayGan && ly.dayZhi ? ' · 日令 ' + esc(ly.dayGan + ly.dayZhi) : ''}</span></h3>
-      <p class="hint">纳甲京房装卦：干支 → 宫五行定六亲 → 日干起六神（初爻青龙起）；月破 = 爻支冲月建，暗动 = 静爻被日冲；老阳○老阴×为动爻。${esc(bian)}；${esc(fushi)}。</p>
-      <table class="ly-table"><thead><tr><th>六神</th><th>六亲</th><th>干支</th><th>爻象</th><th>世应</th><th>标志</th></tr></thead><tbody>${rows}</tbody></table>
-      <p class="hint">断法：先取用神（问财看妻财、问婚看官鬼/妻财、问病看官鬼与世爻、问事看应与世的关系），旺衰看月建日令生扶冲合；动爻变卦定事体转折，伏神待引拨出之日；详见上方「六爻」面板与大脑规则 Q02/Q10。</p>
+    return `<div class="card pp-panel">
+      <h3>六爻卦 · ${esc(ly.name)}${ly.bian ? ' → ' + esc(ly.bian) : ''} · ${esc(ly.gong)}宫</h3>
+      <div class="pp-top">
+        <div class="pp-main">
+          <div class="pp-cap">本卦（自下而上：六神 / 六亲 / 纳甲 / 爻象 / 世应 / 标志）</div>
+          <table class="ly-table"><thead><tr><th>六神</th><th>六亲</th><th>干支</th><th>爻象</th><th>世应</th><th>标志</th></tr></thead><tbody>${rows}</tbody></table>
+        </div>
+        <div class="pp-brief">
+          <div class="kv"><span>卦名</span><b>${esc(ly.name)}${ly.bian ? ' → ' + esc(ly.bian) : ''}</b></div>
+          <div class="kv"><span>卦宫</span><b>${esc(ly.gong)}宫（${esc(ly.gongWx)}）</b></div>
+          <div class="kv"><span>世应</span><b>世 ${ly.shi} 爻 · 应 ${ly.ying} 爻</b></div>
+          <div class="kv"><span>月建</span><b>${esc(ly.monthZhi || '—')}（${esc(monthWx || '—')}）</b></div>
+          <div class="kv"><span>日令</span><b>${esc((ly.dayGan || '') + (ly.dayZhi || ''))}（${esc(dayWx || '—')}）</b></div>
+          <div class="kv"><span>旬空</span><b>${xunKong.length ? esc(xunKong.join('、')) : '—'}</b></div>
+          <div class="kv"><span>动爻</span><b>${dongs.length} 爻${dongs.length ? '（' + dongs.map(y => y.pos + '爻').join('、') + '）' : ''}</b></div>
+          <div class="kv"><span>卦体</span><b>${esc(benJudge)}${ly.bian ? ' → ' + esc(bianJudge) : ''}</b></div>
+          <div class="kv"><span>伏神</span><b>${ly.missing.length} 处</b></div>
+        </div>
+      </div>
+      <div class="pp-sec">
+        <h3>用神定位（六亲分布 · 与月建日令关系：生/克/同/泄/耗）</h3>
+        <table><thead><tr><th>六亲</th><th>出现</th><th>爻位 · 干支 · 旺衰粗判</th></tr></thead><tbody>${yongRows}</tbody></table>
+        <p class="hint" style="margin:6px 0 0">${esc(fushi)}</p>
+      </div>
+      <div class="pp-sec">
+        <h3>应期推算（自动：动爻值日 / 逢合 / 逢冲，旬空爻出空，扫未来 60 日）</h3>
+        <table><thead><tr><th>爻</th><th>取法</th><th>应期支</th><th>最近应期日</th></tr></thead><tbody>${yqRows}</tbody></table>
+      </div>
+      <details class="pp-more">
+        <summary>断法说明 · 六冲六合卦变口诀</summary>
+        <p class="hint">纳甲京房装卦：干支 → 宫五行定六亲 → 日干起六神（初爻青龙起）；月破＝爻支冲月建，暗动＝静爻被日冲，旬空＝日辰旬内空亡两支（出空应事、冲实亦验）。本卦${esc(benJudge)}${ly.bian ? '，变卦' + esc(bianJudge) : ''}：六冲卦事散难成（占病却主速愈）、六合卦事聚易成（占讼却主缠绵）；六冲变六合为散而复聚直断吉，六合变六冲为始荣终悴。断法：先取用神（问财看妻财、问婚看官鬼/妻财、问病看官鬼与世爻），旺衰看月建日令生扶冲合，动爻变卦定转折，伏神待引拨出之日；详见术数页「六爻」面板与大脑规则 Q02 / Q10 / Q12-Q15。</p>
+      </details>
     </div>`;
   }
 
