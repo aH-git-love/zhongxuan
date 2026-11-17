@@ -24,6 +24,9 @@ var UI = (function(){
   const LIUYAO_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
     ? require('./liuyao.js').LIUYAO
     : LIUYAO;
+  const CASE_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
+    ? require('./cases.js').CASES_LIB
+    : CASES_LIB;
   /* 农历月名 → 数字 */
   const LUNAR_MONTH_N = { 正:1, 一:1, 二:2, 三:3, 四:4, 五:5, 六:6, 七:7, 八:8, 九:9, 十:10, 十一:11, 十二:12, 冬:11, 腊:12 };
   const lunarMonthNum = (name) => LUNAR_MONTH_N[String(name).replace('闰','')] || 1;
@@ -953,6 +956,14 @@ var UI = (function(){
     $('dn-scene').onchange = renderRulesView;
     $('dn-reset').onclick = () => { BRAIN.resetWeights(); renderRulesView(); alert('权重已重置'); };
 
+    /* ============ 实断案例库 ============ */
+    $('cs-sys').innerHTML = CASE_LIB.SYS.map(s => `<option>${s}</option>`).join('');
+    const csRun = () => { $('cs-list').innerHTML = renderCases(CASE_LIB.list($('cs-sys').value, $('cs-kw').value)); };
+    $('cs-go').onclick = csRun;
+    $('cs-kw').onkeydown = e => { if (e.key === 'Enter') csRun(); };
+    $('cs-sys').onchange = csRun;
+    $('cs-list').innerHTML = renderCases(CASE_LIB.list('全部', ''));
+
     let curDq = null;
     $('dq-go').onclick = () => {
       curDq = BRAIN.genDecisionQuiz($('dq-scene').value);
@@ -1290,6 +1301,24 @@ var UI = (function(){
     </div>`;
   }
 
+  /* ============ 实断案例库（纯渲染） ============ */
+  function renderCases(list){
+    if (!list || !list.length) return '<p class="hint">没有匹配的案例，换个关键词（如：财、病、婚、讼、应期、回头克）。</p>';
+    return list.map(c => `<details class="cs-card">
+      <summary><b>${esc(c.id)}</b> · ${esc(c.sys)} · ${esc(c.ask)}<span class="cs-time">${esc(c.time)}</span></summary>
+      <div class="cs-meta">
+        <span class="tag gold">${esc(c.ben || '—')}${c.bian ? ' → ' + esc(c.bian) : ''}</span>
+        <span class="tag">${esc(c.src)}</span>
+        ${(c.rule || []).map(r => `<span class="tag blue">${esc(r)}</span>`).join('')}
+      </div>
+      ${c.yao && c.yao.length ? `<table class="cs-yao"><tbody>${c.yao.map(y =>
+        `<tr><td>${esc(y[0])}</td><td>${y[1] ? `<b class="${y[1] === '世' ? 'ly-shi' : 'ly-ying'}">${esc(y[1])}</b>` : ''}</td><td>${y[2] ? `<b class="ly-dong">${esc(y[2])}</b>` : ''}</td></tr>`).join('')}</tbody></table>` : ''}
+      <p class="cs-line"><b>用神</b>：${esc(c.yong || '—')}</p>
+      <p class="cs-line"><b>断</b>：${esc(c.duan)}</p>
+      <p class="cs-line cs-yan"><b>验</b>：${esc(c.yan || '—')}</p>
+    </details>`).join('');
+  }
+
   /* 浏览器加载即初始化；Node 下只导出纯渲染函数 */
   return { esc, pad2, validYMD, renderPaipan, renderZeri, renderHuangli, renderTuiyan,
     renderTuiyanMulti, renderMethods, renderSop, renderMethodRules, renderCross,
@@ -1298,7 +1327,7 @@ var UI = (function(){
     renderQiYi, renderGeju, renderYongshen, renderLiuyao, renderMeihua, renderMeihuaResult,
     renderLiuren, renderWushu, renderDianji, renderZiwei, renderBazhai, renderXuankong,
     renderXiangxue, renderWuge, renderHehun, renderTaisui, renderWuyun,
-    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan };
+    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan, renderCases };
 })();
 
 if (typeof document !== 'undefined' && document.readyState !== 'loading') UI.init();
