@@ -21,6 +21,9 @@ var UI = (function(){
   const XUANKONG_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
     ? require('./xuankong.js').XUANKONG
     : XUANKONG;
+  const LIUYAO_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
+    ? require('./liuyao.js').LIUYAO
+    : LIUYAO;
   /* 农历月名 → 数字 */
   const LUNAR_MONTH_N = { 正:1, 一:1, 二:2, 三:3, 四:4, 五:5, 六:6, 七:7, 八:8, 九:9, 十:10, 十一:11, 十二:12, 冬:11, 腊:12 };
   const lunarMonthNum = (name) => LUNAR_MONTH_N[String(name).replace('闰','')] || 1;
@@ -834,6 +837,22 @@ var UI = (function(){
       $('xk-result').innerHTML = renderXuankongPan(x, zb);
     };
 
+    /* ============ 六爻摇卦排盘 ============ */
+    const lyOpts = [['9','老阳○（动）'],['7','少阳'],['8','少阴'],['6','老阴×（动）']];
+    $('ly-inputs').innerHTML = [0,1,2,3,4,5].map(i =>
+      `<select data-ly="${i}">${lyOpts.map(o => `<option value="${o[0]}"${o[0] === '7' || o[0] === '8' ? ' selected' : ''}>${o[1]}</option>`).join('')}</select>`).join('');
+    const lyRun = lines => {
+      const today = new Date();
+      const info = ALMANAC.dayInfo(today.getFullYear(), today.getMonth() + 1, today.getDate());
+      const r = LIUYAO_LIB.pai({ lines, dayGan: info.dayGan, dayZhi: info.dayZhi, monthZhi: info.monthZhi });
+      $('ly-result').innerHTML = renderLiuyaoPan(r);
+    };
+    $('ly-shake').onclick = () => lyRun(LIUYAO_LIB.shake());
+    $('ly-go').onclick = () => {
+      const lines = [0,1,2,3,4,5].map(i => +document.querySelector(`[data-ly="${i}"]`).value);
+      lyRun(lines);
+    };
+
     /* ============ 整月吉凶日历 ============ */
     $('mc-matter').innerHTML = ALMANAC.MATTER_NAMES.map(x => `<option>${x}</option>`).join('');
     $('mc-zodiac').innerHTML = '<option value="">不限</option>' + SX.map(z => `<option>${z}</option>`).join('');
@@ -1247,6 +1266,30 @@ var UI = (function(){
     </div>`;
   }
 
+  /* ============ 六爻摇卦排盘卡（纯渲染） ============ */
+  function renderLiuyaoPan(ly){
+    if (!ly) return '<p class="hint">六爻输入不合法（需 6 个 6/7/8/9），排不出来。</p>';
+    const sym = y => y.yin ? '▅　▅　▅' : '▅▅▅▅▅';
+    const rows = ly.yao.slice().reverse().map(y => `<tr>
+      <td>${y.pos === 1 ? ly.sixGods ? esc(ly.sixGods[0]) : '—' : esc(ly.sixGods[y.pos - 1])}</td>
+      <td>${esc(y.liuqin)}</td>
+      <td class="gz">${esc(y.gan + y.zhi)}<small>${esc(y.zhiWx)}</small></td>
+      <td><span class="${y.yin ? 'ly-yin' : 'ly-yang'}">${sym(y)}</span>${y.dong ? `<b class="ly-dong">${esc(y.dongType)}</b>` : ''}</td>
+      <td>${y.shi ? '<b class="ly-shi">世</b>' : y.ying ? '<b class="ly-ying">应</b>' : ''}</td>
+      <td>${y.yuepo ? '<span class="tag red">月破</span>' : ''}${y.andong ? '<span class="tag blue">暗动</span>' : ''}</td>
+    </tr>`).join('');
+    const fushi = ly.missing.length
+      ? ly.missing.map(m => `${esc(m.liuqin)}（伏神 ${esc(m.gan + m.zhi)}，本宫首卦第 ${m.from} 爻）`).join('；')
+      : '六亲齐全，无伏神';
+    const bian = ly.bian ? `变卦「${esc(ly.bian)}」` : '无动爻，不变卦';
+    return `<div class="card">
+      <h3>${esc(ly.name)}<span class="tag gold" style="float:right">${esc(ly.gong)}宫（${esc(ly.gongWx)}）· 世 ${ly.shi} 应 ${ly.ying}${ly.monthZhi ? ' · 月建 ' + esc(ly.monthZhi) : ''}${ly.dayGan && ly.dayZhi ? ' · 日令 ' + esc(ly.dayGan + ly.dayZhi) : ''}</span></h3>
+      <p class="hint">纳甲京房装卦：干支 → 宫五行定六亲 → 日干起六神（初爻青龙起）；月破 = 爻支冲月建，暗动 = 静爻被日冲；老阳○老阴×为动爻。${esc(bian)}；${esc(fushi)}。</p>
+      <table class="ly-table"><thead><tr><th>六神</th><th>六亲</th><th>干支</th><th>爻象</th><th>世应</th><th>标志</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="hint">断法：先取用神（问财看妻财、问婚看官鬼/妻财、问病看官鬼与世爻、问事看应与世的关系），旺衰看月建日令生扶冲合；动爻变卦定事体转折，伏神待引拨出之日；详见上方「六爻」面板与大脑规则 Q02/Q10。</p>
+    </div>`;
+  }
+
   /* 浏览器加载即初始化；Node 下只导出纯渲染函数 */
   return { esc, pad2, validYMD, renderPaipan, renderZeri, renderHuangli, renderTuiyan,
     renderTuiyanMulti, renderMethods, renderSop, renderMethodRules, renderCross,
@@ -1255,7 +1298,7 @@ var UI = (function(){
     renderQiYi, renderGeju, renderYongshen, renderLiuyao, renderMeihua, renderMeihuaResult,
     renderLiuren, renderWushu, renderDianji, renderZiwei, renderBazhai, renderXuankong,
     renderXiangxue, renderWuge, renderHehun, renderTaisui, renderWuyun,
-    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan };
+    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan };
 })();
 
 if (typeof document !== 'undefined' && document.readyState !== 'loading') UI.init();
