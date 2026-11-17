@@ -12,6 +12,12 @@ var UI = (function(){
   const YISHU_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
     ? require('./yishu.js').YISHU
     : YISHU;
+  const BRAIN_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
+    ? require('./brain.js').BRAIN
+    : (typeof BRAIN !== 'undefined' ? BRAIN : null);
+  const METHODS_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
+    ? require('./methods.js').METHODS
+    : (typeof METHODS !== 'undefined' ? METHODS : null);
   const DANAO3D_LIB = (typeof require !== 'undefined' && typeof module !== 'undefined')
     ? require('./danao3d.js').DANAO3D
     : DANAO3D;
@@ -719,7 +725,45 @@ var UI = (function(){
       navPop.hidden = !open; navMask.hidden = !open;
     };
     if (navMask) navMask.onclick = closeNav;
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
+
+    /* 全局搜索弹窗 */
+    const gsModal = $('gs-modal'), gsMask = $('gs-mask'), gsInput = $('gs-input'), gsBody = $('gs-body');
+    const closeGs = () => { gsModal.hidden = true; gsMask.hidden = true; };
+    const openGs = () => {
+      gsModal.hidden = false; gsMask.hidden = false; closeNav();
+      gsInput.focus(); gsInput.select && gsInput.select();
+      if (!gsInput.value) gsBody.innerHTML = renderGlobalSearch([], '');
+      else gsBody.innerHTML = renderGlobalSearch(globalSearch(gsInput.value), gsInput.value);
+    };
+    const goTo = (page, anchor) => {
+      const tab = document.querySelector('#mainTabs .tab[data-page="' + page + '"]');
+      if (tab) tab.click();
+      const el = anchor ? document.getElementById(anchor) : document.getElementById('page-' + page);
+      if (el && el.scrollIntoView){
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (el.classList) { el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1900); }
+      }
+    };
+    if ($('gs-open')) $('gs-open').onclick = openGs;
+    if ($('gs-close')) $('gs-close').onclick = closeGs;
+    if (gsMask) gsMask.onclick = closeGs;
+    if (gsInput) gsInput.oninput = () => {
+      gsBody.innerHTML = renderGlobalSearch(globalSearch(gsInput.value), gsInput.value);
+    };
+    if (gsBody) gsBody.onclick = (e) => {
+      const it = e.target.closest ? e.target.closest('.gs-item') : null;
+      if (!it) return;
+      goTo(it.dataset.page, it.dataset.anchor);
+      closeGs();
+    };
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape'){ closeNav(); closeGs(); }
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')){
+        e.preventDefault();
+        if (gsModal.hidden) openGs(); else closeGs();
+      }
+    });
 
     /* 页面切换 */
     document.querySelectorAll('#mainTabs .tab').forEach(btn => {
@@ -1301,6 +1345,49 @@ var UI = (function(){
     </div>`;
   }
 
+  /* ============ 全局搜索（页面 / 规则 / 案例 / 方法 / 术数知识） ============ */
+  const GS_PAGES = [
+    { page:'paipan',  label:'排盘 · 生辰八字',     anchor:'pn-paipan',  kw:'排盘 八字 四柱 生辰 命 大运 十神 五行' },
+    { page:'zeri',    label:'择日 · 良辰吉日',     anchor:'pn-zeri',    kw:'择日 吉日 黄历时辰 建除 黄道 开市 嫁娶' },
+    { page:'tuiyan',  label:'推演 · 流年大运',     anchor:'pn-tuiyan',  kw:'流年 大运 推演 多流派' },
+    { page:'method',  label:'方法 · 推演方式库',   anchor:'pn-method',  kw:'方法 流派 方式 扶抑 调候 通关' },
+    { page:'yishu',   label:'术数 · 知识与排盘台', anchor:'pn-yishu',   kw:'术数 奇门 紫微 玄空 六爻 梅花 六壬 相学 五格 合婚 太岁' },
+    { page:'jieqi',   label:'节气 · 24 节气精查',  anchor:'pn-jieqi',   kw:'节气 立春 冬至 夏至 交接' },
+    { page:'danao',   label:'大脑 · 决策与案例',   anchor:'pn-danao',   kw:'大脑 规则 案例 决策 训练 3D' },
+    { page:'xunlian', label:'训练 · 思维逻辑',     anchor:'pn-xl',      kw:'训练 练习 题目 错题本' }
+  ];
+
+  function globalSearch(q){
+    const k = String(q || '').trim().toLowerCase();
+    if (!k) return [];
+    const out = [];
+    const pages = GS_PAGES.filter(p => (p.label + ' ' + p.kw).toLowerCase().includes(k));
+    if (pages.length) out.push({ group: '页面', items: pages.map(p => ({ label: p.label, sub: '跳转 ' + p.page + ' 页', page: p.page, anchor: p.anchor })) });
+    if (BRAIN_LIB){
+      const rules = BRAIN_LIB.RULES.filter(r =>
+        (r.id + ' ' + r.title + ' ' + r.keywords.join(' ') + ' ' + r.scene + ' ' + r.condition).toLowerCase().includes(k)).slice(0, 8);
+      if (rules.length) out.push({ group: '大脑规则', items: rules.map(r => ({ label: r.id + ' · ' + r.title, sub: r.scene + ' · ' + r.keywords.slice(0, 4).join(' / '), page: 'danao', anchor: 'pn-danao' })) });
+    }
+    const cases = CASE_LIB.list('全部', k).slice(0, 8);
+    if (cases.length) out.push({ group: '实断案例', items: cases.map(c => ({ label: c.id + ' · ' + c.ask + '（' + c.ben + (c.bian ? ' → ' + c.bian : '') + '）', sub: c.time + ' · ' + c.src, page: 'danao', anchor: 'pn-cases' })) });
+    if (METHODS_LIB && METHODS_LIB.LIST){
+      const ms = METHODS_LIB.LIST.filter(m =>
+        (m.id + ' ' + m.name + ' ' + (m.school || '') + ' ' + (m.principle || '')).toLowerCase().includes(k)).slice(0, 8);
+      if (ms.length) out.push({ group: '推演方法', items: ms.map(m => ({ label: m.id + ' · ' + m.name, sub: m.school || '', page: 'method', anchor: 'pn-method' })) });
+    }
+    const yh = (YISHU_LIB.search(q).hits || []).slice(0, 8);
+    if (yh.length) out.push({ group: '术数知识库', items: yh.map(h => ({ label: h.name + '（' + h.group + '）', sub: (h.text || '').slice(0, 46) + '…', page: 'yishu', anchor: 'pn-yishu' })) });
+    return out;
+  }
+
+  function renderGlobalSearch(groups, q){
+    if (!q || !String(q).trim()) return '<p class="gs-empty">输入关键词，搜页面 / 大脑规则 / 实断案例 / 推演方法 / 术数知识库。</p>';
+    if (!groups || !groups.length) return '<p class="gs-empty">没有命中，换个词（如：应期、回头克、玄空、择日、紫微、案例）。</p>';
+    return groups.map(g => `<div class="gs-group">${esc(g.group)}${g.items.length ? '（' + g.items.length + '）' : ''}</div>` +
+      g.items.map(it => `<div class="gs-item" data-page="${it.page}" data-anchor="${it.anchor || ''}">
+        <b>${esc(it.label)}</b><small>${esc(it.sub || '')}</small></div>`).join('')).join('');
+  }
+
   /* ============ 实断案例库（纯渲染） ============ */
   function renderCases(list){
     if (!list || !list.length) return '<p class="hint">没有匹配的案例，换个关键词（如：财、病、婚、讼、应期、回头克）。</p>';
@@ -1327,7 +1414,8 @@ var UI = (function(){
     renderQiYi, renderGeju, renderYongshen, renderLiuyao, renderMeihua, renderMeihuaResult,
     renderLiuren, renderWushu, renderDianji, renderZiwei, renderBazhai, renderXuankong,
     renderXiangxue, renderWuge, renderHehun, renderTaisui, renderWuyun,
-    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan, renderCases };
+    renderQimenJu, initYishu, renderQimenPan, renderZiweiPan, renderMonthView, renderXuankongPan, renderLiuyaoPan, renderCases,
+    globalSearch, renderGlobalSearch };
 })();
 
 if (typeof document !== 'undefined' && document.readyState !== 'loading') UI.init();
