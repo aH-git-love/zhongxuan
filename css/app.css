@@ -464,6 +464,15 @@ footer .foot-dl{ font-size:12px; padding:6px 14px; white-space:nowrap; }
   to{ opacity:1; transform:none; }
 }
 .nav-pop-head{ font-size:11px; color:var(--dim); letter-spacing:2px; margin:2px 6px 8px; }
+
+/* ============ 六爻排盘 ============ */
+#ly-inputs select{ width:76px; flex:0 0 auto; font-size:13px; padding:8px 6px; }
+.ly-table td, .ly-table th{ white-space:nowrap; }
+.ly-yang{ color:var(--gold2); letter-spacing:2px; }
+.ly-yin{ color:var(--txt); opacity:.85; letter-spacing:2px; }
+.ly-dong{ color:var(--red); margin-left:6px; }
+.ly-shi{ color:var(--gold2); }
+.ly-ying{ color:var(--blue); }
 .nav-pop .tabs{ display:flex; flex-direction:column; gap:6px; flex-wrap:nowrap; }
 .nav-pop .tab{
   width:100%; text-align:left; padding:10px 14px; border-radius:8px;
