@@ -1024,6 +1024,7 @@ var UI = (function(){
       });
       document.querySelectorAll('#sys-switch .sys-btn').forEach(b => {
         if (b.classList) b.classList.toggle('active', b.dataset.sys === sys);
+        b.setAttribute('aria-pressed', b.dataset.sys === sys ? 'true' : 'false');
       });
       const sh = $('side-head');
       if (sh) sh.textContent = sys === 'tarot' ? '塔罗导航' : '功能导航';
@@ -1056,25 +1057,138 @@ var UI = (function(){
     try { sysInit = localStorage.getItem('zx_sys') || 'zx'; } catch (e){ sysInit = 'zx'; }
     setSys(sysInit);
 
-    /* ============ 塔罗抽牌台 ============ */
+    const TAROT_HISTORY_KEY = 'zx_tarot_history_v1';
+    const TAROT_HISTORY_LIMIT = 40;
+    let lastDraw = null;
+    let previousTarotSeed = -1;
+    function newTarotSeed(){
+      let seed = (Date.now() + (++tarotDrawCounter * 2654435761)) >>> 0;
+      try {
+        if (typeof crypto !== 'undefined' && crypto.getRandomValues){
+          const buf = new Uint32Array(1); crypto.getRandomValues(buf); seed = buf[0] >>> 0;
+        } else seed = (seed ^ Math.floor(Math.random() * 0xFFFFFFFF)) >>> 0;
+      } catch (e){ seed = (seed + tarotDrawCounter) >>> 0; }
+      if (seed === previousTarotSeed) seed = (seed + 1) >>> 0;
+      previousTarotSeed = seed;
+      return seed;
+    }
+    let tarotDrawCounter = 0;
+    function loadTarotHistory(){
+      try {
+        const v = JSON.parse(localStorage.getItem(TAROT_HISTORY_KEY) || '[]');
+        return Array.isArray(v) ? v.filter(x => x && x.id && x.spreadId && Array.isArray(x.cards)) : [];
+      } catch (e){ return []; }
+    }
+    function saveTarotHistory(list){
+      try { localStorage.setItem(TAROT_HISTORY_KEY, JSON.stringify(list.slice(0, TAROT_HISTORY_LIMIT))); return true; }
+      catch (e){ return false; }
+    }
+    function snapshotTarot(draw){
+      return {
+        id:String(draw.createdAt || Date.now()) + '-' + String(draw.seed),
+        createdAt:draw.createdAt || Date.now(), spreadId:draw.spread.id,
+        question:draw.question || '', seed:draw.seed, reverseRate:draw.reverseRate,
+        cards:draw.cards.map(c => ({ cardId:c.card.id, rev:!!c.rev, index:c.index, positionName:c.pos.name }))
+      };
+    }
+    function restoreTarot(item){
+      const spread = TAROT_LIB.spreadOf(item.spreadId);
+      const cards = item.cards.map((saved, i) => {
+        const card = TAROT_LIB.byId(saved.cardId);
+        const pos = spread.positions.find(p => p.name === saved.positionName) || spread.positions[i];
+        return card && pos ? { card, rev:!!saved.rev, pos, index:saved.index || i + 1 } : null;
+      }).filter(Boolean);
+      if (!cards.length) return null;
+      return { spread, cards, seed:item.seed, question:item.question || '', mode:'classic', reverseRate:item.reverseRate };
+    }
+    function renderTarotHistory(){
+      const box = $('tr-history-list');
+      if (!box) return;
+      const list = loadTarotHistory();
+      if (!list.length){ box.innerHTML = '<p class="hint">这里会保存最近 40 次抽牌，数据仅留在本机浏览器。</p>'; return; }
+      box.innerHTML = `<div class="tr-history-tools"><span class="hint">最近 ${list.length} 次 · 保存在此设备</span><button class="btn" data-history-clear>清空记录</button></div>` +
+        list.map(item => {
+          const d = new Date(item.createdAt || Number(item.id.split('-')[0]));
+          const date = Number.isNaN(d.getTime()) ? '时间未知' : d.toLocaleString();
+          const s = TAROT_LIB.spreadOf(item.spreadId);
+          const ids = item.cards.map(c => c.cardId).join('、');
+          return `<div class="tr-history-row">
+            <button class="tr-history-open" data-history-open="${esc(item.id)}">
+              <b>${esc(item.question || '未填写问题')}</b><span>${esc(s.name)} · ${item.cards.length} 张</span>
+              <small>${esc(date)} · ${esc(ids)}</small>
+            </button>
+            <button class="btn tr-history-del" data-history-del="${esc(item.id)}" aria-label="删除这条记录">删除</button>
+          </div>`;
+        }).join('');
+    }
+    function showTarotResult(draw, save){
+      lastDraw = draw;
+      if ($('tr-result')) $('tr-result').innerHTML = renderTarotDraw(draw);
+      if ($('tr-copy')) $('tr-copy').disabled = !draw;
+      if (save){
+        const list = loadTarotHistory();
+        const item = snapshotTarot(draw);
+        const next = [item].concat(list.filter(x => x.id !== item.id)).slice(0, TAROT_HISTORY_LIMIT);
+        const ok = saveTarotHistory(next);
+        if (!ok && $('tr-history-status')) $('tr-history-status').textContent = '浏览器存储空间不足，当前结果未加入历史记录。';
+        else if ($('tr-history-status')) $('tr-history-status').textContent = '已保存到本机历史记录。';
+        renderTarotHistory();
+      }
+    }
     if ($('tr-spread')) $('tr-spread').innerHTML = TAROT_LIB.SPREADS.map(s =>
       `<option value="${s.id}">${esc(s.name)}（${s.positions.length} 张）</option>`).join('');
     if ($('tr-spread')) $('tr-spread').value = 'three';
-    let lastDraw = null;
     function doTarotDraw(){
       if (!TAROT_LIB) return;
       const revRate = +($('tr-rev') ? $('tr-rev').value : 0.35);
       const res = TAROT_LIB.draw({
         spreadId: $('tr-spread') ? $('tr-spread').value : 'three',
         question: $('tr-q') ? $('tr-q').value.trim() : '',
-        reverseRate: revRate, allowReverse: revRate > 0
+        reverseRate: revRate, allowReverse: revRate > 0, seed:newTarotSeed()
       });
-      lastDraw = res;
-      if ($('tr-result')) $('tr-result').innerHTML = renderTarotDraw(res);
+      showTarotResult(res, true);
+      if ($('tr-copy')) $('tr-copy').disabled = false;
     }
     if ($('tr-draw')) $('tr-draw').onclick = doTarotDraw;
     if ($('tr-again')) $('tr-again').onclick = doTarotDraw;
-    if ($('tr-spread')) $('tr-spread').onchange = () => { if (lastDraw) doTarotDraw(); };
+    function invalidateTarotDraw(message){
+      if (!lastDraw) return;
+      lastDraw = null;
+      if ($('tr-result')) $('tr-result').innerHTML = `<p class="hint">${esc(message)}</p>`;
+      if ($('tr-copy')) $('tr-copy').disabled = true;
+      if ($('tr-history-status')) $('tr-history-status').textContent = message;
+    }
+    if ($('tr-spread')) $('tr-spread').onchange = () => {
+      /* 切阵只清空旧抽牌，绝不暗中随机重抽；由用户明确点击抽牌。 */
+      invalidateTarotDraw('牌阵已切换，点击「洗牌抽牌」生成新结果。');
+    };
+    if ($('tr-q')) $('tr-q').oninput = () => invalidateTarotDraw('问题已修改，点击「洗牌抽牌」更新抽牌结果。');
+    if ($('tr-rev')) $('tr-rev').onchange = () => invalidateTarotDraw('逆位设置已修改，点击「洗牌抽牌」生成新结果。');
+    if ($('tr-history-list')) $('tr-history-list').onclick = e => {
+      const target = e.target.closest ? e.target.closest('[data-history-open],[data-history-del],[data-history-clear]') : null;
+      if (!target) return;
+      if (target.hasAttribute('data-history-clear')){
+        if (confirm('清空本机保存的全部塔罗记录？')){
+          saveTarotHistory([]); renderTarotHistory();
+          if ($('tr-history-status')) $('tr-history-status').textContent = '历史记录已清空。';
+        }
+        return;
+      }
+      const all = loadTarotHistory();
+      if (target.hasAttribute('data-history-del')){
+        saveTarotHistory(all.filter(x => x.id !== target.getAttribute('data-history-del')));
+        renderTarotHistory(); return;
+      }
+      const item = all.find(x => x.id === target.getAttribute('data-history-open'));
+      if (!item) return;
+      const restored = restoreTarot(item);
+      if (!restored){ alert('记录中的牌数据已失效'); return; }
+      if ($('tr-spread')) $('tr-spread').value = item.spreadId;
+      if ($('tr-q')) $('tr-q').value = item.question || '';
+      showTarotResult(restored, false);
+      if ($('tr-history-status')) $('tr-history-status').textContent = '已载入历史抽牌结果（没有重新洗牌）。';
+      document.getElementById('page-tdraw').scrollIntoView({ behavior:'smooth', block:'start' });
+    };
     if ($('tr-copy')) $('tr-copy').onclick = () => {
       if (!lastDraw){ alert('先抽一次牌'); return; }
       const an = TAROT_LIB.analyze(lastDraw);
@@ -1082,28 +1196,32 @@ var UI = (function(){
       const lines = [
         '【中玄 · 塔罗】' + lastDraw.spread.name + (lastDraw.question ? '｜' + lastDraw.question : ''),
         '结论：' + v.line,
+        '推理：' + v.synthesis,
         '加权分 ' + an.score + '｜大牌 ' + an.majorRatio + '%｜逆位 ' + an.revCount + '/' + lastDraw.cards.length + '｜主导元素 ' + an.domEl,
         ''
       ];
-      lastDraw.cards.forEach(c => {
-        lines.push(`${c.pos.name}：${c.card.name}${c.rev ? '（逆位）' : '（正位）'} — ${c.rev ? c.card.rev : c.card.up}`);
-      });
-      if (an.notes.length){ lines.push('', '结构：' + an.notes.join('；')); }
+      lastDraw.cards.forEach(c => { lines.push(`${c.pos.name}：${c.card.name}${c.rev ? '（逆位）' : '（正位）'} — ${c.rev ? c.card.rev : c.card.up}`); });
+      if (an.notes.length) lines.push('', '结构：' + an.notes.join('；'));
       if (an.advices.length){ lines.push('', '建议：'); an.advices.forEach((a, i) => lines.push((i + 1) + '. ' + a)); }
       const text = lines.join('\n');
-      const done = () => alert('结论已复制，去粘贴吧');
+      const done = () => { if ($('tr-history-status')) $('tr-history-status').textContent = '结论已复制。'; };
       if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText){
         navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
       } else fallbackCopy(text, done);
     };
     function fallbackCopy(text, done){
+      let ta = null;
       try {
-        const ta = document.createElement('textarea');
-        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        ta = document.createElement('textarea'); ta.value = text;
+        ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
         document.body.appendChild(ta); ta.select();
-        document.execCommand('copy'); ta.remove(); done();
-      } catch (e){ alert('复制失败，请手动选择文字'); }
+        const copied = document.execCommand('copy');
+        if (copied) done();
+        else if ($('tr-history-status')) $('tr-history-status').textContent = '复制失败；可在下方结果中长按选择文字。';
+      } catch (e){ if ($('tr-history-status')) $('tr-history-status').textContent = '复制失败；可在下方结果中长按选择文字。'; }
+      finally { if (ta && ta.parentNode) ta.parentNode.removeChild(ta); }
     }
+    renderTarotHistory();
     /* 牌库 */
     if ($('tl-group')) $('tl-group').innerHTML = TAROT_LIB.groups().map(g => `<option>${esc(g)}</option>`).join('');
     function renderTarotLibView(){
@@ -1507,6 +1625,7 @@ var UI = (function(){
     renderRulesView();
 
     /* URL hash 自动演示（便于无头验证与快速体验） */
+    if (typeof location !== 'undefined' && /^#demo(?:-|$)/.test(location.hash) && location.hash !== '#demo-tarot') setSys('zx');
     if (typeof location !== 'undefined' && location.hash === '#demo'){
       $('pp-name').value = '示例'; $('pp-y').value = 1990; $('pp-m').value = 8;
       $('pp-d').value = 15; $('pp-h').value = 14; $('pp-mi').value = 30;
@@ -1950,13 +2069,21 @@ var UI = (function(){
       if (spread.id === 'cross') return inner.replace('class="tr-card', `style="grid-area:tp${i + 1}" class="tr-card`);
       return inner;
     }).join('');
-    const rows = result.cards.map(c => `<tr>
-      <td>${esc(c.pos.name)}</td>
-      <td><b>${esc(c.card.name)}</b>${c.rev ? ' <span class="tag red">逆</span>' : ''}<br><small style="color:var(--dim2)">${esc(c.card.suitName)} · ${esc(c.card.el)}</small></td>
-      <td>${c.rev ? '<span class="ty-badge ty-bad">逆</span>' : '<span class="ty-badge ty-good">正</span>'}</td>
-      <td style="text-align:left">${esc(c.rev ? c.card.rev : c.card.up)}</td>
-      <td style="text-align:left">${esc(c.card.advice || '')}</td>
-    </tr>`).join('');
+    const rows = result.cards.map((c, i) => {
+      const read = an.positionReads && an.positionReads[i];
+      return `<tr>
+      <td data-l="位置">${esc(c.pos.name)}</td>
+      <td data-l="牌"><b>${esc(c.card.name)}</b>${c.rev ? ' <span class="tag red">逆</span>' : ''}<br><small style="color:var(--dim2)">${esc(c.card.suitName)} · ${esc(c.card.el)}</small></td>
+      <td data-l="正逆">${c.rev ? '<span class="ty-badge ty-bad">逆</span>' : '<span class="ty-badge ty-good">正</span>'}</td>
+      <td data-l="核心义" style="text-align:left">${esc(c.rev ? c.card.rev : c.card.up)}</td>
+      <td data-l="位置判断" style="text-align:left">${esc(read ? read.state : c.card.advice || '')}</td>
+    </tr>`;
+    }).join('');
+    const readRows = (an.positionReads || []).map((r, i) => `<div class="tr-reason-row">
+      <div class="tr-reason-head"><b>${esc(r.position)}</b><span>${esc(result.cards[i].card.name)}${result.cards[i].rev ? '（逆位）' : '（正位）'}</span><span class="tr-reason-score">${r.score > 0 ? '+' : ''}${r.score}</span></div>
+      <p>${esc(r.lens)}</p><p class="tr-reason-meaning">牌义：${esc(r.meaning)}</p>
+      <p class="tr-reason-state">判断：${esc(r.state)}</p>
+    </div>`).join('');
     const elLine = Object.keys(an.elements).map(k => `${k} ${an.elements[k]}`).join(' · ') || '—';
     const suitLine = Object.keys(an.suits).filter(k => k !== '大阿尔卡纳').map(k => `${k} ${an.suits[k]}`).join(' · ') || '—';
     return `<div class="panel pp-panel">
@@ -1971,6 +2098,7 @@ var UI = (function(){
           <span>主导元素 ${esc(an.domEl)}</span>
           ${an.missEl.length ? `<span>缺 ${esc(an.missEl.join('、'))}</span>` : ''}
         </div>
+        <p class="tr-synthesis">${esc(v.synthesis || '')}</p>
       </div>
       <div class="pp-top">
         <div class="pp-main">
@@ -1991,6 +2119,10 @@ var UI = (function(){
       <div class="pp-sec">
         <h3>逐牌解读（正逆位分开给义）</h3>
         <table class="ty-table"><thead><tr><th>位置</th><th>牌</th><th>正逆</th><th>核心义</th><th>提示</th></tr></thead><tbody>${rows}</tbody></table>
+      </div>
+      <div class="pp-sec">
+        <h3>按牌阵位置推理（位置语义 → 牌义 → 判断）</h3>
+        <div class="tr-reason-list">${readRows}</div>
       </div>
       <div class="pp-sec">
         <h3>元素 · 花色 · 结构自动统计</h3>
