@@ -351,59 +351,16 @@ node smoke.js    # 297 项：模块拼接加载 + 全链路 + 全部渲染函数
 
 ## 八、是否需要部署到服务器？
 
-**不需要。** 本应用是**纯静态页面**：无后端、无数据库、无网络请求（不打接口、不加载 CDN），双击 `E:\中玄\index.html` 即可在浏览器中直接使用（`file://` 协议完全兼容），数据全部保存在浏览器本地（localStorage）。离线、内网、无服务器环境均可运行。
+**本地运行/开发**：单机可双击 `index.html`；需要局域网手机测试时，运行 `node server.js` 或 `python -m http.server 8765`。正式使用和获取更新请打开唯一官方网址 https://ah-git-love.github.io/zhongxuan/。本地地址不提供发布下载。
 
-如果只是想**多设备访问**（如手机/平板看），再考虑起个静态服务即可，三选一：
+### 唯一官方入口与在线更新
 
-```bash
-# 方式一：Python 自带（Windows/Mac/Linux 都有）
-cd E:\中玄
-python -m http.server 8080
-# 手机连同一 Wi-Fi，访问 http://电脑IP:8080
+**官方网页（唯一下载/使用入口）**：https://ah-git-love.github.io/zhongxuan/
 
-# 方式二：Node
-npx serve E:\中玄
+不再提供 APK、压缩包或其他安装文件下载。Android 手机和 iPhone 都直接用浏览器打开上述网址；需要桌面图标时，使用浏览器自带的「添加到主屏幕」，这不是单独下载一个安装包。
 
-# 方式三：长期使用挂到 IIS / Nginx
-# 把 E:\中玄 整个目录设为站点根目录即可（纯静态托管，无特殊配置）
-```
+网页会通过 Service Worker 自动检查新版本并更新缓存。更新完成后页面会显示「新版已就绪」，点击「立即更新」刷新当前页面即可；本机的抽牌历史和 localStorage 数据保留，无需重新下载或安装新包。页面处于前台时每 5 分钟检查一次，切回前台或网络恢复时也会检查。离线时继续使用已缓存版本，网络恢复后自动检查更新。
 
-注意：起服务访问（`http://`）后，localStorage 的数据与 `file://` 打开时的数据**不互通**（浏览器按来源隔离），训练记录、大脑权重会各自独立。
+本地开发仍可运行 `node server.js` 或 `python -m http.server 8765`；局域网地址用于开发测试，不作为官方发布入口。
 
-| 使用方式 | 适合场景 | 是否要服务器 |
-| --- | --- | --- |
-| 双击 `index.html`（file://） | 单机自用 | 否 |
-| `python -m http.server` | 手机/局域网临时访问 | 可选（一条命令） |
-| IIS / Nginx 静态目录 | 长期多设备访问 | 可选 |
-
-结论：**单机使用零部署，直接双击；要局域网/手机访问才需要起服务，且只是一条静态命令，不需要任何后端。**
-
-### 装到手机（PWA，免打包，推荐）
-
-先用一条命令起服务（任选其一）：
-
-```bash
-node server.js                 # 本仓库自带静态服务，默认 8765
-python -m http.server 8765     # 或 Python 自带
-```
-
-手机连同一 Wi-Fi，浏览器打开 `http://电脑IP:8765`：
-
-- **Android Chrome**：右上角菜单 →「添加到主屏幕」→ 桌面出现「中玄」图标，独立窗口全屏运行、可离线（Service Worker 缓存全部资源）。
-- **iPhone Safari**：分享按钮 →「添加到主屏幕」。
-- 数据仍存本机 localStorage；清除站点数据只丢训练记录与大脑权重，不影响功能。
-
-### 安卓 APK（已打包好，直接装）
-
-**唯一下载地址**：`https://ah-git-love.github.io/zhongxuan/dist/zhongxuan-v1.1-online.apk`
-
-页脚的「⬇ 安卓 APK」按钮也指向同一地址。APK v1.1 · 约 1.2MB · 已签名可直接安装（装时允许「未知来源」）。它是 TWA/WebView 在线壳，打开加载 GitHub Pages 线上版，首次需联网；进入后由 Service Worker 接管，断网仍可继续用。想让壳指向别的域名，用 `tools/build_apk3.js` 换 host 重新云打包即可（PWABuilder 云服务，无需本机 Android SDK）。
-
-```bash
-node tools/build_apk4.js "https://你的域名" "自定义名.apk"
-node tools/pick_apk.js dist/xxx-src.zip dist/xxx.apk   # 云打包返回的 zip 里提取 APK
-node tools/gh_upload.js          # 重新发布到 GitHub Pages 并云打包固定域名 APK
-node tools/gh_upload_apk.js      # 只把 dist 里的 APK 传上 Pages
-```
-
-> 本机无 JDK / Android SDK / Gradle，APK 通过 PWABuilder 云端（CloudAPK 服务，enqueuePackageJob → 轮询 → downloadPackageZip）生成；GitHub 直连 443 被墙，故发布走 GitHub REST API 逐文件上传而非 git push。
+更新流程验收：`node tools/test_web_update.js`，真实 Chrome 检查版本切换提示、稍后/立即更新、本机数据保留、旧缓存替换、320/390/900px 布局，以及停止本地服务器后的离线刷新，共 7 项通过。`node tools/test_sw.js` 共 6 项通过。每次发布网页新版本时须同步提升 `sw.js` 的缓存版本。发布使用 `node tools/gh_upload.js --apply`（默认不带参数只预览变更）。

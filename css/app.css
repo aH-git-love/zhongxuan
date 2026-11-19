@@ -886,3 +886,13 @@ body[data-theme="dark"] .xk-num.xk-xiang{ color:#c99a72; }
 .tr-reason-row .tr-reason-state{ color:var(--gold2); }
 @media (max-width:720px){ .tr-reason-list{ grid-template-columns:1fr; } }
 @media (max-width:720px){ .page-tdraw .field.actions{ flex-wrap:wrap; } .page-tdraw .field.actions .btn{ flex:1 1 112px; } }
+
+/* 网址版版本更新提示与唯一入口 */
+.update-notice{ position:fixed; z-index:120; right:16px; bottom:16px; width:min(520px,calc(100vw - 32px)); display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--line2); border-radius:10px; background:var(--panel); color:var(--txt); box-shadow:0 12px 36px rgba(0,0,0,.22); }
+.update-notice[hidden]{ display:none !important; }
+.update-notice #update-message{ flex:1; font-size:12.5px; line-height:1.6; }
+.update-actions{ display:flex; align-items:center; gap:6px; flex:0 0 auto; }
+.update-actions .btn{ white-space:nowrap; }
+.update-footnote{ color:var(--dim2); font-size:11px; }
+footer{ flex-wrap:wrap; justify-content:center; gap:10px 14px; }
+@media(max-width:520px){ .update-notice{ left:10px; right:10px; bottom:10px; width:auto; align-items:flex-start; flex-direction:column; gap:8px; } .update-actions{ width:100%; justify-content:flex-end; } .update-actions .btn{ padding:6px 10px; } .update-footnote{ flex-basis:auto; min-width:0; max-width:100%; overflow-wrap:anywhere; text-align:center; } footer{ flex-wrap:nowrap; } }
