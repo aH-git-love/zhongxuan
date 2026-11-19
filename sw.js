@@ -1,6 +1,6 @@
 /* 中玄 · 推演台 —— Service Worker（离线缓存，PWA 用）
  * 仅在 http/https 下注册；file:// 双击打开时不生效，也不影响使用。 */
-const CACHE = 'zhongxuan-v13';
+const CACHE = 'zhongxuan-v14';
 const ASSETS = [
   './', './index.html',
   './css/app.css',
@@ -32,6 +32,8 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  /* 账号与大脑 API 永不进入离线静态缓存，避免跨账号缓存响应。 */
+  if (new URL(e.request.url).pathname.includes('/api/')) return;
   /* 网络优先（在线拿最新），离线回退缓存 */
   e.respondWith(
     fetch(e.request).then(resp => {

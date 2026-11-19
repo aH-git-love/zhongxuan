@@ -1292,41 +1292,68 @@ const BRAIN = (function(){
 
   /* ---- 权重存取（localStorage，与 TRAINER 同域） ---- */
   const KEY = 'zhongxuan_brain_v1';
+  const ENGINE_VERSION = 'rules-v2';
+  function normalizeState(value){
+    const raw = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    const st = { w:{}, hits:{}, good:{}, bad:{} };
+    for (const r of RULES){
+      for (const key of ['w','hits','good','bad']){
+        const map = raw[key];
+        const n = map && Object.prototype.hasOwnProperty.call(map,r.id) ? map[r.id] : undefined;
+        st[key][r.id] = typeof n === 'number' && Number.isFinite(n)
+          ? (key === 'w' ? Math.max(1,Math.min(30,n)) : Math.max(0,Math.min(1000000,Math.floor(n))))
+          : (key === 'w' ? r.weight : 0);
+      }
+    }
+    return st;
+  }
   function loadState(){
     let st = null;
     try { st = JSON.parse(localStorage.getItem(KEY)); } catch (e){}
-    if (!st || !st.w) st = { w: {}, hits: {}, good: {}, bad: {} };
-    for (const r of RULES){ if (st.w[r.id] === undefined) st.w[r.id] = r.weight; }
-    return st;
+    return normalizeState(st);
   }
   function saveState(st){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e){} }
 
   /* ---- 分析：关键词匹配 + 权重排序 ---- */
-  function analyze(text, scene){
-    const input = (text || '').trim();
-    const st = loadState();
+  function analyze(text, scene, options){
+    const opts = options || {};
+    const input = typeof text === 'string' ? text.trim().slice(0,4000) : '';
+    const normalized = input.normalize('NFKC').toLowerCase();
+    const explicitState = Object.prototype.hasOwnProperty.call(opts,'state');
+    const st = explicitState ? normalizeState(opts.state) : loadState();
     const scored = [];
     for (const r of RULES){
       if (scene && scene !== '全部' && r.scene !== scene) continue;
       let score = 0;
       const hits = [];
       for (const kw of r.keywords){
-        if (input.includes(kw)){ score += kw.length >= 3 ? 3 : 2; hits.push(kw); }
+        if (normalized.includes(kw.normalize('NFKC').toLowerCase())){ score += kw.length >= 3 ? 3 : 2; hits.push(kw); }
       }
       if (input.includes(r.title)) score += 4;
       if (score > 0){
-        score += (st.w[r.id] - 10) * 0.3; /* 权重微调 */
-        scored.push({ rule: r, score, hits });
+        const evidenceScore = score;
+        /* 反馈只作有限重排；无关键词证据的规则始终不入选。 */
+        const weightAdjustment = Math.max(-1.5,Math.min(1.5,(st.w[r.id] - r.weight) * 0.15));
+        score += weightAdjustment;
+        scored.push({ rule: r, score, hits, evidenceScore, weightAdjustment });
       }
     }
     scored.sort((a, b) => b.score - a.score);
     /* 记录命中 */
-    if (scored.length){
+    if (scored.length && opts.recordHits !== false){
       for (const s of scored.slice(0, 2)){ st.hits[s.rule.id] = (st.hits[s.rule.id] || 0) + 1; }
-      saveState(st);
+      if (!explicitState) saveState(st);
     }
     const top = scored.slice(0, 3);
-    return { input, scene, matches: top, chain: buildChain(input, top), methods: collectMethods(top), yishu: collectYishu(top), state: st };
+    const margin = top.length > 1 ? Number((top[0].score-top[1].score).toFixed(3)) : null;
+    const ambiguous = top.length > 1 && margin < 1.5 && top[0].rule.scene !== top[1].rule.scene;
+    const retrieval = { strength:!top.length?'none':ambiguous?'ambiguous':top[0].evidenceScore>=6?'strong':'limited', margin, ambiguous, label:'关键词检索强度，非预测概率' };
+    const clarifications = !top.length
+      ? ['你希望解决的具体问题是什么？','问题属于哪个场景，已经掌握哪些事实？']
+      : ambiguous ? ['问题同时涉及多个场景，请确认首先要解决哪一件事。'] : [];
+    const chain = buildChain(input,top);
+    if (ambiguous) chain.splice(2,0,{step:'场景待确认',detail:clarifications[0]});
+    return { input, scene, matches:top, chain, methods:collectMethods(top), yishu:collectYishu(top), state:st, engineVersion:ENGINE_VERSION, retrieval, clarifications, source:'local' };
   }
 
   function buildChain(input, matches){
@@ -1334,7 +1361,7 @@ const BRAIN = (function(){
     chain.push({ step: '读取问题', detail: input || '（空输入）' });
     if (!matches.length){
       chain.push({ step: '匹配规则', detail: '未命中已知规则 → 走通用处理' });
-      chain.push({ step: '通用处理', detail: '先问清三件事：出生时间（几点几分、哪个城市）、想解决的具体问题、已发生的关键年份' });
+      chain.push({ step: '补充信息', detail: '先明确想解决的具体问题、所属场景和已有事实，再选择适用规则；未命中时暂不套用命理结论。' });
       return chain;
     }
     chain.push({ step: '匹配规则', detail: matches.map(m => `${m.rule.id}(${m.rule.title}) 命中[${m.hits.join('、') || '标题'}]`).join('；') });
@@ -1363,15 +1390,18 @@ const BRAIN = (function(){
   }
 
   /* ---- 反馈自学习 ---- */
-  function feedback(ruleId, good){
-    const st = loadState();
+  function feedback(ruleId, good, options){
+    const opts = options || {};
+    const explicitState = Object.prototype.hasOwnProperty.call(opts,'state');
+    const st = explicitState ? normalizeState(opts.state) : loadState();
+    if (typeof good !== 'boolean') return st;
     const r = RULES.find(x => x.id === ruleId);
     if (!r) return st;
     const delta = good ? 0.6 : -0.9;
     st.w[ruleId] = Math.max(1, Math.min(30, (st.w[ruleId] || 10) + delta));
     if (good) st.good[ruleId] = (st.good[ruleId] || 0) + 1;
     else st.bad[ruleId] = (st.bad[ruleId] || 0) + 1;
-    saveState(st);
+    if (!explicitState) saveState(st);
     return st;
   }
 
@@ -1391,14 +1421,14 @@ const BRAIN = (function(){
   }
 
   /* ---- 规则库检索 ---- */
-  function listRules(scene){
-    const st = loadState();
+  function listRules(scene, options){
+    const st = options && Object.prototype.hasOwnProperty.call(options,'state') ? normalizeState(options.state) : loadState();
     return RULES.filter(r => !scene || scene === '全部' || r.scene === scene)
       .map(r => ({ ...r, curWeight: st.w[r.id] || r.weight, hits: st.hits[r.id] || 0, good: st.good[r.id] || 0, bad: st.bad[r.id] || 0 }));
   }
   function resetWeights(){ const st = { w: {}, hits: {}, good: {}, bad: {} }; for (const r of RULES) st.w[r.id] = r.weight; saveState(st); return st; }
 
-  return { RULES, SCENES, analyze, feedback, genDecisionQuiz, listRules, resetWeights, loadState };
+  return { RULES, SCENES, ENGINE_VERSION, normalizeState, analyze, feedback, genDecisionQuiz, listRules, resetWeights, loadState };
 })();
 
 if (typeof module !== 'undefined' && module.exports) module.exports = { BRAIN };

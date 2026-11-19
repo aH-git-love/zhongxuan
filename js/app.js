@@ -544,19 +544,24 @@ var UI = (function(){
   }
 
   function renderDanao(res){
+    const sourceLabel = res.source==='server' ? (res.personalized?'后端推理 · 当前账号独立反馈':'后端推理 · 公共基线，登录后可保存反馈') : res.source==='local-fallback' ? '后端暂未响应 · 本地离线推理，反馈存本机' : '本地规则推理 · 反馈存本机';
+    const strength = {none:'未命中',limited:'有限',strong:'较强',ambiguous:'多场景待确认'};
+    const metadata = `<p class="hint">${esc(sourceLabel)} · ${esc(res.engineVersion || 'rules-v2')}${res.retrieval ? ' · 检索依据：'+esc(strength[res.retrieval.strength]||'有限')+'（非预测概率）' : ''}</p><p id="dn-feedback-status" class="hint" role="status" aria-live="polite"></p>`;
     if (!res.matches.length){
       return `
         <div class="panel">
           <h2>大脑分析</h2>
+          ${metadata}
           <ul class="chain">
             ${res.chain.map(c => `<li><b>${esc(c.step)}</b><br>${esc(c.detail)}</li>`).join('')}
           </ul>
-          <p class="hint">未命中规则：请补充信息（出生时间几点几分、城市、想解决的具体问题），或点上方快捷问题换个说法再试。</p>
+          <p class="hint">未命中规则：请补充想解决的具体问题、所属场景与已有事实，或选择上方相关快捷问题。</p>
         </div>`;
     }
     return `
       <div class="panel">
         <h2>大脑分析</h2>
+        ${metadata}
         <ul class="chain">
           ${res.chain.map(c => `<li><b>${esc(c.step)}</b><br>${esc(c.detail)}</li>`).join('')}
         </ul>
@@ -1005,9 +1010,10 @@ var UI = (function(){
     if ($('au-close')) $('au-close').onclick = closeAu;
     if (auMask) auMask.onclick = closeAu;
 
+    let authReady = Promise.resolve();
     if (AUTH_LIB){
       refreshAuthBtn();
-      AUTH_LIB.detect().then(() => AUTH_LIB.verify()).then(() => {
+      authReady = AUTH_LIB.detect().then(() => AUTH_LIB.verify()).then(() => {
         refreshAuthBtn();
         const st = $('au-mode-state');
         if (st) st.textContent = AUTH_LIB.modeOf() === 'server' ? '服务端会话' : '本地会话';
@@ -1458,20 +1464,87 @@ var UI = (function(){
     $('dn-quick').querySelectorAll('.tag').forEach(el => {
       el.onclick = () => { $('dn-input').value = el.dataset.q; $('dn-go').click(); };
     });
-    function renderRulesView(){ $('dn-rules').innerHTML = renderRules(BRAIN.listRules($('dn-scene').value)); }
-    $('dn-go').onclick = () => {
-      const res = BRAIN.analyze($('dn-input').value.trim(), $('dn-scene').value);
-      $('dn-result').innerHTML = renderDanao(res);
-      /* 3D 脑图：命中规则点亮 */
-      if (DANAO3D_LIB && typeof DANAO3D_LIB.highlight === 'function'){
-        try { DANAO3D_LIB.highlight(res.matches.map(m => m.rule.id)); } catch (e){}
-      }
-      $('dn-result').querySelectorAll('[data-fb]').forEach(btn => {
-        btn.onclick = () => { BRAIN.feedback(btn.dataset.fb, btn.dataset.good === '1'); renderRulesView(); };
-      });
+    let serverBrainState = null, serverBrainIdentity = null, brainRequestId = 0;
+    function brainIdentity(){ return AUTH_LIB && AUTH_LIB.session() ? AUTH_LIB.session().token || null : null; }
+    function renderRulesView(){
+      if (serverBrainIdentity !== brainIdentity()) serverBrainState = null;
+      $('dn-rules').innerHTML = renderRules(BRAIN.listRules($('dn-scene').value,serverBrainState ? {state:serverBrainState} : undefined));
+    }
+    async function brainRequest(route,payload){
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(),8000);
+      try {
+        const token = brainIdentity();
+        const response = await fetch('api/brain/' + route,{
+          method:'POST', cache:'no-store', signal:controller.signal,
+          headers:{'Content-Type':'application/json',...(token ? {Authorization:'Bearer '+token} : {})},
+          body:JSON.stringify(payload)
+        });
+        const value = await response.json();
+        if (!response.ok || !value.ok) throw new Error('请求失败（'+response.status+'），请重新登录或稍后重试。');
+        return value;
+      } finally { clearTimeout(timer); }
+    }
+    function brainStatus(text){ const node=$('dn-feedback-status'); if(node)node.textContent=text; }
+    $('dn-go').onclick = async () => {
+      const requestId = ++brainRequestId;
+      const text = $('dn-input').value.trim(), scene = $('dn-scene').value;
+      if (!text || text.length>4000){ $('dn-result').innerHTML='<p class="hint">请输入 1–4000 字的问题。</p>'; return; }
+      $('dn-go').disabled=true;
+      try {
+        await authReady;
+        const token = brainIdentity();
+        let res;
+        if (AUTH_LIB && AUTH_LIB.modeOf()==='server'){
+          try { res=(await brainRequest('analyze',{text,scene})).result; }
+          catch(e){ res=BRAIN.analyze(text,scene); res.source='local-fallback'; }
+        } else res=BRAIN.analyze(text,scene);
+        if (requestId!==brainRequestId || token!==brainIdentity()) return;
+        if(res.source==='server'){
+          serverBrainState=res.state; serverBrainIdentity=token;
+        } else serverBrainState=null;
+        $('dn-result').innerHTML=renderDanao(res);
+        renderRulesView();
+        if(DANAO3D_LIB && typeof DANAO3D_LIB.highlight==='function'){
+          try { DANAO3D_LIB.highlight(res.matches.map(m=>m.rule.id)); } catch(e){}
+        }
+        const voted=new Set();
+        $('dn-result').querySelectorAll('[data-fb]').forEach(btn=>{
+          btn.onclick=async()=>{
+            const id=btn.dataset.fb;
+            if(voted.has(id))return;
+            if(token!==brainIdentity()){brainStatus('账号已变化，请重新分析后反馈。');return;}
+            if(res.source==='server' && !res.inferenceId){brainStatus('登录后重新分析，即可保存到账号的后端反馈。');return;}
+            voted.add(id);
+            const siblings=[...$('dn-result').querySelectorAll('[data-fb]')].filter(b=>b.dataset.fb===id);
+            siblings.forEach(b=>b.disabled=true);
+            try {
+              if(res.source==='server'){
+                const answer=await brainRequest('feedback',{inferenceId:res.inferenceId,ruleId:id,good:btn.dataset.good==='1'});
+                if(requestId!==brainRequestId || token!==brainIdentity())return;
+                serverBrainState=answer.state; serverBrainIdentity=token;
+                brainStatus('反馈已保存到当前账号，本次规则反馈只计一次。');
+              }else{BRAIN.feedback(id,btn.dataset.good==='1');brainStatus('反馈已保存到当前浏览器；当前使用本地规则引擎。');}
+              renderRulesView();
+            }catch(e){voted.delete(id);siblings.forEach(b=>b.disabled=false);brainStatus('反馈尚未保存，请稍后重试。');}
+          };
+        });
+      } finally {if(requestId===brainRequestId)$('dn-go').disabled=false;}
     };
     $('dn-scene').onchange = renderRulesView;
-    $('dn-reset').onclick = () => { BRAIN.resetWeights(); renderRulesView(); alert('权重已重置'); };
+    $('dn-reset').onclick = async () => {
+      await authReady;
+      try {
+        if(AUTH_LIB && AUTH_LIB.modeOf()==='server' && brainIdentity()){
+          const token=brainIdentity();
+          const answer=await brainRequest('reset',{});
+          if(token!==brainIdentity())return;
+          serverBrainState=answer.state;serverBrainIdentity=token;
+          ++brainRequestId; $('dn-go').disabled=false; $('dn-result').innerHTML='<p class="hint">当前账号后端权重已重置，请重新分析。</p>';
+        }else{BRAIN.resetWeights();serverBrainState=null;}
+        renderRulesView();alert('当前使用范围的权重已重置');
+      }catch(e){alert('重置尚未完成，请稍后重试。');}
+    };
 
     /* ============ 实断案例库 ============ */
     $('cs-sys').innerHTML = CASE_LIB.SYS.map(s => `<option>${s}</option>`).join('');
