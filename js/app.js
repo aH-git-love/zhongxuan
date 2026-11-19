@@ -2118,17 +2118,23 @@ var UI = (function(){
   function trCardFace(c, rev, posName, idx){
     const card = c;
     const big = card.arcana === '大牌';
-    return `<div class="tr-card${rev ? ' tr-rev' : ''}">
-      <div class="tr-pos">${esc(posName || '')}</div>
-      <div class="tr-face">
-        <span class="tr-sym">${big ? esc(ROMAN[card.num] || '') : card.sym}</span>
-        <b>${esc(card.name)}</b>
-        <small>${big ? '大牌 · ' + esc(card.el) + ' · ' + esc(card.planet || '') : esc(card.suitName) + ' · ' + esc(card.el) + ' · ' + esc(String(card.num))}</small>
+    const focus = /现状|现在|裁决|结果|本月主题/.test(posName || '');
+    const number = big ? (ROMAN[card.num] || '0') : String(card.num);
+    return `<article class="tr-card zw-cell${rev ? ' tr-rev' : ''}${focus ? ' tr-focus' : ''}" data-card-id="${esc(card.id)}" aria-label="${esc((posName || '')+' · '+card.name+' · '+(rev?'逆位':'正位'))}">
+      <div class="tr-card-hd zw-cell-hd">
+        <span class="tr-pos zw-pname">${esc(posName || '牌面')}</span>
+        ${idx ? `<span class="tr-idx zw-gz">${idx}</span>` : ''}
       </div>
+      <div class="tr-card-meta"><span>${esc(big ? '大阿尔卡纳' : card.suitName)}</span><span class="tr-orientation${rev ? ' tr-rv' : ''}">${rev ? '逆位' : '正位'}</span></div>
+      <div class="tr-face">
+        <span class="tr-emblem" aria-hidden="true"><span class="tr-sym${big ? ' tr-major-symbol' : ''}">${esc(big ? number : card.sym)}</span></span>
+        <b>${esc(card.name)}</b>
+        <small>${big ? esc(card.en || '') : '小阿尔卡纳 · '+esc(number)}</small>
+      </div>
+      <div class="tr-attributes"><span>元素 · ${esc(card.el)}</span><span>${esc(big ? card.planet || '大牌' : card.suitName)}</span></div>
       <div class="tr-kw">${esc(rev ? card.rev : card.up)}</div>
-      ${rev ? '<span class="tr-rv">逆</span>' : ''}
-      ${idx ? `<span class="tr-idx">${idx}</span>` : ''}
-    </div>`;
+      <details class="tr-card-more"><summary>查看行动提示</summary><p>${esc(card.advice || '结合所在位置与现实条件理解这张牌。')}</p></details>
+    </article>`;
   }
 
   function renderTarotDraw(result){
@@ -2136,7 +2142,7 @@ var UI = (function(){
     const an = TAROT_LIB.analyze(result);
     const v = TAROT_LIB.verdict(result, an);
     const spread = result.spread;
-    const boardCls = spread.id === 'cross' ? 'tr-board tr-cross' : 'tr-board';
+    const boardCls = spread.id === 'cross' ? 'tr-board tr-cross' : 'tr-board' + (result.cards.length===1 ? ' tr-single' : '');
     const cardsHtml = result.cards.map((c, i) => {
       const inner = trCardFace(c.card, c.rev, c.pos.name, i + 1);
       if (spread.id === 'cross') return inner.replace('class="tr-card', `style="grid-area:tp${i + 1}" class="tr-card`);
@@ -2175,8 +2181,9 @@ var UI = (function(){
       </div>
       <div class="pp-top">
         <div class="pp-main">
-          <div class="pp-cap">牌阵（${result.cards.length} 张 · 逆位左上角标「逆」）</div>
-          <div class="${boardCls}">${cardsHtml}</div>
+          <div class="pp-cap">牌阵总览（${result.cards.length} 张 · 位置 / 牌面 / 正逆位）</div>
+          <p class="hint tr-board-note">先看位置，再读牌义；每张牌标明正逆位，可展开行动提示。</p>
+          <div class="${boardCls}" role="group" aria-label="${esc(spread.name)}牌面">${cardsHtml}</div>
         </div>
         <div class="pp-brief">
           <div class="kv"><span>问题</span><b>${esc(result.question || '未填写')}</b></div>
@@ -2225,16 +2232,17 @@ var UI = (function(){
       return c.suitName === filter;
     });
     if (!list.length) return '<p class="hint">没有命中的牌，换个词（如：权杖、逆位、结束、承诺）。</p>';
-    return `<p class="hint">共 ${list.length} 张 · 点开看正逆位完整义与提示。数据基准：Rider–Waite–Smith（1909 公版）+ Waite《The Pictorial Key to the Tarot》。</p>` +
+    return `<p class="hint">共 ${list.length} 张 · 点开看正逆位完整义与提示。数据基准：Rider–Waite–Smith（1909 公版）+ Waite《The Pictorial Key to the Tarot》。</p><div class="tr-catalog">` +
       list.map(c => `<details class="card tr-lib">
-        <summary><b>${esc(c.name)}</b>${c.en ? ' <small>' + esc(c.en) + '</small>' : ''}
-          <span class="tag gold">${esc(c.arcana)}</span><span class="tag">${esc(c.suitName)}</span><span class="tag blue">${esc(c.el)}</span></summary>
+        <summary><span class="tr-catalog-head"><span class="tr-catalog-number" aria-hidden="true">${esc(c.arcana==='大牌' ? ROMAN[c.num] || '0' : c.sym+' '+c.num)}</span><b>${esc(c.name)}</b></span>
+          ${c.en ? '<small class="tr-catalog-en">' + esc(c.en) + '</small>' : ''}
+          <span class="tr-catalog-tags"><span class="tag gold">${esc(c.arcana)}</span><span class="tag">${esc(c.suitName)}</span><span class="tag blue">${esc(c.el)}</span></span><span class="tr-catalog-toggle">正逆位 · 展开详情</span></summary>
         <div class="kv"><span>正位</span><b>${esc(c.up)}</b></div>
         <div class="kv"><span>逆位</span><b>${esc(c.rev)}</b></div>
         <div class="kv"><span>提示</span><b>${esc(c.advice)}</b></div>
         ${c.numMeaning ? `<div class="kv"><span>数位</span><b>${esc(c.numMeaning)}</b></div>` : ''}
         ${c.planet ? `<div class="kv"><span>对应</span><b>${esc(c.el)} · ${esc(c.planet)}</b></div>` : ''}
-      </details>`).join('');
+      </details>`).join('') + '</div>';
   }
 
   function renderTarotSpreads(){
