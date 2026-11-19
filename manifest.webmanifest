@@ -1,10 +1,11 @@
 {
   "name": "中玄 · 推演台",
   "short_name": "中玄",
-  "description": "八字排盘 · 择日 · 流年推演 · 术数知识库 · 大脑决策训练（本地离线）",
+  "description": "经典塔罗78张真实牌面 · 八字排盘 · 择日 · 决策训练 · 本机记录与离线使用",
   "lang": "zh-CN",
   "dir": "ltr",
-  "start_url": "./index.html",
+  "id": "./index.html",
+  "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

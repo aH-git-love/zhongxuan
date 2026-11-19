@@ -1,0 +1,13 @@
+const fs=require('fs'),crypto=require('crypto'),assert=require('assert');
+const {TAROT}=require('../js/tarot');
+const escape=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const art=JSON.parse(fs.readFileSync('assets/tarot/rws/sources.json','utf8'));
+assert.equal(art.cards.length,78);assert.equal(new Set(art.cards.map(c=>c.id)).size,78);
+for(const card of TAROT.ALL){const entry=art.cards.find(c=>c.id===card.id);assert(entry,'Missing '+card.id);const file='assets/tarot/rws/'+card.id+'.webp';const bytes=fs.readFileSync(file);assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),entry.sha256,card.id+' digest');}
+assert(fs.readFileSync('app.html','utf8').includes('id="tr-result"'),'Preserved app missing');
+const landing=fs.readFileSync('landing.html','utf8');assert(landing.includes('./app.html'),'Landing needs app CTA');assert(!landing.includes('\u4e0b\u8f7d'),'Landing contains retired wording');
+fs.writeFileSync('index.html',landing);
+const rows=art.cards.map(c=>`<li><span><b>${escape(c.cardName)}</b> <small>${escape(c.id)}</small></span><a href="${escape(c.sourcePage)}" target="_blank" rel="noopener noreferrer">查看原始来源 ↗</a></li>`).join('\n');
+const page=`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>塔罗牌图来源与署名 · 中玄</title><link rel="icon" href="./icon-192.png"><link rel="stylesheet" href="./css/landing.css"><style>.credits{max-width:900px;padding:50px 20px 70px;margin:auto}.credits h1{font-size:30px;margin:20px 0}.credits p{line-height:1.9;margin:12px 0}.credits a{text-underline-offset:4px}.credits ul{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 24px}.credits li{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #d8ceba;font-size:13px}.credits small{opacity:.65}.credits nav{display:flex;gap:20px;flex-wrap:wrap}@media(max-width:380px){.credits ul{grid-template-columns:minmax(0,1fr)}}</style></head><body><main class="credits"><nav><a href="./">← 返回官网</a><a href="./app.html?sys=tarot">体验塔罗 →</a></nav><h1>真实牌面，来源可查。</h1><p>本项目使用 Rider–Waite–Smith 经典牌组，由 Pamela Colman Smith 绘制，A. E. Waite 构思，1909 年首次出版。图像来自 Wikimedia Commons 的历史牌面扫描；各来源页标示为公共领域（Public domain）。</p><p>应用内保存的是完整扫描的等比 WebP 副本，保留原画、文字与边框。正逆位仅改变显示方向。宣传首页展示的牌图为静态示例，与实际抽牌结果无关。</p><p><a href="./assets/tarot/rws/sources.json">78 张逐图来源记录</a> · <a href="./docs/tarot-art-sources.md">处理方式与复现说明</a></p><ul>${rows}</ul></main></body></html>`;
+fs.writeFileSync('art-credits.html',page);
+console.log('Built index.html promotional homepage and art-credits.html; verified 78 image hashes');

@@ -237,6 +237,11 @@ const TAROT = (function(){
     });
   });
   const ALL = MAJORS.concat(MINORS);
+  /* 本地完整牌图：经典RWS 1909扫描，逐张来源见 assets/tarot/rws/sources.json。 */
+  for (const card of ALL){
+    card.image = './assets/tarot/rws/' + card.id + '.webp';
+    card.imageAlt = card.name + ' · Rider–Waite–Smith 经典牌面';
+  }
 
   /* ---------------- 随机与抽牌 ---------------- */
   function mulberry32(seed){

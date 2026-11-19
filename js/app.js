@@ -1061,7 +1061,30 @@ var UI = (function(){
     });
     let sysInit = 'zx';
     try { sysInit = localStorage.getItem('zx_sys') || 'zx'; } catch (e){ sysInit = 'zx'; }
+    try {
+      const requestedSys = new URLSearchParams(location.search).get('sys');
+      if (requestedSys==='tarot' || requestedSys==='zx') sysInit=requestedSys;
+    } catch(e){}
     setSys(sysInit);
+
+    const artDialog=$('tr-art-dialog');
+    if(artDialog && typeof artDialog.showModal==='function'){
+      document.addEventListener('click',event=>{
+        const trigger=event.target.closest && event.target.closest('[data-card-art]');
+        if(!trigger)return;
+        const src=trigger.dataset.cardArt;
+        if(!/^\.\/assets\/tarot\/rws\/[MCWSP]\d{2}\.webp$/.test(src))return;
+        const reversed=trigger.dataset.artReversed==='1';
+        const name=trigger.dataset.artName || '塔罗';
+        $('tr-art-title').textContent=name+' · '+(reversed?'逆位':'正位');
+        const image=$('tr-art-large');
+        image.src=src;image.alt=name+'完整牌面';
+        image.classList.toggle('is-reversed',reversed);
+        artDialog.showModal();
+      });
+      $('tr-art-close').onclick=()=>artDialog.close();
+      artDialog.addEventListener('click',event=>{if(event.target===artDialog)artDialog.close();});
+    }
 
     const TAROT_HISTORY_KEY = 'zx_tarot_history_v1';
     const TAROT_HISTORY_LIMIT = 40;
@@ -2127,7 +2150,10 @@ var UI = (function(){
       </div>
       <div class="tr-card-meta"><span>${esc(big ? '大阿尔卡纳' : card.suitName)}</span><span class="tr-orientation${rev ? ' tr-rv' : ''}">${rev ? '逆位' : '正位'}</span></div>
       <div class="tr-face">
-        <span class="tr-emblem" aria-hidden="true"><span class="tr-sym${big ? ' tr-major-symbol' : ''}">${esc(big ? number : card.sym)}</span></span>
+        <button class="tr-art-trigger" type="button" data-card-art="${esc(card.image)}" data-art-name="${esc(card.name)}" data-art-reversed="${rev ? '1' : '0'}" aria-label="放大查看${esc(card.name)}${rev ? '逆位' : '正位'}牌面">
+          <img class="tr-card-image" src="${esc(card.image)}" alt="${esc(card.imageAlt)}${rev ? '（逆位）' : '（正位）'}" width="480" height="832" loading="lazy" decoding="async">
+          <span class="tr-art-hint">点击放大</span>
+        </button>
         <b>${esc(card.name)}</b>
         <small>${big ? esc(card.en || '') : '小阿尔卡纳 · '+esc(number)}</small>
       </div>
@@ -2181,9 +2207,10 @@ var UI = (function(){
       </div>
       <div class="pp-top">
         <div class="pp-main">
-          <div class="pp-cap">牌阵总览（${result.cards.length} 张 · 位置 / 牌面 / 正逆位）</div>
-          <p class="hint tr-board-note">先看位置，再读牌义；每张牌标明正逆位，可展开行动提示。</p>
+          <div class="pp-cap">牌阵总览（${result.cards.length} 张 · 经典RWS牌面）</div>
+          <p class="hint tr-board-note">点击牌图可放大查看；逆位牌面旋转显示，牌义文字保持正向。</p>
           <div class="${boardCls}" role="group" aria-label="${esc(spread.name)}牌面">${cardsHtml}</div>
+          <p class="hint tr-art-credit">牌图：Pamela Colman Smith · RWS经典牌组 · <a href="./art-credits.html">来源与署名</a></p>
         </div>
         <div class="pp-brief">
           <div class="kv"><span>问题</span><b>${esc(result.question || '未填写')}</b></div>
@@ -2234,12 +2261,12 @@ var UI = (function(){
     if (!list.length) return '<p class="hint">没有命中的牌，换个词（如：权杖、逆位、结束、承诺）。</p>';
     return `<p class="hint">共 ${list.length} 张 · 点开看正逆位完整义与提示。数据基准：Rider–Waite–Smith（1909 公版）+ Waite《The Pictorial Key to the Tarot》。</p><div class="tr-catalog">` +
       list.map(c => `<details class="card tr-lib">
-        <summary><span class="tr-catalog-head"><span class="tr-catalog-number" aria-hidden="true">${esc(c.arcana==='大牌' ? ROMAN[c.num] || '0' : c.sym+' '+c.num)}</span><b>${esc(c.name)}</b></span>
-          ${c.en ? '<small class="tr-catalog-en">' + esc(c.en) + '</small>' : ''}
+        <summary><span class="tr-catalog-head"><img class="tr-catalog-image" src="${esc(c.image)}" alt="${esc(c.imageAlt)}" width="72" height="125" loading="lazy" decoding="async"><span class="tr-catalog-identity"><b>${esc(c.name)}</b>${c.en ? '<small class="tr-catalog-en">' + esc(c.en) + '</small>' : ''}</span></span>
           <span class="tr-catalog-tags"><span class="tag gold">${esc(c.arcana)}</span><span class="tag">${esc(c.suitName)}</span><span class="tag blue">${esc(c.el)}</span></span><span class="tr-catalog-toggle">正逆位 · 展开详情</span></summary>
         <div class="kv"><span>正位</span><b>${esc(c.up)}</b></div>
         <div class="kv"><span>逆位</span><b>${esc(c.rev)}</b></div>
         <div class="kv"><span>提示</span><b>${esc(c.advice)}</b></div>
+        <button type="button" class="btn tr-catalog-open" data-card-art="${esc(c.image)}" data-art-name="${esc(c.name)}" data-art-reversed="0">查看完整牌面</button>
         ${c.numMeaning ? `<div class="kv"><span>数位</span><b>${esc(c.numMeaning)}</b></div>` : ''}
         ${c.planet ? `<div class="kv"><span>对应</span><b>${esc(c.el)} · ${esc(c.planet)}</b></div>` : ''}
       </details>`).join('') + '</div>';

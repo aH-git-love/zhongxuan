@@ -1,6 +1,8 @@
 # 中玄 · 推演台 v1.0（定版）
 
-本地离线运行的八字排盘 + 择日 + 流年推演 + 大脑决策训练 + 道家术数工具台。网页可离线运行；可选Node后端提供账号和大脑推理/反馈持久化。官方入口仍为 https://ah-git-love.github.io/zhongxuan/ ，无需重新下载安装包。
+八字排盘 + 择日 + 流年推演 + 大脑决策训练 + 真实经典塔罗牌面的工具台。官方唯一入口为 https://ah-git-love.github.io/zhongxuan/ 。首页为产品宣传页，点击「立即体验」进入 app.html；塔罗入口 app.html?sys=tarot 直接打开抽牌台。网页支持在线更新与缓存后的离线使用。
+
+塔罗已接入 78 张 Pamela Colman Smith 绘制的经典 Rider–Waite–Smith 历史牌图，等比保留完整原画与边框，支持正逆位、牌面放大和本机历史回看。逐图来源见 [牌图来源](docs/tarot-art-sources.md) 和 art-credits.html。可选Node后端提供账号和大脑推理/反馈持久化。
 
 **大脑 rules-v2**：增加后端分析、账号隔离反馈、去重计票、有限权重重排、检索证据与场景澄清；未接后端时继续本地推理。当前官方静态站使用本地引擎，Node后端已完成本机接口与浏览器验证，尚未部署公网实例。启动、接口与数据说明见 [大脑后端说明](docs/brain-backend.md)。
 

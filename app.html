@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中玄 · 推演台 | 八字 · 择日 · 大脑训练</title>
+<link rel="stylesheet" href="css/app.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#10141d">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="中玄">
+</head>
+<body data-theme="light">
+<header class="topbar">
+  <button class="btn nav-toggle" id="nav-toggle" aria-label="打开导航">☰</button>
+  <div class="brand">
+    <span class="logo">☯</span>
+    <h1>中玄 · 推演台</h1>
+    <span class="sub" id="cur-page">排盘</span>
+  </div>
+  <div class="sys-switch" id="sys-switch" role="group" aria-label="体系切换">
+    <button class="sys-btn active" data-sys="zx" aria-pressed="true">中玄</button>
+    <button class="sys-btn" data-sys="tarot" aria-pressed="false">塔罗</button>
+  </div>
+  <div class="top-right">
+    <button class="theme-btn" id="theme-btn" title="切换宣纸亮 / 墨夜暗">☀ 宣纸</button>
+    <button class="btn auth-btn" id="auth-btn" title="登录 / 账号"><span class="auth-txt">未登录</span></button>
+  </div>
+</header>
+
+<aside id="update-notice" class="update-notice" role="status" aria-live="polite" hidden>
+  <span id="update-message">发现在线更新，刷新页面即可使用新版。</span>
+  <div class="update-actions">
+    <button class="btn primary" id="update-now">立即更新</button>
+    <button class="btn" id="update-later">稍后</button>
+  </div>
+</aside>
+
+<aside class="side" id="side">
+  <div class="side-head" id="side-head">功能导航</div>
+  <nav class="side-nav" id="mainTabs">
+    <button class="tab active" data-page="paipan">排盘</button>
+    <button class="tab" data-page="zeri">择日</button>
+    <button class="tab" data-page="tuiyan">推演</button>
+    <button class="tab" data-page="method">方法</button>
+    <button class="tab" data-page="yishu">术数</button>
+    <button class="tab" data-page="jieqi">节气</button>
+    <button class="tab" data-page="danao">大脑</button>
+    <button class="tab" data-page="xunlian">训练</button>
+  </nav>
+  <nav class="side-nav" id="tarotTabs" hidden>
+    <button class="tab active" data-page="tdraw">抽牌</button>
+    <button class="tab" data-page="tlib">牌库</button>
+    <button class="tab" data-page="tspread">牌阵</button>
+    <button class="tab" data-page="tbasic">入门</button>
+  </nav>
+  <div class="side-foot">离线可用 · 数据存本机</div>
+</aside>
+<div class="side-mask" id="side-mask" hidden></div>
+
+<div class="gs-mask" id="au-mask" hidden></div>
+<div class="gs-modal au-modal" id="au-modal" hidden>
+  <div class="gs-bar">
+    <span class="gs-icon">👤</span><b id="au-title">登录</b>
+    <button class="btn gs-close" id="au-close">关闭</button>
+  </div>
+  <div class="gs-body" id="au-body"></div>
+</div>
+
+<main>
+  <!-- ============ 排盘 ============ -->
+  <section id="page-paipan" class="page active">
+    <div class="panel" id="pn-paipan">
+      <h2>生辰八字排盘</h2>
+      <div class="form-grid">
+        <div class="field"><label>姓名（选填）</label><input id="pp-name" type="text" placeholder="张三"></div>
+        <div class="field"><label>性别</label>
+          <select id="pp-gender"><option value="男">男</option><option value="女">女</option></select></div>
+        <div class="field"><label>公历生日</label>
+          <div class="row">
+            <input id="pp-y" type="number" value="1990" min="1901" max="2100">
+            <input id="pp-m" type="number" value="8" min="1" max="12">
+            <input id="pp-d" type="number" value="15" min="1" max="31">
+          </div>
+        </div>
+        <div class="field"><label>出生时刻（24 小时制）</label>
+          <div class="row">
+            <input id="pp-h" type="number" value="14" min="0" max="23">
+            <input id="pp-mi" type="number" value="30" min="0" max="59">
+          </div>
+        </div>
+        <div class="field"><label>出生地经度（选填）</label>
+          <div class="row">
+            <input id="pp-lon" type="number" value="116.4" step="0.1">
+            <label class="check"><input id="pp-true" type="checkbox"> 真太阳时</label>
+          </div>
+        </div>
+        <div class="field"><label>排盘口径</label>
+          <label class="check"><input id="pp-zi" type="checkbox" checked> 23:00 后算次日（子时换日）</label>
+        </div>
+        <div class="field actions">
+          <button class="btn primary" id="pp-go">开始排盘</button>
+          <button class="btn" id="pp-save" disabled>保存命例</button>
+        </div>
+      </div>
+    </div>
+    <div id="pp-result" class="result"></div>
+  </section>
+
+  <!-- ============ 择日 ============ -->
+  <section id="page-zeri" class="page">
+    <div class="panel" id="pn-zeri">
+      <h2>良辰吉日 · 择日</h2>
+      <div class="form-grid">
+        <div class="field"><label>事项</label>
+          <select id="zr-matter"></select></div>
+        <div class="field"><label>起始日期</label>
+          <div class="row">
+            <input id="zr-y" type="number" min="1" max="2"><input id="zr-m" type="number" min="1" max="12"><input id="zr-d" type="number" min="1" max="31">
+          </div>
+        </div>
+        <div class="field"><label>往后天数</label>
+          <input id="zr-days" type="number" value="30" min="1" max="120"></div>
+        <div class="field"><label>主事人生肖（避开冲日）</label>
+          <select id="zr-zodiac"></select></div>
+        <div class="field actions">
+          <button class="btn primary" id="zr-go">筛选吉日</button>
+        </div>
+      </div>
+    </div>
+    <div id="zr-result" class="result"></div>
+    <div class="panel" id="pn-month">
+      <h2>整月吉凶日历</h2>
+      <p class="hint">按月铺开，色标显示每天宜忌倾向（金=大吉、绿=可用、灰=常日、红=凶日），点击某天查看当日黄历详情。</p>
+      <div class="form-grid">
+        <div class="field"><label>年 / 月</label>
+          <div class="row">
+            <input id="mc-y" type="number" min="1" max="2"><input id="mc-m" type="number" min="1" max="12">
+          </div>
+        </div>
+        <div class="field"><label>用途</label><select id="mc-matter"></select></div>
+        <div class="field"><label>主事人生肖（可选）</label><select id="mc-zodiac"><option value="">不限</option></select></div>
+        <div class="field actions"><button class="btn primary" id="mc-go">生成月历</button></div>
+      </div>
+      <div id="mc-result" class="result"></div>
+    </div>
+    <div class="panel">
+      <h2>单日黄历</h2>
+      <div class="form-grid">
+        <div class="field"><label>查询日期</label>
+          <div class="row">
+            <input id="hl-y" type="number" min="1" max="2"><input id="hl-m" type="number" min="1" max="12"><input id="hl-d" type="number" min="1" max="31">
+          </div>
+        </div>
+        <div class="field actions"><button class="btn primary" id="hl-go">查当日黄历</button></div>
+      </div>
+      <div id="hl-result"></div>
+    </div>
+  </section>
+
+  <!-- ============ 推演 ============ -->
+  <section id="page-tuiyan" class="page">
+    <div class="panel" id="pn-tuiyan">
+      <h2>流年 · 大运推演</h2>
+      <p class="hint">改任何一项都会自动重算（不用点按钮）。年份支持区间写法：<code>2026-2030</code>，或 <code>2026,2028,2031</code>，最多 12 年。</p>
+      <div class="form-grid">
+        <div class="field"><label>命例</label><select id="ty-profile"></select></div>
+        <div class="field"><label>推演年份（4 位年，支持 2026-2030 区间）</label>
+          <input id="ty-years" type="text" value="2026-2028" placeholder="2026-2030 或 2026,2028" inputmode="numeric"></div>
+        <div class="field"><label>推演模式</label>
+          <select id="ty-mode">
+            <option value="multi">多流派并列（7 派互证）</option>
+            <option value="basic">简明版（冲合刑害）</option>
+          </select></div>
+        <div class="field actions"><button class="btn primary" id="ty-go">重新推演</button></div>
+        <div class="field wide"><div id="ty-quick" class="ty-quick">
+          <button class="btn" data-span="1">今年</button>
+          <button class="btn" data-span="3">未来 3 年</button>
+          <button class="btn" data-span="5">未来 5 年</button>
+          <button class="btn" data-span="10">未来 10 年</button>
+        </div></div>
+      </div>
+    </div>
+    <div id="ty-result" class="result"></div>
+  </section>
+
+  <!-- ============ 方法论（推演方式库） ============ -->
+  <section id="page-method" class="page">
+    <div class="panel" id="pn-method">
+      <h2>推演方式库 · 网上推演方式全归纳</h2>
+      <p class="hint">整理自子平九经（滴天髓 / 子平真诠 / 三命通会 / 渊海子平 / 穷通宝鉴 / 神峰通考 / 千里命稿 / 协纪辨方书 / 果老星宗）与网上主流命理工具的推演口径：正格体系（扶抑 / 调候 / 格局 / 通关 / 病药 / 专旺从格 / 气势 / 三得）、结构关系（刑冲合害破会夹拱 / 空亡墓库 / 宫位六亲 / 十神类象 / 纳音 / 神煞 / 命宫胎元身宫 / 小运）、运岁应期（大运 / 流年引动 / 应期定位 / 流月流日）、盲派象法（串宫压运 / 宾主做功 / 干支象法 / 动态分析）。</p>
+      <div class="form-grid">
+        <div class="field"><label>体系筛选</label><select id="mt-group"></select></div>
+        <div class="field"><label>关键词搜索</label><input id="mt-kw" type="text" placeholder="如：调候 / 应期 / 盲派 / 空亡"></div>
+      </div>
+    </div>
+    <div id="mt-list" class="result"></div>
+    <div class="panel">
+      <h2>推演 SOP · 标准流程 13 步</h2>
+      <p class="hint">拿到命例按这个顺序推，不漏项、不跳步。每步标注了对应的推演方式。</p>
+      <ol class="chain" id="mt-sop"></ol>
+    </div>
+    <div class="panel">
+      <h2>口诀与判据速查</h2>
+      <div id="mt-rules"></div>
+    </div>
+    <div class="panel">
+      <h2>旁参术数体系（网上常见 15 种）</h2>
+      <p class="hint">八字之外的推演体系各有分工：八字看一生结构与节奏，六爻问一事，奇门择时择方，紫微看宫位……分工使用，不混用。</p>
+      <div id="mt-cross"></div>
+    </div>
+  </section>
+
+  <!-- ============ 术数（道家玄门知识库） ============ -->
+  <section id="page-yishu" class="page">
+    <div class="panel" id="pn-yishu">
+      <h2>道家术数 · 玄门八卦与奇门六爻知识库</h2>
+      <p class="hint">整理自《周易·说卦传》《烟波钓叟歌》《遁甲演义》《卜筮正宗》《梅花易数》《六壬大全》等典籍：八经卦（先天为体、后天为用）、洛书九宫、奇门八门九星八神三奇六仪、定局表与格局、六爻六亲六神、梅花起卦体用、六壬十二天将与四课三传、道家五术（山医命相卜）。</p>
+      <div class="form-grid">
+        <div class="field"><label>奇门排盘（时家转盘）</label>
+          <div class="row">
+            <input id="qm-y" type="number" value="2026" min="1901" max="2100">
+            <input id="qm-m" type="number" value="1" min="1" max="12">
+            <input id="qm-d" type="number" value="1" min="1" max="31">
+            <input id="qm-h" type="number" value="10" min="0" max="23">
+            <input id="qm-mi" type="number" value="30" min="0" max="59">
+            <button class="btn primary" id="qm-go">起局</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="qm-result" class="result"></div>
+    <div class="panel">
+      <div class="form-grid">
+        <div class="field"><label>全库搜索</label><input id="ys-kw" type="text" placeholder="如：玄武 / 门迫 / 妻财 / 休门 / 黄庭经"></div>
+        <div class="field"><label>梅花起卦</label>
+          <div class="row">
+            <select id="ys-mh-nian"></select>
+            <select id="ys-mh-yue"></select>
+            <select id="ys-mh-ri"></select>
+            <select id="ys-mh-shi"></select>
+            <button class="btn primary" id="ys-mh-go">起卦</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>奇门定局（节气 × 三元查表）</label>
+          <div class="row">
+            <select id="ys-qm-jie"></select>
+            <select id="ys-qm-yuan"></select>
+            <button class="btn primary" id="ys-qm-go">定局</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="ys-search" class="result"></div>
+    <div id="ys-mh-result" class="result"></div>
+    <div id="ys-qm-result" class="result"></div>
+    <div class="panel">
+      <h2>八经卦（先天为体 · 后天为用）</h2>
+      <p class="hint">先天八卦（乾一兑二离三震四巽五坎六艮七坤八）为体，言对待；后天八卦（洛书配宫）为用，言流行。奇门九宫以后天为盘。</p>
+      <div id="ys-bagua"></div>
+    </div>
+    <div class="panel">
+      <h2>洛书九宫 · 奇门底图（常驻门星神干）</h2>
+      <p class="hint">戴九履一、左三右七、二四为肩、六八为足、五居中央。九宫为地盘，门星神干随时辰转动。</p>
+      <div id="ys-jiugong"></div>
+    </div>
+    <div class="panel">
+      <h2>八门（人事）· 九星（天时）· 八神（神助）· 三奇六仪（干层）</h2>
+      <p class="hint" id="ys-menpo-note"></p>
+      <div id="ys-bamen"></div>
+      <div id="ys-jiuxing"></div>
+      <div id="ys-bashen"></div>
+      <div id="ys-qiyi"></div>
+    </div>
+    <div class="panel">
+      <h2>奇门格局 18 种与用神取用</h2>
+      <div id="ys-geju"></div>
+      <div id="ys-yongshen"></div>
+    </div>
+    <div class="panel" id="pn-mh">
+      <h2>六爻：六亲 · 六神 · 断卦规则 · 用神</h2>
+      <div id="ys-liuyao"></div>
+    </div>
+    <div class="panel">
+      <h2>梅花易数：起卦法与体用生克</h2>
+      <div id="ys-meihua"></div>
+    </div>
+    <div class="panel">
+      <h2>大六壬：十二天将与四课三传</h2>
+      <div id="ys-liuren"></div>
+    </div>
+    <div class="panel">
+      <h2>道家五术：山医命相卜</h2>
+      <div id="ys-wushu"></div>
+    </div>
+    <div class="panel" id="pn-ziwei">
+      <h2>紫微斗数：十四主星 · 十二宫 · 四化 · 安星</h2>
+      <p class="hint">《紫微斗数全书》口径：寅宫起正月顺数生月、月宫起子时逆数生时安命宫；命宫纳音定五行局；紫微系逆布、天府系顺布；三方四正合看格局。</p>
+      <div id="ys-ziwei"></div>
+    </div>
+    <div class="panel">
+      <h2>紫微排盘（自动安星 · 四化 · 大限）</h2>
+      <p class="hint">输入阳历生日与时刻，自动定命宫身宫、五行局、紫微落宫，布十四主星并标出年干四化（禄权科忌）与大限。</p>
+      <div class="form-grid">
+        <div class="field"><label>年</label><input id="zw-y" type="number" value="1990"></div>
+        <div class="field"><label>月</label><input id="zw-m" type="number" value="8"></div>
+        <div class="field"><label>日</label><input id="zw-d" type="number" value="15"></div>
+        <div class="field"><label>时刻（0-23）</label><input id="zw-h" type="number" value="14" min="0" max="23"></div>
+        <div class="field"><label>性别</label><select id="zw-g"><option>男</option><option>女</option></select></div>
+        <div class="field actions"><button class="btn primary" id="zw-go">排紫微盘</button></div>
+      </div>
+      <div id="zw-result" class="result"></div>
+    </div>
+    <div class="panel">
+      <h2>八宅：东四命 · 西四命 · 大游年八方</h2>
+      <p class="hint">《八宅明镜》口径：命卦以年份数字根速算（男 11−根、女 4+根，得 5 男寄坤女寄艮）；宅卦看大门朝向；八方吉凶按大游年歌。</p>
+      <div id="ys-bazhai"></div>
+    </div>
+    <div class="panel" id="pn-xk">
+      <h2>玄空：三元九运与飞星</h2>
+      <p class="hint">《沈氏玄空学》口径：运星入中顺飞布九宫，坐向双星分山星（人丁）向星（财禄）；年紫白 = 9 −（年份后两位数字根）。</p>
+      <div id="ys-xuankong"></div>
+    </div>
+    <div class="panel">
+      <h2>玄空宅命盘（下卦排盘 · 旺衰判局）</h2>
+      <p class="hint">选坐山（向首自动取对面）+ 建造年份定元运，按三元龙阴阳排山向飞星（阳顺阴逆），自动判「旺山旺向 / 上山下水 / 双星到向 / 双星到坐」。</p>
+      <div class="form-grid">
+        <div class="field"><label>坐山（二十四山）</label><select id="xk-mountain"></select></div>
+        <div class="field"><label>建造年份</label><input id="xk-year" type="number" value="2004"></div>
+        <div class="field"><label>流月（节气月，用于紫白叠加）</label><select id="xk-month"></select></div>
+        <div class="field actions"><button class="btn primary" id="xk-go">排宅命盘</button></div>
+      </div>
+      <div id="xk-result" class="result"></div>
+    </div>
+    <div class="panel" id="pn-ly">
+      <h2>六爻摇卦排盘（京房纳甲）</h2>
+      <p class="hint">三枚铜钱摇六次自下而上装卦：背数 3=老阳○（动）、2=少阴、1=少阳、0=老阴×（动）。自动装干支、六亲、六神、世应，并标月破暗动、伏神、变卦。日干支与月建取今日。</p>
+      <div class="form-grid">
+        <div class="field actions"><button class="btn primary" id="ly-shake">🎲 自动摇卦</button></div>
+        <div class="field"><label>或手动选六爻（初爻起）</label>
+          <div class="row" id="ly-inputs"></div></div>
+        <div class="field actions"><button class="btn" id="ly-go">排盘</button></div>
+      </div>
+      <div id="ly-result" class="result"></div>
+    </div>
+    <div class="panel">
+      <h2>相学：三停 · 十二宫 · 五官 · 五岳 · 流年</h2>
+      <p class="hint">《麻衣相法》《柳庄相法》《冰鉴》口径：上停 15-30、中停 31-50、下停 51 后；五官五岳与十二宫对应六亲与流年部位。</p>
+      <div id="ys-xiangxue"></div>
+    </div>
+    <div class="panel">
+      <h2>姓名五格剖象</h2>
+      <p class="hint">天格、人格、地格、外格、总格五格算法；笔画个位定五行（1,2 木 / 3,4 火 / 5,6 土 / 7,8 金 / 9,0 水）；三才与 81 数理参考。</p>
+      <div id="ys-wuge"></div>
+    </div>
+    <div class="panel">
+      <h2>合婚与安太岁</h2>
+      <p class="hint">吕才合婚看年柱纳音；生肖六冲六合三合六害；犯太岁分值 / 冲 / 刑 / 害 / 破，安太岁是顺势减冲的民俗。</p>
+      <div id="ys-hehun"></div>
+      <div id="ys-taisui"></div>
+    </div>
+    <div class="panel">
+      <h2>五运六气（《素问》七篇大论）</h2>
+      <p class="hint">天干化五运、地支化六气；司天主上半年、在泉主下半年；客主加临看该年气候与病候倾向。</p>
+      <div id="ys-wuyun"></div>
+    </div>
+    <div class="panel">
+      <h2>典籍 32 部：核心贡献与关键原文</h2>
+      <div id="ys-dianji"></div>
+    </div>
+  </section>
+
+  <!-- ============ 节气 ============ -->
+  <section id="page-jieqi" class="page">
+    <div class="panel" id="pn-jieqi">
+      <h2>24 节气精查</h2>
+      <div class="form-grid">
+        <div class="field"><label>年份</label><input id="jq-y" type="number" value="2026"></div>
+        <div class="field actions"><button class="btn primary" id="jq-go">查询</button></div>
+      </div>
+      <p class="hint">立春为年柱分界；惊蛰、清明等十二节为月柱分界。时刻已折算为北京时间。</p>
+      <div id="jq-result"></div>
+    </div>
+  </section>
+
+  <!-- ============ 大脑 ============ -->
+  <section id="page-danao" class="page">
+    <div class="panel" id="pn-danao">
+      <h2>大脑 · 决策推理引擎</h2>
+      <p class="hint">描述你遇到的问题，大脑会给出：问题定性 → 匹配规则 → 冲突检查 → 处理步骤。规则权重随你的反馈自学习。</p>
+      <div class="form-grid">
+        <div class="field wide"><label>问题描述</label>
+          <textarea id="dn-input" rows="2" placeholder="例：客人不知道自己几点出生，怎么排盘？ / 我算的结果跟别的 App 不一样 / 客人问什么时候结婚"></textarea>
+        </div>
+        <div class="field wide" id="dn-quick"></div>
+        <div class="field"><label>场景限定</label><select id="dn-scene"></select></div>
+        <div class="field actions"><button class="btn primary" id="dn-go">分析</button></div>
+      </div>
+    </div>
+    <div id="dn-result" class="result"></div>
+    <div class="panel">
+      <h2>大脑 3D 图 · 规则网络</h2>
+      <p class="hint">48 条规则 = 神经元（12 场景分色脑区），拖拽旋转 · 滚轮缩放 · 双击复位 · 悬停看规则名；点「分析」后命中的规则会在图上点亮（点节点可单独聚焦）。</p>
+      <canvas id="danao-3d-canvas" class="danao-canvas"></canvas>
+      <div id="danao-3d-detail" class="result" style="margin-top:10px"></div>
+    </div>
+    <div class="panel">
+      <h2>决策训练（情境判断）</h2>
+      <div class="form-grid">
+        <div class="field"><label>训练场景</label><select id="dq-scene"></select></div>
+        <div class="field actions"><button class="btn primary" id="dq-go">出题</button></div>
+      </div>
+      <div id="dq-result"></div>
+    </div>
+    <div class="panel" id="pn-cases">
+      <h2>实断案例库 · 典籍原案照断（22 案）</h2>
+      <p class="hint">六爻 16 案取自《增删卜易》真实断例（月建日辰 · 卦象 · 断语 · 事后应验），另附玄空/奇门/紫微/择日/八字算法算例 6 案。练法见规则 E04：先遮住断语自断，再对照应验拆差。</p>
+      <div class="form-grid">
+        <div class="field"><label>体系筛选</label><select id="cs-sys"></select></div>
+        <div class="field"><label>关键词</label><input id="cs-kw" type="text" placeholder="如：悔婚 / 回头克 / 应期 / 官讼"></div>
+        <div class="field actions"><button class="btn primary" id="cs-go">检索</button></div>
+      </div>
+      <div id="cs-list" class="cs-list"></div>
+    </div>
+    <div class="panel" id="pn-rules">
+      <h2>规则库（自学习权重）</h2>
+      <div class="field actions"><button class="btn" id="dn-reset">重置权重</button></div>
+      <div id="dn-rules"></div>
+    </div>
+  </section>
+
+  <!-- ============ 训练 ============ -->
+  <section id="page-xunlian" class="page">
+    <div class="panel" id="pn-xl">
+      <h2>思维逻辑训练</h2>
+      <div class="form-grid">
+        <div class="field"><label>模式</label>
+          <select id="xl-mode">
+            <option value="10">快练（10 题）</option>
+            <option value="20">标准（20 题）</option>
+            <option value="5">热身（5 题）</option>
+          </select></div>
+        <div class="field"><label>题型（可多选，默认全部）</label>
+          <div class="type-grid" id="xl-types"></div></div>
+        <div class="field actions"><button class="btn primary" id="xl-go">开始训练</button></div>
+      </div>
+      <div class="stats-bar" id="xl-stats"></div>
+    </div>
+    <div class="panel" id="xl-quiz-panel" style="display:none">
+      <div class="quiz-head">
+        <span id="xl-progress"></span>
+        <span id="xl-timer"></span>
+        <span id="xl-streak"></span>
+      </div>
+      <div id="xl-question" class="question"></div>
+      <div id="xl-options" class="options"></div>
+      <div id="xl-explain" class="explain" style="display:none"></div>
+      <div class="field actions"><button class="btn primary" id="xl-next" style="display:none">下一题</button></div>
+    </div>
+    <div class="panel">
+      <h2>统计与错题本</h2>
+      <div id="xl-report"></div>
+      <div class="field actions">
+        <button class="btn" id="xl-clear-wrong">清空错题本</button>
+        <button class="btn" id="xl-reset">重置全部统计</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 塔罗 · 抽牌台 ============ -->
+  <section id="page-tdraw" class="page">
+    <div class="panel" id="pn-tdraw">
+      <h2>塔罗抽牌 · 78 张 · 正逆位</h2>
+      <p class="hint">问一个自己能影响的问题（默认看三个月内）。牌阵可选；逆位是独立读法，不是简单取反。同一问题别反复抽。</p>
+      <div class="form-grid">
+        <div class="field wide"><label>你的问题（可留空）</label>
+          <input id="tr-q" type="text" placeholder="例：这个项目接下来三个月该怎么推进？" maxlength="60"></div>
+        <div class="field"><label>牌阵</label><select id="tr-spread"></select></div>
+        <div class="field"><label>逆位</label>
+          <select id="tr-rev">
+            <option value="0.35">允许逆位（约 35%）</option>
+            <option value="0">全部正位</option>
+            <option value="0.5">逆位偏多（约 50%）</option>
+          </select></div>
+        <div class="field actions">
+          <button class="btn primary" id="tr-draw">洗牌抽牌</button>
+          <button class="btn" id="tr-again">同一问题重抽</button>
+          <button class="btn" id="tr-copy" disabled>复制结论</button>
+        </div>
+      </div>
+      <p class="tr-status" id="tr-history-status" aria-live="polite">抽牌记录只保存在当前浏览器，最多保留 40 条。</p>
+    </div>
+    <div id="tr-result" class="result"></div>
+    <div class="panel tr-history-panel" id="tr-history">
+      <h2>本机历史抽牌 <span class="tr-history-count">最近 40 条</span></h2>
+      <p class="hint">数据仅在当前浏览器本地保存；换设备、清理浏览器数据或无痕窗口关闭后记录不会同步。点「回看」可还原原牌与原结论，不会重新洗牌。</p>
+      <div id="tr-history-list" class="tr-history-list"></div>
+    </div>
+  </section>
+
+  <!-- ============ 塔罗 · 牌库 ============ -->
+  <section id="page-tlib" class="page">
+    <div class="panel" id="pn-tlib">
+      <h2>牌库 · 78 张牌义</h2>
+      <p class="hint">数据基准：Rider–Waite–Smith（1909 公版）+ A.E. Waite《The Pictorial Key to the Tarot》；元素与行星用 Golden Dawn 传统对应。</p>
+      <div class="form-grid">
+        <div class="field"><label>分类</label><select id="tl-group"></select></div>
+        <div class="field"><label>关键词</label><input id="tl-kw" type="text" placeholder="如：权杖 / 结束 / 承诺 / 逆位"></div>
+      </div>
+    </div>
+    <div id="tl-list" class="result"></div>
+  </section>
+
+  <!-- ============ 塔罗 · 牌阵 ============ -->
+  <section id="page-tspread" class="page">
+    <div class="panel" id="pn-tspread">
+      <h2>牌阵库 · 位置决定含义</h2>
+      <p class="hint">同一张牌落在不同位置，读法完全不同——先看位置语义，再看牌义。选阵建议：一个问题一个阵，别贪多。</p>
+    </div>
+    <div id="ts-list" class="result"></div>
+  </section>
+
+  <!-- ============ 塔罗 · 入门 ============ -->
+  <section id="page-tbasic" class="page">
+    <div class="panel" id="pn-tbasic">
+      <h2>塔罗入门 · 结构 / 元素 / 逆位 / 问法</h2>
+      <p class="hint">先把骨架搭清楚，再谈解读。这一页是使用手册，不是神秘学介绍。</p>
+    </div>
+    <div id="tb-body" class="result"></div>
+  </section>
+</main>
+
+<footer>
+  <span class="foot-title">中玄 · 推演台<em>在线版</em></span>
+  <a class="btn primary foot-dl" href="https://ah-git-love.github.io/zhongxuan/">🌐 打开官方网页</a>
+  <span class="update-footnote">在线更新 · 数据保存在本机</span>
+</footer>
+
+<dialog id="tr-art-dialog" class="tr-art-dialog" aria-labelledby="tr-art-title">
+  <div class="tr-art-dialog-inner">
+    <div class="tr-art-dialog-head"><h2 id="tr-art-title">经典塔罗牌面</h2><button type="button" class="btn" id="tr-art-close" autofocus>关闭</button></div>
+    <img id="tr-art-large" alt="" width="480" height="832">
+    <p>Pamela Colman Smith · Rider–Waite–Smith · <a href="./art-credits.html">来源与署名</a></p>
+  </div>
+</dialog>
+
+<script src="js/core.js"></script>
+<script src="js/astro.js"></script>
+<script src="js/bazi.js"></script>
+<script src="js/almanac.js"></script>
+<script src="js/methods.js"></script>
+<script src="js/yishu.js"></script>
+<script src="js/qimen.js"></script>
+<script src="js/brain.js"></script>
+<script src="js/danao3d.js"></script>
+<script src="js/ziwei.js"></script>
+<script src="js/xuankong.js"></script>
+<script src="js/liuyao.js"></script>
+<script src="js/cases.js"></script>
+<script src="js/tarot.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/trainer.js"></script>
+<script src="js/app.js"></script>
+<script>
+/* 网址版更新：在线时自动检查 SW 版本；资源更新就绪后提示刷新，无需重新安装应用包。 */
+(function(){
+  if (!('serviceWorker' in navigator) || (location.protocol !== 'http:' && location.protocol !== 'https:')) return;
+  var notice = document.getElementById('update-notice');
+  var message = document.getElementById('update-message');
+  var hadController = !!navigator.serviceWorker.controller;
+  var registration = null;
+  var updateDismissed = false;
+  function showUpdate(text){
+    if (updateDismissed) return;
+    if (message) message.textContent = text || '新版已就绪；刷新页面即可更新，你的本机数据会保留。';
+    if (notice) notice.hidden = false;
+  }
+  navigator.serviceWorker.addEventListener('controllerchange', function(){
+    if (hadController) showUpdate();
+    hadController = true;
+  });
+  navigator.serviceWorker.register('./sw.js', { updateViaCache:'none' }).then(function(reg){
+    registration = reg;
+    function inspect(){
+      if (reg.waiting && navigator.serviceWorker.controller) showUpdate();
+    }
+    reg.addEventListener('updatefound', function(){
+      updateDismissed = false;
+      var worker = reg.installing;
+      if (!worker) return;
+      worker.addEventListener('statechange', function(){
+        if (worker.state === 'installed' && navigator.serviceWorker.controller) inspect();
+      });
+    });
+    inspect();
+    function checkForUpdate(){
+      if (document.visibilityState !== 'hidden') reg.update().catch(function(){});
+    }
+    checkForUpdate();
+    window.setInterval(checkForUpdate, 5 * 60 * 1000);
+    window.addEventListener('online', checkForUpdate);
+    document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'visible') checkForUpdate(); });
+  }).catch(function(){});
+  var updateNow = document.getElementById('update-now');
+  var updateLater = document.getElementById('update-later');
+  if (updateNow) updateNow.addEventListener('click', function(){
+    if (registration && registration.waiting) registration.waiting.postMessage({ type:'SKIP_WAITING' });
+    window.location.reload();
+  });
+  if (updateLater) updateLater.addEventListener('click', function(){ updateDismissed = true; if (notice) notice.hidden = true; });
+})();
+</script>
+</body>
+</html>

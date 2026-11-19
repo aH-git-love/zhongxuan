@@ -1,0 +1,2857 @@
+{
+  "schemaVersion": 1,
+  "deck": "Rider-Waite-Smith, Pamela Colman Smith, original Pam-A scans",
+  "sourceCategory": "https://commons.wikimedia.org/wiki/Category:Rider-Waite-Smith_tarot_deck_(TaionWC)",
+  "author": "Pamela Colman Smith",
+  "processing": {
+    "format": "WebP",
+    "width": 420,
+    "quality": 62,
+    "method": 6,
+    "imageBudgetBytes": 5800000,
+    "budgetRecompressionQuality": 54,
+    "resize": "proportional Lanczos; entire scan retained; no crop, recoloring or text overlay"
+  },
+  "verifiedAt": "2026-11-19T17:28:43+00:00",
+  "cards": [
+    {
+      "id": "M00",
+      "cardName": "愚者",
+      "englishName": "The Fool",
+      "suit": "major",
+      "number": 0,
+      "sourceFile": "File:RWS Tarot 00 Fool.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_00_Fool.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1144,
+        "height": 1919
+      },
+      "sourceSha1": "a707c0123b59fd2420b05645e9d3d16b74235b42",
+      "localImage": "assets/tarot/rws/M00.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 705
+      },
+      "bytes": 54482,
+      "sha256": "d7cef5dbbd10da87d623970e6a6f8817e849fe026705269e4c54bf6863909e45",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg",
+      "downloadDimensions": {
+        "width": 1144,
+        "height": 1919
+      }
+    },
+    {
+      "id": "M01",
+      "cardName": "魔术师",
+      "englishName": "The Magician",
+      "suit": "major",
+      "number": 1,
+      "sourceFile": "File:RWS Tarot 01 Magician.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_01_Magician.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1108,
+        "height": 1920
+      },
+      "sourceSha1": "d24df085c3c22da8cd7f88c0f2a4256c6ae50fda",
+      "localImage": "assets/tarot/rws/M01.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 728
+      },
+      "bytes": 57036,
+      "sha256": "c4aa6fbaf460fe28121799fc13709cce41504e655cb9d696ae51a3d630e772e4",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg",
+      "downloadDimensions": {
+        "width": 1108,
+        "height": 1920
+      }
+    },
+    {
+      "id": "M02",
+      "cardName": "女祭司",
+      "englishName": "The High Priestess",
+      "suit": "major",
+      "number": 2,
+      "sourceFile": "File:RWS Tarot 02 High Priestess.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_02_High_Priestess.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1117,
+        "height": 1919
+      },
+      "sourceSha1": "bb96b30d13035c34a06006ea4aca8ab9a5a98506",
+      "localImage": "assets/tarot/rws/M02.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 63722,
+      "sha256": "4caceda869f35ca72373de0fd7eb721492c9003412645ef0f338ed5ca9a30183",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg",
+      "downloadDimensions": {
+        "width": 1117,
+        "height": 1919
+      }
+    },
+    {
+      "id": "M03",
+      "cardName": "皇后",
+      "englishName": "The Empress",
+      "suit": "major",
+      "number": 3,
+      "sourceFile": "File:RWS Tarot 03 Empress.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_03_Empress.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1123,
+        "height": 1920
+      },
+      "sourceSha1": "0c04891e42d51937390049994de8ac8867b201a1",
+      "localImage": "assets/tarot/rws/M03.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 718
+      },
+      "bytes": 69978,
+      "sha256": "781c2547e25cb5bb906631daf7be243072949b45e4826dff2cf54db17503b32c",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg",
+      "downloadDimensions": {
+        "width": 1123,
+        "height": 1920
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M04",
+      "cardName": "皇帝",
+      "englishName": "The Emperor",
+      "suit": "major",
+      "number": 4,
+      "sourceFile": "File:RWS Tarot 04 Emperor.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_04_Emperor.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1117,
+        "height": 1919
+      },
+      "sourceSha1": "3fc0742d9a9199a226641a86b099df9540cfc3a3",
+      "localImage": "assets/tarot/rws/M04.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 66350,
+      "sha256": "1c420427eefe394f69bf8cc60b8cb53c709040b3c80f5105283497d225e5e4a4",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg",
+      "downloadDimensions": {
+        "width": 1117,
+        "height": 1919
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M05",
+      "cardName": "教皇",
+      "englishName": "The Hierophant",
+      "suit": "major",
+      "number": 5,
+      "sourceFile": "File:RWS Tarot 05 Hierophant.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_05_Hierophant.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/8/8d/RWS_Tarot_05_Hierophant.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "1e7b864bcaf4c672d8fdf17e2abf7379326949c4",
+      "localImage": "assets/tarot/rws/M05.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 724
+      },
+      "bytes": 71196,
+      "sha256": "9a0048dc406e0b9e06d302d5b77551e101b9c9daacde20bc8abf6fc0904b23d0",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/8/8d/RWS_Tarot_05_Hierophant.jpg",
+      "downloadDimensions": {
+        "width": 1114,
+        "height": 1919
+      }
+    },
+    {
+      "id": "M06",
+      "cardName": "恋人",
+      "englishName": "The Lovers",
+      "suit": "major",
+      "number": 6,
+      "sourceFile": "File:RWS Tarot 06 Lovers.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_06_Lovers.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_06_Lovers.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1122,
+        "height": 1920
+      },
+      "sourceSha1": "1c18b372fc4658948f2d1e9770b2aa87a2e4ac02",
+      "localImage": "assets/tarot/rws/M06.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 719
+      },
+      "bytes": 73388,
+      "sha256": "c781666d3e19ca06f18994b1e853b74c62aea615d7d30ab8ed4500b5cfe4a7ad",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_06_Lovers.jpg",
+      "downloadDimensions": {
+        "width": 1122,
+        "height": 1920
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M07",
+      "cardName": "战车",
+      "englishName": "The Chariot",
+      "suit": "major",
+      "number": 7,
+      "sourceFile": "File:RWS Tarot 07 Chariot.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_07_Chariot.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1111,
+        "height": 1919
+      },
+      "sourceSha1": "8a93a2130017d32a7e8f9612d0874b5b1b41f83d",
+      "localImage": "assets/tarot/rws/M07.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 64886,
+      "sha256": "6380808c2fefbfe7e88e18dcff5028d3ad4432f82b5b47139567d8977a6f7e72",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg",
+      "downloadDimensions": {
+        "width": 1111,
+        "height": 1919
+      }
+    },
+    {
+      "id": "M08",
+      "cardName": "力量",
+      "englishName": "Strength",
+      "suit": "major",
+      "number": 8,
+      "sourceFile": "File:RWS Tarot 08 Strength.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_08_Strength.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/f/f5/RWS_Tarot_08_Strength.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "16baefeee43cee6b285838d27af690a0cf7e9db6",
+      "localImage": "assets/tarot/rws/M08.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 724
+      },
+      "bytes": 53524,
+      "sha256": "453f06f1e7ea2f0dc2846a0097fc2e7356b950ea70c97cff6dbf08c838b22baf",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/f/f5/RWS_Tarot_08_Strength.jpg",
+      "downloadDimensions": {
+        "width": 1114,
+        "height": 1919
+      }
+    },
+    {
+      "id": "M09",
+      "cardName": "隐士",
+      "englishName": "The Hermit",
+      "suit": "major",
+      "number": 9,
+      "sourceFile": "File:RWS Tarot 09 Hermit.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_09_Hermit.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/4/4d/RWS_Tarot_09_Hermit.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1123,
+        "height": 1920
+      },
+      "sourceSha1": "106bf91c47522063c78d60ab412c53064541f617",
+      "localImage": "assets/tarot/rws/M09.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 718
+      },
+      "bytes": 35162,
+      "sha256": "4ea26c39c0cc44aa375f0692c4108ead923f0f33cb9d7297d85456d12d96b4f1",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/4/4d/RWS_Tarot_09_Hermit.jpg",
+      "downloadDimensions": {
+        "width": 1123,
+        "height": 1920
+      }
+    },
+    {
+      "id": "M10",
+      "cardName": "命运之轮",
+      "englishName": "Wheel of Fortune",
+      "suit": "major",
+      "number": 10,
+      "sourceFile": "File:RWS Tarot 10 Wheel of Fortune.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_10_Wheel_of_Fortune.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1104,
+        "height": 1920
+      },
+      "sourceSha1": "0758555fa3b5960fb631cba01879f3be0260a278",
+      "localImage": "assets/tarot/rws/M10.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 730
+      },
+      "bytes": 67100,
+      "sha256": "aa2d88e2a4bca5fa44fd8507362c4c645075252736f9a99b22cee2b4b75c6ca2",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg",
+      "downloadDimensions": {
+        "width": 1104,
+        "height": 1920
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M11",
+      "cardName": "正义",
+      "englishName": "Justice",
+      "suit": "major",
+      "number": 11,
+      "sourceFile": "File:RWS Tarot 11 Justice.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_11_Justice.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/e/e0/RWS_Tarot_11_Justice.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "16404e646dac8b8f5de4841b9259065059a04f71",
+      "localImage": "assets/tarot/rws/M11.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 724
+      },
+      "bytes": 68920,
+      "sha256": "7ab0d7f5eabbf5b1f929be57e87c1606dee3b90eb4ff87a5e2beb5e45b77b243",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/e/e0/RWS_Tarot_11_Justice.jpg",
+      "downloadDimensions": {
+        "width": 1114,
+        "height": 1919
+      }
+    },
+    {
+      "id": "M12",
+      "cardName": "倒吊人",
+      "englishName": "The Hanged Man",
+      "suit": "major",
+      "number": 12,
+      "sourceFile": "File:RWS Tarot 12 Hanged Man.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_12_Hanged_Man.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/2/2b/RWS_Tarot_12_Hanged_Man.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1092,
+        "height": 1920
+      },
+      "sourceSha1": "41d2398a09087cc2936fcc70fcde7d92552331fd",
+      "localImage": "assets/tarot/rws/M12.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 738
+      },
+      "bytes": 68206,
+      "sha256": "3abb01eb073f8878e4b2ea1201ebf3aacc1d8bf235d332d5532769d5eb395a82",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/2/2b/RWS_Tarot_12_Hanged_Man.jpg",
+      "downloadDimensions": {
+        "width": 1092,
+        "height": 1920
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M13",
+      "cardName": "死神",
+      "englishName": "Death",
+      "suit": "major",
+      "number": 13,
+      "sourceFile": "File:RWS Tarot 13 Death.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_13_Death.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/d/d7/RWS_Tarot_13_Death.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1111,
+        "height": 1919
+      },
+      "sourceSha1": "a49bfe7b626af084f33a67dbb22c001718f80a80",
+      "localImage": "assets/tarot/rws/M13.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 71464,
+      "sha256": "8737e3c8eadf91e936494c32430ec86a9608a1925f0b420d3799f7f882b8023f",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/d7/RWS_Tarot_13_Death.jpg",
+      "downloadDimensions": {
+        "width": 1111,
+        "height": 1919
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M14",
+      "cardName": "节制",
+      "englishName": "Temperance",
+      "suit": "major",
+      "number": 14,
+      "sourceFile": "File:RWS Tarot 14 Temperance.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_14_Temperance.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/f/f8/RWS_Tarot_14_Temperance.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1106,
+        "height": 1920
+      },
+      "sourceSha1": "2d9eb7320f00cbf6d9e7ae334853ff7185a6b769",
+      "localImage": "assets/tarot/rws/M14.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 729
+      },
+      "bytes": 74870,
+      "sha256": "ff32ce471137f0a29ad989fa4ce90ace67fd33603858b7f82f365b85b0648dcb",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/f/f8/RWS_Tarot_14_Temperance.jpg",
+      "downloadDimensions": {
+        "width": 1106,
+        "height": 1920
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M15",
+      "cardName": "恶魔",
+      "englishName": "The Devil",
+      "suit": "major",
+      "number": 15,
+      "sourceFile": "File:RWS Tarot 15 Devil.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_15_Devil.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/5/55/RWS_Tarot_15_Devil.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1090,
+        "height": 1920
+      },
+      "sourceSha1": "fc1d9242a524d82317fc45b27ef9e93af550b082",
+      "localImage": "assets/tarot/rws/M15.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 740
+      },
+      "bytes": 55888,
+      "sha256": "a9264277c08924e226558c828bbad3be75ce930b130640f204add6339b4367e9",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/5/55/RWS_Tarot_15_Devil.jpg",
+      "downloadDimensions": {
+        "width": 1090,
+        "height": 1920
+      }
+    },
+    {
+      "id": "M16",
+      "cardName": "塔",
+      "englishName": "The Tower",
+      "suit": "major",
+      "number": 16,
+      "sourceFile": "File:RWS Tarot 16 Tower.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_16_Tower.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "c9da59cdde2b85b49c9e0ce67a6a08c7893ca926",
+      "localImage": "assets/tarot/rws/M16.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 51592,
+      "sha256": "a9162509c5a233e7771a6da3cce6200bca1f9bb9a7c536f6074c8351d5e73efd",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg",
+      "downloadDimensions": {
+        "width": 1109,
+        "height": 1920
+      }
+    },
+    {
+      "id": "M17",
+      "cardName": "星星",
+      "englishName": "The Star",
+      "suit": "major",
+      "number": 17,
+      "sourceFile": "File:RWS Tarot 17 Star.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_17_Star.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_17_Star.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "e220037a9310a12abd5733711810b4497a23ef77",
+      "localImage": "assets/tarot/rws/M17.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 724
+      },
+      "bytes": 58502,
+      "sha256": "cd3543290b7ee7ed2d7ef89d9f211513f5dc6d73b39ad6a4e6924c74a4ffb5e1",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_17_Star.jpg",
+      "downloadDimensions": {
+        "width": 1114,
+        "height": 1919
+      }
+    },
+    {
+      "id": "M18",
+      "cardName": "月亮",
+      "englishName": "The Moon",
+      "suit": "major",
+      "number": 18,
+      "sourceFile": "File:RWS Tarot 18 Moon.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_18_Moon.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/7/7f/RWS_Tarot_18_Moon.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1111,
+        "height": 1919
+      },
+      "sourceSha1": "e85cd51cdb95ef3b46284c0c317f72414b4ef30e",
+      "localImage": "assets/tarot/rws/M18.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 60590,
+      "sha256": "b24ec013d7986c4eabafbb1c5427e8a748ba23c5d394647f9fbddabb8a61c063",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/7/7f/RWS_Tarot_18_Moon.jpg",
+      "downloadDimensions": {
+        "width": 1111,
+        "height": 1919
+      }
+    },
+    {
+      "id": "M19",
+      "cardName": "太阳",
+      "englishName": "The Sun",
+      "suit": "major",
+      "number": 19,
+      "sourceFile": "File:RWS Tarot 19 Sun.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_19_Sun.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "c12879caebe972e194e81743e5925c5b8c5607d8",
+      "localImage": "assets/tarot/rws/M19.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 724
+      },
+      "bytes": 69286,
+      "sha256": "b06d46541162c3eca51096441951c07486c762ff35188873d81a111d5c125fde",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg",
+      "downloadDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M20",
+      "cardName": "审判",
+      "englishName": "Judgement",
+      "suit": "major",
+      "number": 20,
+      "sourceFile": "File:RWS Tarot 20 Judgement.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_20_Judgement.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1115,
+        "height": 1920
+      },
+      "sourceSha1": "19f6e9aae7c8169c75946e3eeb2b517cb295eb53",
+      "localImage": "assets/tarot/rws/M20.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 68992,
+      "sha256": "5eb61485b6faf7f0c1e760dfae26e032fa1bc61f8cb1beccd8b1bd3882a54d44",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg",
+      "downloadDimensions": {
+        "width": 1115,
+        "height": 1920
+      },
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "M21",
+      "cardName": "世界",
+      "englishName": "The World",
+      "suit": "major",
+      "number": 21,
+      "sourceFile": "File:RWS Tarot 21 World.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:RWS_Tarot_21_World.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1112,
+        "height": 1920
+      },
+      "sourceSha1": "5b41b2ebeffac2fea5348b2607479a4ee0fd99b8",
+      "localImage": "assets/tarot/rws/M21.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 70580,
+      "sha256": "a25a42c796355c52356269d632a965599d932eba80ba4b4f8bb09f1793786361",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg",
+      "downloadDimensions": {
+        "width": 1112,
+        "height": 1920
+      }
+    },
+    {
+      "id": "W01",
+      "cardName": "权杖一",
+      "englishName": "",
+      "suit": "wands",
+      "number": 1,
+      "sourceFile": "File:Wands01.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands01.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/1/11/Wands01.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1106,
+        "height": 1920
+      },
+      "sourceSha1": "87dcc6561605687ecd2bcd672f3157ad6b1eaaae",
+      "localImage": "assets/tarot/rws/W01.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 729
+      },
+      "bytes": 63656,
+      "sha256": "af1fbda3beb986b5667e647c0d7f4a548c1d31877cbd4b33329b7f6928d29908",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/1/11/Wands01.jpg",
+      "downloadDimensions": {
+        "width": 1106,
+        "height": 1920
+      }
+    },
+    {
+      "id": "W02",
+      "cardName": "权杖二",
+      "englishName": "",
+      "suit": "wands",
+      "number": 2,
+      "sourceFile": "File:Wands02.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands02.jpg",
+      "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wands02.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1115,
+        "height": 1920
+      },
+      "sourceSha1": "224cd7b4b1512574f77dfbeca6f64ec30eb779e1",
+      "localImage": "assets/tarot/rws/W02.webp",
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 60708,
+      "sha256": "91e8ce33290eb6becd173adc39ca16bf86b0487deff7473f370d1a152ae31412",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wands02.jpg",
+      "downloadDimensions": {
+        "width": 1115,
+        "height": 1920
+      }
+    },
+    {
+      "id": "W03",
+      "cardName": "权杖三",
+      "englishName": "",
+      "suit": "wands",
+      "number": 3,
+      "sourceFile": "File:Wands03.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands03.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Wands03.jpg/500px-Wands03.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1103,
+        "height": 1920
+      },
+      "sourceSha1": "8b18d992a00b65f783f1ce95930ea7a6d7771eab",
+      "localImage": "assets/tarot/rws/W03.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Wands03.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 870
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 731
+      },
+      "bytes": 86846,
+      "sha256": "86f0b3842a44c3ec395c35f07ae96186c114af0997b80d47250a210746ef5186",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W04",
+      "cardName": "权杖四",
+      "englishName": "",
+      "suit": "wands",
+      "number": 4,
+      "sourceFile": "File:Wands04.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands04.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Wands04.jpg/500px-Wands04.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1108,
+        "height": 1920
+      },
+      "sourceSha1": "d938100eabd3e515789eac05dcebb2d7749d57df",
+      "localImage": "assets/tarot/rws/W04.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Wands04.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 68428,
+      "sha256": "71ddaee723b79616f355dc193b447da11a05f652f91a9af53447d38a52e5b086",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W05",
+      "cardName": "权杖五",
+      "englishName": "",
+      "suit": "wands",
+      "number": 5,
+      "sourceFile": "File:Wands05.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands05.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Wands05.jpg/500px-Wands05.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1108,
+        "height": 1920
+      },
+      "sourceSha1": "480db3a9788df55659a554252e6f305e55f35720",
+      "localImage": "assets/tarot/rws/W05.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Wands05.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 72158,
+      "sha256": "35a3fa2237ccc2568f52ad5a858b09da1c09a304c5058dd73d06ceedb83ce877",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W06",
+      "cardName": "权杖六",
+      "englishName": "",
+      "suit": "wands",
+      "number": 6,
+      "sourceFile": "File:Wands06.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands06.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/Wands06.jpg/500px-Wands06.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1118,
+        "height": 1920
+      },
+      "sourceSha1": "a06a540821876a1693ac1856cbf017bc8b011dbf",
+      "localImage": "assets/tarot/rws/W06.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Wands06.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 859
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 78456,
+      "sha256": "59fb3d87bc3783e4ad00a9def231fa2d0c7282a78b9682d8490461146732bb78",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W07",
+      "cardName": "权杖七",
+      "englishName": "",
+      "suit": "wands",
+      "number": 7,
+      "sourceFile": "File:Wands07.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands07.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Wands07.jpg/500px-Wands07.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "d63a45b166eda1dc993268f78a760a86f7c52209",
+      "localImage": "assets/tarot/rws/W07.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Wands07.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 62766,
+      "sha256": "8ae0c3effb68868ec04396c61b825c656aba6f86e0c8384f75907b5ddea94070"
+    },
+    {
+      "id": "W08",
+      "cardName": "权杖八",
+      "englishName": "",
+      "suit": "wands",
+      "number": 8,
+      "sourceFile": "File:Wands08.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands08.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Wands08.jpg/500px-Wands08.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1115,
+        "height": 1920
+      },
+      "sourceSha1": "ee83d049b8fa4f4fd378f0f69b58fc4c25b4ab8b",
+      "localImage": "assets/tarot/rws/W08.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Wands08.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 62014,
+      "sha256": "f58f78f9621a820dd481546ada4358b736e91dcc511500c35052adcde6a3fb56"
+    },
+    {
+      "id": "W09",
+      "cardName": "权杖九",
+      "englishName": "",
+      "suit": "wands",
+      "number": 9,
+      "sourceFile": "File:Wands09.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands09.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Wands09.jpg/500px-Wands09.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "3715a212b70ecc95737b6b1ea5ee360332624218",
+      "localImage": "assets/tarot/rws/W09.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Wands09.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 77006,
+      "sha256": "b3c884292f213f879f6ad5101b9c83475e9faf3852112019fb2e41a7d6eb9201",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W10",
+      "cardName": "权杖十",
+      "englishName": "",
+      "suit": "wands",
+      "number": 10,
+      "sourceFile": "File:Wands10.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands10.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Wands10.jpg/500px-Wands10.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1101,
+        "height": 1920
+      },
+      "sourceSha1": "7931b8e703b4fe520ffd4bda5da49d8087c1e3ca",
+      "localImage": "assets/tarot/rws/W10.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Wands10.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 872
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 732
+      },
+      "bytes": 69618,
+      "sha256": "17a56f78c85bff3975ec74905be58527c7d7c68b2866325f49710de7c5f26818",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W11",
+      "cardName": "权杖侍从",
+      "englishName": "",
+      "suit": "wands",
+      "number": 11,
+      "sourceFile": "File:Wands11.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands11.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Wands11.jpg/500px-Wands11.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "0b898179e4d32aed7a57f583083fe9c699c9481e",
+      "localImage": "assets/tarot/rws/W11.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Wands11.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 90050,
+      "sha256": "a31f84cb2c0c3883a4625a1bc7dfa13402186a14380144a3829413344b27035c",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W12",
+      "cardName": "权杖骑士",
+      "englishName": "",
+      "suit": "wands",
+      "number": 12,
+      "sourceFile": "File:Wands12.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands12.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Wands12.jpg/500px-Wands12.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1115,
+        "height": 1920
+      },
+      "sourceSha1": "0260e923a92c43ed4943ce475a05eb03f0086cf4",
+      "localImage": "assets/tarot/rws/W12.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/1/16/Wands12.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 95836,
+      "sha256": "2a7a08a15d0422e09c391b7bb803d3b1fb43043ea18b0ace84f34c566a7182d2",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W13",
+      "cardName": "权杖王后",
+      "englishName": "",
+      "suit": "wands",
+      "number": 13,
+      "sourceFile": "File:Wands13.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands13.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Wands13.jpg/500px-Wands13.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1118,
+        "height": 1920
+      },
+      "sourceSha1": "011c387bbdebeca12b308bda5555a7c024705e75",
+      "localImage": "assets/tarot/rws/W13.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Wands13.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 859
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 93238,
+      "sha256": "203810bc617a2af97a21b4233d33695f54923a2e05a9f122d22d11d290d1d69c",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "W14",
+      "cardName": "权杖国王",
+      "englishName": "",
+      "suit": "wands",
+      "number": 14,
+      "sourceFile": "File:Wands14.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wands14.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Wands14.jpg/500px-Wands14.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1104,
+        "height": 1920
+      },
+      "sourceSha1": "d181026328ff20bd53162d74806a97a138925822",
+      "localImage": "assets/tarot/rws/W14.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Wands14.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 870
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 731
+      },
+      "bytes": 97470,
+      "sha256": "500adb50b9fdae60a23ca2964b0c6ba635b86182adbbd75f77373b337f9b9903",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C01",
+      "cardName": "圣杯一",
+      "englishName": "",
+      "suit": "cups",
+      "number": 1,
+      "sourceFile": "File:Cups01.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups01.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Cups01.jpg/500px-Cups01.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1112,
+        "height": 1920
+      },
+      "sourceSha1": "d9aaeedc3e15d2983cabcf1a63135039070864e7",
+      "localImage": "assets/tarot/rws/C01.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/3/36/Cups01.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 863
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 90798,
+      "sha256": "41c2e38bf4122cb647e5e3efb111f11e1d8ebd9f24db3ff4e901dd7906b14511",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C02",
+      "cardName": "圣杯二",
+      "englishName": "",
+      "suit": "cups",
+      "number": 2,
+      "sourceFile": "File:Cups02.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups02.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Cups02.jpg/500px-Cups02.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "31ff6179cff02fcdb6a292ec4d15e66e4727bd55",
+      "localImage": "assets/tarot/rws/C02.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Cups02.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 85618,
+      "sha256": "4ada352e215b7615264a5ae4cb5f64e336fdaf06c89db0793fb3167c7a85555d",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C03",
+      "cardName": "圣杯三",
+      "englishName": "",
+      "suit": "cups",
+      "number": 3,
+      "sourceFile": "File:Cups03.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups03.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Cups03.jpg/500px-Cups03.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1117,
+        "height": 1919
+      },
+      "sourceSha1": "8644f8f839d1e7c785ce4cd28c0a7553b40f29ca",
+      "localImage": "assets/tarot/rws/C03.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Cups03.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 859
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 80192,
+      "sha256": "3f424f2bd87d96904f470760896ddc902b85497c3f52f2d1ef5fd17847f1cf8a",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C04",
+      "cardName": "圣杯四",
+      "englishName": "",
+      "suit": "cups",
+      "number": 4,
+      "sourceFile": "File:Cups04.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups04.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Cups04.jpg/500px-Cups04.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1118,
+        "height": 1920
+      },
+      "sourceSha1": "aced20aeeb9b69215ea5df106bb3ccc9710b2f8a",
+      "localImage": "assets/tarot/rws/C04.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/3/35/Cups04.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 859
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 70236,
+      "sha256": "54d982a836d0238e583f924770ebc87d9b660f4e67be8827d72bad279459571a"
+    },
+    {
+      "id": "C05",
+      "cardName": "圣杯五",
+      "englishName": "",
+      "suit": "cups",
+      "number": 5,
+      "sourceFile": "File:Cups05.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups05.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d7/Cups05.jpg/500px-Cups05.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1121,
+        "height": 1920
+      },
+      "sourceSha1": "28d89b259fcfccce0336557e2f691244304475ae",
+      "localImage": "assets/tarot/rws/C05.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Cups05.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 856
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 719
+      },
+      "bytes": 52164,
+      "sha256": "424da8d985053640bbe781420364058c9d377a5f00379e1b94f9d2c249592387"
+    },
+    {
+      "id": "C06",
+      "cardName": "圣杯六",
+      "englishName": "",
+      "suit": "cups",
+      "number": 6,
+      "sourceFile": "File:Cups06.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups06.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Cups06.jpg/500px-Cups06.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1115,
+        "height": 1920
+      },
+      "sourceSha1": "0c98185dbc9c36f1383b576e20b154e254e02a83",
+      "localImage": "assets/tarot/rws/C06.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/1/17/Cups06.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 96202,
+      "sha256": "6c9c6651a482c8ef9143f80eee41e37470df740580486645488200300c88a699",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C07",
+      "cardName": "圣杯七",
+      "englishName": "",
+      "suit": "cups",
+      "number": 7,
+      "sourceFile": "File:Cups07.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups07.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Cups07.jpg/500px-Cups07.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "46cddf039c6cdbb73062ec02d9b46305a1c68c7e",
+      "localImage": "assets/tarot/rws/C07.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Cups07.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 69022,
+      "sha256": "7ad687d78a2ed5b2fcae0f4988419741944463b035e7bea4bd1e827a488a140d",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C08",
+      "cardName": "圣杯八",
+      "englishName": "",
+      "suit": "cups",
+      "number": 8,
+      "sourceFile": "File:Cups08.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups08.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Cups08.jpg/500px-Cups08.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "89419f820aa82cb855cd705c97741f439a2ef757",
+      "localImage": "assets/tarot/rws/C08.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/6/60/Cups08.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 71980,
+      "sha256": "f032628020621444894a359af36fe1dccb350a861e797b729ebaab5813663f8f",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C09",
+      "cardName": "圣杯九",
+      "englishName": "",
+      "suit": "cups",
+      "number": 9,
+      "sourceFile": "File:Cups09.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups09.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Cups09.jpg/500px-Cups09.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "d06b79c496232ae7a12e8c1bd034b37b5580202e",
+      "localImage": "assets/tarot/rws/C09.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/2/24/Cups09.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 74134,
+      "sha256": "c2ac76b1e3ba7f4d84999cf33ddd864f03494417a9ecffb1bfc59a58899a4cc1",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C10",
+      "cardName": "圣杯十",
+      "englishName": "",
+      "suit": "cups",
+      "number": 10,
+      "sourceFile": "File:Cups10.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups10.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Cups10.jpg/500px-Cups10.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "29c49649940bac0a8c0dff6e1cb651f60e1b47af",
+      "localImage": "assets/tarot/rws/C10.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/8/84/Cups10.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 92032,
+      "sha256": "10d4028cb42aa1afdb73a3e010f2994e7cfc0b20a1b016d54f6f2825588c2876",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C11",
+      "cardName": "圣杯侍从",
+      "englishName": "",
+      "suit": "cups",
+      "number": 11,
+      "sourceFile": "File:Cups11.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups11.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Cups11.jpg/500px-Cups11.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1115,
+        "height": 1920
+      },
+      "sourceSha1": "ef5138a1d6bea70661665547298e79364754ee90",
+      "localImage": "assets/tarot/rws/C11.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Cups11.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 92088,
+      "sha256": "85b403d0c96015df5588a680f5aeaeb54954f0e228942b0a98c6392d07a6abb0",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C12",
+      "cardName": "圣杯骑士",
+      "englishName": "",
+      "suit": "cups",
+      "number": 12,
+      "sourceFile": "File:Cups12.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups12.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Cups12.jpg/500px-Cups12.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "bfcbc0b7014f2041b38eb76cb7b7e253d21ad3aa",
+      "localImage": "assets/tarot/rws/C12.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Cups12.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 89288,
+      "sha256": "4bbf0b9ac64c7112cfd6f59399a59d7b10f29be4e8830464dcd2ca2eed5c664d",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C13",
+      "cardName": "圣杯王后",
+      "englishName": "",
+      "suit": "cups",
+      "number": 13,
+      "sourceFile": "File:Cups13.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups13.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Cups13.jpg/500px-Cups13.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "69b68cee5e7e09e624a53169aed26035ab04143e",
+      "localImage": "assets/tarot/rws/C13.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/6/62/Cups13.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 77990,
+      "sha256": "0a4fc6d60f14971782ce6adaf69c7d392c380677f56421bc3c905b4dd0957462",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "C14",
+      "cardName": "圣杯国王",
+      "englishName": "",
+      "suit": "cups",
+      "number": 14,
+      "sourceFile": "File:Cups14.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cups14.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Cups14.jpg/500px-Cups14.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1121,
+        "height": 1920
+      },
+      "sourceSha1": "a78389417bbcbc09e8fdeddec49332938cf48a86",
+      "localImage": "assets/tarot/rws/C14.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/0/04/Cups14.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 856
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 719
+      },
+      "bytes": 87340,
+      "sha256": "96de30b1f61ec41ee0a6a13a663789c142e297044eac7264189460d716697f0c",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S01",
+      "cardName": "宝剑一",
+      "englishName": "",
+      "suit": "swords",
+      "number": 1,
+      "sourceFile": "File:Swords01.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords01.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Swords01.jpg/500px-Swords01.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "8ec8b145cc670007aeb8020ce7940d9ba0ab40fe",
+      "localImage": "assets/tarot/rws/S01.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Swords01.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 83284,
+      "sha256": "d3b907c223f5579c5c22bd312ddd9b2689031631fcff7871900f5aea16af1c9f",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S02",
+      "cardName": "宝剑二",
+      "englishName": "",
+      "suit": "swords",
+      "number": 2,
+      "sourceFile": "File:Swords02.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords02.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Swords02.jpg/500px-Swords02.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1121,
+        "height": 1920
+      },
+      "sourceSha1": "303a13183017cca280fe5a79ddc513b00277a8b5",
+      "localImage": "assets/tarot/rws/S02.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Swords02.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 856
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 719
+      },
+      "bytes": 70920,
+      "sha256": "94f5465b186dadf4fee19ded2214150347e7a606024eaa6c13224cab6150f734",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S03",
+      "cardName": "宝剑三",
+      "englishName": "",
+      "suit": "swords",
+      "number": 3,
+      "sourceFile": "File:Swords03.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords03.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Swords03.jpg/500px-Swords03.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1103,
+        "height": 1920
+      },
+      "sourceSha1": "a4490aa4f6e1751adc47a40b2860a41c1fb4c810",
+      "localImage": "assets/tarot/rws/S03.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/0/02/Swords03.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 870
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 731
+      },
+      "bytes": 63596,
+      "sha256": "6aeb047a96790c39e707945ed3507fd766f3ec5adc4e15f7595a02a6b951e1a9"
+    },
+    {
+      "id": "S04",
+      "cardName": "宝剑四",
+      "englishName": "",
+      "suit": "swords",
+      "number": 4,
+      "sourceFile": "File:Swords04.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords04.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Swords04.jpg/500px-Swords04.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1117,
+        "height": 1919
+      },
+      "sourceSha1": "0f50aad1a018ab09ea2d3223c5175ff988688128",
+      "localImage": "assets/tarot/rws/S04.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Swords04.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 859
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 76146,
+      "sha256": "770ebf184d07f0a4d6fe354f30e5055c94055605b392d7885a023798b1cde3be",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S05",
+      "cardName": "宝剑五",
+      "englishName": "",
+      "suit": "swords",
+      "number": 5,
+      "sourceFile": "File:Swords05.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords05.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Swords05.jpg/500px-Swords05.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "b92b4bdb92b8b8262979440366c4d7c37b9ed152",
+      "localImage": "assets/tarot/rws/S05.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/2/23/Swords05.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 82020,
+      "sha256": "57e77f3db64a4ad0a26a7ed32b3a5657b5faabad88a22bfd01fdb057cda2f356",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S06",
+      "cardName": "宝剑六",
+      "englishName": "",
+      "suit": "swords",
+      "number": 6,
+      "sourceFile": "File:Swords06.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords06.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Swords06.jpg/500px-Swords06.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1111,
+        "height": 1919
+      },
+      "sourceSha1": "295ec146bc425729ec5c7be675fd6ce3bd94c628",
+      "localImage": "assets/tarot/rws/S06.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/2/29/Swords06.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 864
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 726
+      },
+      "bytes": 87578,
+      "sha256": "5456fb408ae66380a20a1de2f60ec2f24265425a5323bc37e5a845cbeef44298",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S07",
+      "cardName": "宝剑七",
+      "englishName": "",
+      "suit": "swords",
+      "number": 7,
+      "sourceFile": "File:Swords07.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords07.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/Swords07.jpg/500px-Swords07.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "4bb5e8567295b28c2d4956b33a0d26a83d52a2f8",
+      "localImage": "assets/tarot/rws/S07.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/3/34/Swords07.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 67894,
+      "sha256": "d04e5b704c55bdb2ea6959820bbdf38c389e273682a2bc037e9aebc5eda09535"
+    },
+    {
+      "id": "S08",
+      "cardName": "宝剑八",
+      "englishName": "",
+      "suit": "swords",
+      "number": 8,
+      "sourceFile": "File:Swords08.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords08.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/Swords08.jpg/500px-Swords08.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "668676cf4f43fb66c4d13641dc1cbd9bcf692bf0",
+      "localImage": "assets/tarot/rws/S08.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Swords08.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 83740,
+      "sha256": "40f2b1c245aad65d1ec6bccfbd754e4e22500a2cb5f609a2bc47b1063a5f5574",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S09",
+      "cardName": "宝剑九",
+      "englishName": "",
+      "suit": "swords",
+      "number": 9,
+      "sourceFile": "File:Swords09.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords09.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Swords09.jpg/500px-Swords09.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "eb3289e1366812310982a0d865910599d94154b1",
+      "localImage": "assets/tarot/rws/S09.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Swords09.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 67476,
+      "sha256": "b8dda802c14d0388b9f3b2f01f4939fe275cb09d0444c22a90fbf44f6347c0c8"
+    },
+    {
+      "id": "S10",
+      "cardName": "宝剑十",
+      "englishName": "",
+      "suit": "swords",
+      "number": 10,
+      "sourceFile": "File:Swords10.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords10.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Swords10.jpg/500px-Swords10.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1107,
+        "height": 1920
+      },
+      "sourceSha1": "589beb4b5e987e11b3e298b7a02a27de9bc424b6",
+      "localImage": "assets/tarot/rws/S10.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords10.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 867
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 728
+      },
+      "bytes": 62238,
+      "sha256": "46702de182a71083a19d3ac588755941a4d5373f8368f41cf1a255bdb9361095"
+    },
+    {
+      "id": "S11",
+      "cardName": "宝剑侍从",
+      "englishName": "",
+      "suit": "swords",
+      "number": 11,
+      "sourceFile": "File:Swords11.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords11.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Swords11.jpg/500px-Swords11.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1108,
+        "height": 1920
+      },
+      "sourceSha1": "a4aabf1894b6fc513a0e115b63e0b762be391b73",
+      "localImage": "assets/tarot/rws/S11.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Swords11.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 79194,
+      "sha256": "64a5c8ba65febed964f90fdc987675c3cf711b79a087174bd2b5c4ac8882ec42",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S12",
+      "cardName": "宝剑骑士",
+      "englishName": "",
+      "suit": "swords",
+      "number": 12,
+      "sourceFile": "File:Swords12.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords12.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Swords12.jpg/500px-Swords12.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1112,
+        "height": 1920
+      },
+      "sourceSha1": "4c0d208cc07285f28587db0d3f89a6a1af62ac5b",
+      "localImage": "assets/tarot/rws/S12.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Swords12.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 863
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 79092,
+      "sha256": "983635845c50540ecaa3ae1daf2754991e06ed736fd74eadb2cb555ae8368d83",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S13",
+      "cardName": "宝剑王后",
+      "englishName": "",
+      "suit": "swords",
+      "number": 13,
+      "sourceFile": "File:Swords13.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords13.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Swords13.jpg/500px-Swords13.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1104,
+        "height": 1920
+      },
+      "sourceSha1": "e4b59f06e66bc3643d5b1a2876638af8b046e4f0",
+      "localImage": "assets/tarot/rws/S13.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords13.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 870
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 731
+      },
+      "bytes": 71700,
+      "sha256": "88bfba67cb1405aba8f084d3757c042adb71afb8dc54df20cd9a0bc3d81070ce",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "S14",
+      "cardName": "宝剑国王",
+      "englishName": "",
+      "suit": "swords",
+      "number": 14,
+      "sourceFile": "File:Swords14.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Swords14.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Swords14.jpg/500px-Swords14.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1117,
+        "height": 1919
+      },
+      "sourceSha1": "69a4d993f44ecef40a8b4c4bfb5452770290130d",
+      "localImage": "assets/tarot/rws/S14.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/3/33/Swords14.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 859
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 88540,
+      "sha256": "ae0ed767756db6c0b5f050cfda016b86d75afded2c920b8ac4f577b711407ea9",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P01",
+      "cardName": "星币一",
+      "englishName": "",
+      "suit": "pents",
+      "number": 1,
+      "sourceFile": "File:Pents01.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents01.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Pents01.jpg/500px-Pents01.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "3d4f8dc21e8892cd5fadbd3c748358c8984856c6",
+      "localImage": "assets/tarot/rws/P01.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pents01.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 83886,
+      "sha256": "9a7088863b8d9d42ffe6578475e9d26cf4fa8b9178f3a40e26db28022f169235",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P02",
+      "cardName": "星币二",
+      "englishName": "",
+      "suit": "pents",
+      "number": 2,
+      "sourceFile": "File:Pents02.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents02.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Pents02.jpg/500px-Pents02.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1112,
+        "height": 1920
+      },
+      "sourceSha1": "4924c94b5553a2aff65a932f066391b47e7db517",
+      "localImage": "assets/tarot/rws/P02.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Pents02.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 863
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 84340,
+      "sha256": "9ff10dfa742505a46b9146a56fffaafb23d1a15e7923af00800eb60c8fbff87e",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P03",
+      "cardName": "星币三",
+      "englishName": "",
+      "suit": "pents",
+      "number": 3,
+      "sourceFile": "File:Pents03.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents03.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Pents03.jpg/500px-Pents03.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1117,
+        "height": 1919
+      },
+      "sourceSha1": "ca857869e950b28e912b0a585f597d7f68112fae",
+      "localImage": "assets/tarot/rws/P03.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents03.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 859
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 81496,
+      "sha256": "a28444590573d6a1e803270285a986108852c2c68e70c8a3b067c7a312b9480e",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P04",
+      "cardName": "星币四",
+      "englishName": "",
+      "suit": "pents",
+      "number": 4,
+      "sourceFile": "File:Pents04.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents04.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Pents04.jpg/500px-Pents04.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1110,
+        "height": 1920
+      },
+      "sourceSha1": "4d9da9f40f497226ae0777923c9a38796adbe0c1",
+      "localImage": "assets/tarot/rws/P04.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/3/35/Pents04.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 865
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 77006,
+      "sha256": "4dd588ceee0594c0677a25867478567b6d241890948a331a6ccc9924ec168b81",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P05",
+      "cardName": "星币五",
+      "englishName": "",
+      "suit": "pents",
+      "number": 5,
+      "sourceFile": "File:Pents05.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents05.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/Pents05.jpg/500px-Pents05.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1112,
+        "height": 1920
+      },
+      "sourceSha1": "cbe62be71c1a110125dd55887843ce04c3827976",
+      "localImage": "assets/tarot/rws/P05.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/9/96/Pents05.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 863
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 85926,
+      "sha256": "f34eddc30073d95c0c1bf9540dbf842a44a1de5093a695844cbb07f3cadf6ba0",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P06",
+      "cardName": "星币六",
+      "englishName": "",
+      "suit": "pents",
+      "number": 6,
+      "sourceFile": "File:Pents06.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents06.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Pents06.jpg/500px-Pents06.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "cdbc8cabea9dbe863673891f6c19cd9a8310b258",
+      "localImage": "assets/tarot/rws/P06.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pents06.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 80876,
+      "sha256": "b435be7ca827a7e854bd816d3ae09f4b702e11920e8210ecbbe59615279c4a8a",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P07",
+      "cardName": "星币七",
+      "englishName": "",
+      "suit": "pents",
+      "number": 7,
+      "sourceFile": "File:Pents07.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents07.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Pents07.jpg/500px-Pents07.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1114,
+        "height": 1919
+      },
+      "sourceSha1": "c9caaba37d822b79b329f31e7db4f13d8fd2fd9b",
+      "localImage": "assets/tarot/rws/P07.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pents07.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 90644,
+      "sha256": "6f91dafd5976fe21804ef60ff47092c9d472281ccfb9356123c7ab808c2e3adb",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P08",
+      "cardName": "星币八",
+      "englishName": "",
+      "suit": "pents",
+      "number": 8,
+      "sourceFile": "File:Pents08.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents08.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Pents08.jpg/500px-Pents08.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1117,
+        "height": 1920
+      },
+      "sourceSha1": "7ee1f241af3bb05d2bd81c07f2a4cd2291cc60ba",
+      "localImage": "assets/tarot/rws/P08.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/4/49/Pents08.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 859
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 722
+      },
+      "bytes": 84728,
+      "sha256": "67019dbf4ccd4eef01234df4a72e508c7b18fe9b0168acc1e9c23211bee693d5",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P09",
+      "cardName": "星币九",
+      "englishName": "",
+      "suit": "pents",
+      "number": 9,
+      "sourceFile": "File:Pents09.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents09.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Pents09.jpg/500px-Pents09.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1108,
+        "height": 1920
+      },
+      "sourceSha1": "2fd48ca167699b1e51985338711e191e23613827",
+      "localImage": "assets/tarot/rws/P09.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Pents09.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 75742,
+      "sha256": "1e3e952e67ab77d2f9b04641f34db27e49c68dbca5cc310acfd615364d2d6d48",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P10",
+      "cardName": "星币十",
+      "englishName": "",
+      "suit": "pents",
+      "number": 10,
+      "sourceFile": "File:Pents10.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents10.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Pents10.jpg/500px-Pents10.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1115,
+        "height": 1920
+      },
+      "sourceSha1": "af975248f5a406aef38a97bc58348468b3292de6",
+      "localImage": "assets/tarot/rws/P10.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents10.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 861
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 723
+      },
+      "bytes": 92170,
+      "sha256": "d6a638bc63515c09d1df41835f5a8385ecb6b98c9462f76abbe47b4fa96477f4",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P11",
+      "cardName": "星币侍从",
+      "englishName": "",
+      "suit": "pents",
+      "number": 11,
+      "sourceFile": "File:Pents11.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents11.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Pents11.jpg/500px-Pents11.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1112,
+        "height": 1920
+      },
+      "sourceSha1": "1f8c81e2972b400c31558dfccfb13c88a0a54dc4",
+      "localImage": "assets/tarot/rws/P11.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Pents11.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 863
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 725
+      },
+      "bytes": 65898,
+      "sha256": "43ba2b4d0642a059c822d8265d2907b73080f2b6e3bb8e111cb7c8a131aa9949"
+    },
+    {
+      "id": "P12",
+      "cardName": "星币骑士",
+      "englishName": "",
+      "suit": "pents",
+      "number": 12,
+      "sourceFile": "File:Pents12.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents12.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Pents12.jpg/500px-Pents12.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1111,
+        "height": 1919
+      },
+      "sourceSha1": "4b71c7b41acda1e05bb507de542e58da16c5b41c",
+      "localImage": "assets/tarot/rws/P12.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Pents12.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 864
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 726
+      },
+      "bytes": 58142,
+      "sha256": "6aa75d86670a2c17c66a2923644dca80e63eca5e4f8ab59f2413053dfbd16a44"
+    },
+    {
+      "id": "P13",
+      "cardName": "星币王后",
+      "englishName": "",
+      "suit": "pents",
+      "number": 13,
+      "sourceFile": "File:Pents13.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents13.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Pents13.jpg/500px-Pents13.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1109,
+        "height": 1920
+      },
+      "sourceSha1": "0788c5de3edff7cfb9c94795e7ef96368a636f48",
+      "localImage": "assets/tarot/rws/P13.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/8/88/Pents13.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 866
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 727
+      },
+      "bytes": 91774,
+      "sha256": "b8b3690f83c9b3ef3257c36e8e0d2f214467e08200feb382685c540b0ba4d1ff",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    },
+    {
+      "id": "P14",
+      "cardName": "星币国王",
+      "englishName": "",
+      "suit": "pents",
+      "number": 14,
+      "sourceFile": "File:Pents14.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pents14.jpg",
+      "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Pents14.jpg/500px-Pents14.jpg",
+      "license": "Public domain",
+      "licenseCode": "pd",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "originalSourceAuthor": "Pamela Colman Smith",
+      "sourceCredit": "http://muzendo.jp/blog/",
+      "originalPublicationDate": "1910",
+      "sourceDimensions": {
+        "width": 1107,
+        "height": 1920
+      },
+      "sourceSha1": "084fe9710bbd671f793ace7f11fb4c9ec5661900",
+      "localImage": "assets/tarot/rws/P14.webp",
+      "sourceOriginalImage": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Pents14.jpg",
+      "downloadDimensions": {
+        "width": 500,
+        "height": 867
+      },
+      "dimensions": {
+        "width": 420,
+        "height": 728
+      },
+      "bytes": 76968,
+      "sha256": "22fbf06ba356d8ff6d8c458e3a268f59d48c4550e14592733629aa946a27562d",
+      "budgetRecompression": {
+        "input": "first-pass WebP",
+        "quality": 54,
+        "method": 6
+      }
+    }
+  ]
+}
