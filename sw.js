@@ -1,6 +1,6 @@
 /* 中玄 · 推演台 —— Service Worker（离线缓存，PWA 用）
  * 仅在 http/https 下注册；file:// 双击打开时不生效，也不影响使用。 */
-const CACHE = 'zhongxuan-v11';
+const CACHE = 'zhongxuan-v12';
 const ASSETS = [
   './', './index.html',
   './css/app.css',
@@ -20,7 +20,7 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
-      .then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(ks => Promise.all(ks.filter(k => k !== CACHE && k.startsWith('zhongxuan-')).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -36,7 +36,10 @@ self.addEventListener('fetch', e => {
       }
       return resp;
     }).catch(() =>
-      caches.match(e.request).then(hit => hit || caches.match('./index.html'))
+      caches.match(e.request).then(hit => {
+        if (hit) return hit;
+        return e.request.mode === 'navigate' ? caches.match('./index.html') : Response.error();
+      })
     )
   );
 });
