@@ -266,26 +266,97 @@ const TAROT = (function(){
     const seed = Number.isFinite(o.seed) ? o.seed : (Date.now() % 2147483647);
     const rnd = mulberry32(seed);
     const deck = shuffle(ALL, rnd);
-    const reverseRate = o.allowReverse === false ? 0 : (typeof o.reverseRate === 'number' ? o.reverseRate : 0.35);
+    const reverseRate = o.allowReverse === false ? 0 : (typeof o.reverseRate === 'number' ? Math.max(0, Math.min(1, o.reverseRate)) : 0.35);
     const bags = o.bags || [];
     const cards = spread.positions.map((pos, i) => {
       const card = deck[i];
       const rev = rnd() < reverseRate;
       return { card, rev, pos, index:i + 1, bag: bags[i] || '' };
     });
-    return { spread, cards, seed, question:o.question || '', mode:o.mode || 'classic' };
+    return { spread, cards, seed, question:o.question || '', mode:o.mode || 'classic', reverseRate };
   }
 
-  /* 解读统计分析 */
+  const polarityOf = c => c.rev ? c.card.polR : c.card.pol;
+  const positionScore = c => {
+    const p = polarityOf(c);
+    const name = c.pos.name || '';
+    /* 本函数分数统一表示“对问题推进的支持度”。反对位的牌义仍按原文解释，只在汇总时把证据方向反转。 */
+    if (name === '反对') return -p;
+    return p;
+  };
+  const orientationText = c => c.rev ? c.card.rev : c.card.up;
+  function cardReading(c){
+    const raw = polarityOf(c);
+    const p = positionScore(c);
+    const state = c.pos.name === '反对'
+      ? (raw >= 1 ? '反方条件较有力量，推进前要正面处理' : raw <= -1 ? '反方条件较弱或可化解，但仍需核实' : '反方因素不突出，留意隐藏成本')
+      : p >= 1 ? '有利资源或可用机会' : p <= -1 ? '主要压力或需要处理的课题' : '影响较弱，结果更依赖选择与执行';
+    const name = c.pos.name.replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, '');
+    const lens = ({
+      '过去':'作为背景线索，说明哪些既有条件仍影响当下，不是对过去的定罪。',
+      '现在':'指向当前可观察的状态与变量，先拿现实事实核对。',
+      '未来':'表示趋势延伸，不代表不可改变的结果。',
+      '建议':'把牌义转成一项可执行的小行动，而不是等待结果发生。',
+      '阻碍':'标记需要面对的摩擦点；先确认它是否真实存在。',
+      '根源':'提供一个待验证的深层原因假设，不直接当作事实。',
+      '最终结果':'是当前条件不变时的阶段性走向，行动改变也会改变走向。',
+      '近未来':'提示近期优先观察的变化，不是准确日期预报。',
+      '目标':'反映意识目标或期待，需与实际需求区分。',
+      '自我':'描述你在问题中的视角，不是固定人格判断。',
+      '环境':'描述外部条件的象征线索，应用现实信息验证。',
+      '希望与恐惧':'反映内在期待或担忧，不可拿来证明他人想法。',
+      '对方':'仅是关系问题中的象征视角，不能当作对方真实内心的证据。',
+      '裁决':'作为整体趋势参考，必须与支持/反对位和现实条件合看。',
+      '支持':'检视可用资源、帮助与有利条件。',
+      '反对':'检视成本、阻力与可能的反方条件。',
+      '关系现状':'观察双方互动结构，不替任何一方读心。',
+      '你的期待':'区分愿望与现实需求。',
+      '对方期待':'作为沟通假设，需直接询问验证。',
+      '本月主题':'作为本月优先关注的主线。',
+      '第一周':'作为第一周的观察重点。',
+      '第二周':'作为第二周的观察重点。',
+      '第三周':'作为第三周的观察重点。',
+      '第四周':'作为第四周的观察重点。'
+    })[name] || '将牌义放回这个位置的问题中理解，不脱离上下文单独断言。';
+    return { position:c.pos.name, desc:c.pos.desc, lens, name:c.card.name, rev:c.rev, meaning:orientationText(c), state, score:p, line:`${c.pos.name}：${c.card.name}${c.rev ? '（逆）' : ''}——${orientationText(c)}；${lens} ${state}。` };
+  }
+  function spreadSynthesis(result, reads){
+    const by = Object.fromEntries((result.cards || []).map(c => [c.pos.name.replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, ''), c]));
+    const raw = c => c ? positionScore(c) : 0;
+    const spreadId = result.spread && result.spread.id;
+    if (spreadId === 'three'){
+      const p = by['过去'], n = by['现在'], f = by['未来'];
+      const delta = raw(f) - raw(p);
+      const trend = delta >= 1.5 ? '牌面倾向由弱转强' : delta <= -1.5 ? '牌面倾向由强转弱' : '前后基调变化不大';
+      return `${trend}；当前关键看「${n ? n.card.name + (n.rev ? '（逆）' : '') : '现在'}」，未来位给的是按现状延伸的趋势，不是必然结局。`;
+    }
+    if (spreadId === 'yesno'){
+      const support = by['支持'], against = by['反对'], decision = by['裁决'];
+      const balance = raw(support) + raw(against);
+      const compare = balance >= 1 ? '支持因素暂占上风' : balance <= -1 ? '反对因素与代价更突出' : '支持与反对力量接近';
+      return `${compare}；裁决位「${decision ? decision.card.name + (decision.rev ? '（逆）' : '') : '—'}」权重最高，仍需结合现实条件核实。`;
+    }
+    if (spreadId === 'cross'){
+      const challenge = by['挑战'], outcome = by['最终结果'];
+      const outcomeTxt = outcome ? (raw(outcome) >= 1 ? '结果位显示较多可用条件' : raw(outcome) <= -1 ? '结果位提示先处理关键阻力' : '结果位保留较大不确定性') : '结果位未明';
+      const challengeTxt = challenge ? (raw(challenge) <= -1 ? '挑战位的阻力不可忽视' : '挑战位存在可借力因素') : '挑战位需结合详情看';
+      return `${outcomeTxt}；${challengeTxt}。先读现状、挑战、结果三张，再用其余位置补充原因，不把单牌当定论。`;
+    }
+    if (spreadId === 'love') return '关系牌阵描述的是你所提供问题中的互动视角；「对方」位是牌面象征，不等同于对方真实想法，需以直接沟通和可观察行为核实。';
+    const strongest = reads.slice().sort((a, b) => Math.abs(b.score) - Math.abs(a.score))[0];
+    return strongest ? `先看「${strongest.position}」位的主题，再按其余位置顺序补足；牌面提供反思线索，具体走向仍受行动与现实条件影响。` : '牌阵为空。';
+  }
+
+  /* 解读统计：同时按牌义与位置角色计算；规则是透明启发式，不把牌面包装成确定预测。 */
   function analyze(result){
     const cards = result.cards || [];
     const els = {}, suits = {};
     let score = 0, wsum = 0, rev = 0, major = 0;
     cards.forEach(c => {
-      const pol = c.rev ? c.card.polR : c.card.pol;
-      const w = c.pos.w || 1;
-      score += pol * w;
-      wsum += Math.abs(w);
+      const p = positionScore(c);
+      const w = Math.abs(Number(c.pos.w) || 1);
+      score += p * w;
+      wsum += w;
       if (c.rev) rev++;
       if (c.card.arcana === '大牌') major++;
       const el = c.card.el || '—';
@@ -299,39 +370,37 @@ const TAROT = (function(){
     const domEl = Object.keys(els).sort((a, b) => els[b] - els[a])[0] || '—';
     const missEl = ['火', '水', '风', '土'].filter(e => !els[e]);
     const domSuit = Object.keys(suits).filter(k => k !== '大阿尔卡纳').sort((a, b) => suits[b] - suits[a])[0] || '—';
-    const strong = cards.filter(c => c.card.arcana === '大牌' || Math.abs(c.rev ? c.card.polR : c.card.pol) >= 2);
+    const strong = cards.filter(c => c.card.arcana === '大牌' || Math.abs(positionScore(c)) >= 2);
     const advices = [];
-    cards.forEach(c => {
-      const a = c.card.advice;
-      if (a && !advices.includes(a)) advices.push(a);
-    });
+    cards.forEach(c => { if (c.card.advice && !advices.includes(c.card.advice)) advices.push(c.card.advice); });
     const notes = [];
-    if (majorRatio >= 0.4) notes.push('大牌占比 ' + Math.round(majorRatio * 100) + '%，主题由命运层面主导，个人能控制的部分少，顺势比硬推有效');
-    if (revRatio >= 0.5) notes.push('逆位过半（' + rev + '/' + cards.length + '），能量偏内收与阻滞，宜先整理内部再对外行动');
-    if (domEl !== '—') notes.push('元素偏「' + domEl + '」（' + els[domEl] + ' 张），本次解读重心在' + ({ 火:'行动与热情', 水:'情感与直觉', 风:'思考与沟通', 土:'物质与身体' }[domEl] || '该元素对应领域'));
-    if (missEl.length && missEl.length < 4) notes.push('缺' + missEl.join('、') + '元素，对应领域（' + missEl.map(e => ({ 火:'行动', 水:'情感', 风:'沟通', 土:'落地' }[e])).join('、') + '）当前供给不足');
-    if (domSuit !== '—' && domSuit !== '大阿尔卡纳') notes.push(domSuit + '牌最多，主线落在' + ({
-      '权杖':'行动与事业', '圣杯':'情感与关系', '宝剑':'思维与沟通', '星币':'物质与工作'
-    }[domSuit] || '其所属领域'));
+    /* 小样本牌阵不宣称统计显著，只报告实际构成，避免三张牌硬套 40% 阈值。 */
+    if (major > 0) notes.push(`大牌 ${major}/${cards.length} 张：出现大牌时，本次主题更集中在阶段性转折或核心课题；这是结构描述，不代表无法改变。`);
+    if (rev > 0) notes.push(`逆位 ${rev}/${cards.length} 张：按本牌义库的内化/受阻读法逐位解释；逆位不自动等于凶。`);
+    if (domEl !== '—') notes.push('元素最多为「' + domEl + '」（' + els[domEl] + ' 张），关注' + ({ 火:'行动与热情', 水:'情感与直觉', 风:'思考与沟通', 土:'物质与身体' }[domEl] || '该元素领域'));
+    if (missEl.length && missEl.length < 4) notes.push('未出现' + missEl.join('、') + '元素：这些领域在牌面中没有直接强调，不等于现实中缺失');
+    if (domSuit !== '—' && domSuit !== '大阿尔卡纳') notes.push(domSuit + '牌最多，主题集中在' + ({ '权杖':'行动与事业', '圣杯':'情感与关系', '宝剑':'思维与沟通', '星币':'物质与工作' }[domSuit] || '其所属领域'));
+    const positionReads = cards.map(cardReading);
+    const synthesis = spreadSynthesis(result, positionReads);
     return {
       score:+score.toFixed(2), norm:+norm.toFixed(2), tone,
       elements:els, suits, majorRatio:+(majorRatio * 100).toFixed(0), revCount:rev, revRatio:+(revRatio * 100).toFixed(0),
       domEl, missEl, domSuit,
       strong:strong.map(c => ({ id:c.card.id, name:c.card.name, rev:c.rev, pos:c.pos.name })),
-      advices:advices.slice(0, 3), notes
+      advices:advices.slice(0, 3), notes, positionReads, synthesis
     };
   }
 
-  /* 一句话结论 */
+  /* 一句话结论：yes/no 的总分同样按支持/反对/裁决角色计分。 */
   function verdict(result, an){
     const a = an || analyze(result);
-    const best = (result.cards || []).slice().sort((x, y) => (y.rev ? y.card.polR : y.card.pol) - (x.rev ? x.card.polR : x.card.pol))[0];
-    const worst = (result.cards || []).slice().sort((x, y) => (x.rev ? x.card.polR : x.card.pol) - (y.rev ? y.card.polR : y.card.pol))[0];
+    const best = (result.cards || []).slice().sort((x, y) => positionScore(y) - positionScore(x))[0];
+    const worst = (result.cards || []).slice().sort((x, y) => positionScore(x) - positionScore(y))[0];
     const tail = result.spread.id === 'yesno'
       ? (a.norm >= 0.35 ? '倾向「是，可以推进」' : a.norm <= -0.35 ? '倾向「否，暂缓」' : '「不确定」，先补信息再问')
-      : a.norm >= 1.1 ? '整体强吉，可顺势而为' : a.norm >= 0.35 ? '整体偏吉，稳步推进' : a.norm > -0.35 ? '整体中性，取决于你的选择' : a.norm > -1.1 ? '整体偏凶，宜守不宜攻' : '整体强凶，先止损与休整';
+      : a.norm >= 1.1 ? '整体偏顺，可分步推进' : a.norm >= 0.35 ? '整体略有支持，稳步验证' : a.norm > -0.35 ? '整体中性，关键取决于选择与执行' : a.norm > -1.1 ? '阻力较多，先处理关键课题' : '当前阻力显著，优先厘清条件与止损点';
     return {
-      tone:a.tone, line:`${a.tone} · ${tail}`,
+      tone:a.tone, line:`${a.tone} · ${tail}`, synthesis:a.synthesis,
       best:best ? `${best.pos.name}「${best.card.name}${best.rev ? '（逆）' : ''}」` : '',
       worst:worst ? `${worst.pos.name}「${worst.card.name}${worst.rev ? '（逆）' : ''}」` : ''
     };
