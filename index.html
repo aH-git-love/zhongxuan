@@ -22,8 +22,8 @@
     <span class="sub" id="cur-page">排盘</span>
   </div>
   <div class="sys-switch" id="sys-switch" role="group" aria-label="体系切换">
-    <button class="sys-btn active" data-sys="zx">中玄</button>
-    <button class="sys-btn" data-sys="tarot">塔罗</button>
+    <button class="sys-btn active" data-sys="zx" aria-pressed="true">中玄</button>
+    <button class="sys-btn" data-sys="tarot" aria-pressed="false">塔罗</button>
   </div>
   <div class="top-right">
     <button class="theme-btn" id="theme-btn" title="切换宣纸亮 / 墨夜暗">☀ 宣纸</button>
@@ -482,11 +482,17 @@
         <div class="field actions">
           <button class="btn primary" id="tr-draw">洗牌抽牌</button>
           <button class="btn" id="tr-again">同一问题重抽</button>
-          <button class="btn" id="tr-copy">复制结论</button>
+          <button class="btn" id="tr-copy" disabled>复制结论</button>
         </div>
       </div>
+      <p class="tr-status" id="tr-history-status" aria-live="polite">抽牌记录只保存在当前浏览器，最多保留 40 条。</p>
     </div>
     <div id="tr-result" class="result"></div>
+    <div class="panel tr-history-panel" id="tr-history">
+      <h2>本机历史抽牌 <span class="tr-history-count">最近 40 条</span></h2>
+      <p class="hint">数据仅在当前浏览器本地保存；换设备、清理浏览器数据或无痕窗口关闭后记录不会同步。点「回看」可还原原牌与原结论，不会重新洗牌。</p>
+      <div id="tr-history-list" class="tr-history-list"></div>
+    </div>
   </section>
 
   <!-- ============ 塔罗 · 牌库 ============ -->
