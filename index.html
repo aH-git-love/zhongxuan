@@ -32,7 +32,7 @@
 </header>
 
 <aside id="update-notice" class="update-notice" role="status" aria-live="polite" hidden>
-  <span id="update-message">发现在线更新，可直接更新网页，无需重新下载安装包。</span>
+  <span id="update-message">发现在线更新，刷新页面即可使用新版。</span>
   <div class="update-actions">
     <button class="btn primary" id="update-now">立即更新</button>
     <button class="btn" id="update-later">稍后</button>
@@ -538,7 +538,7 @@
 <footer>
   <span class="foot-title">中玄 · 推演台<em>在线版</em></span>
   <a class="btn primary foot-dl" href="https://ah-git-love.github.io/zhongxuan/">🌐 打开官方网页</a>
-  <span class="update-footnote">更新直接从网址获取，无需重新下载或安装新包</span>
+  <span class="update-footnote">在线更新 · 数据保存在本机</span>
 </footer>
 
 <script src="js/core.js"></script>
@@ -567,7 +567,7 @@
   var hadController = !!navigator.serviceWorker.controller;
   var registration = null;
   function showUpdate(text){
-    if (message) message.textContent = text || '新版已就绪；刷新页面即可更新，无需重新下载安装包。你的本机数据会保留。';
+    if (message) message.textContent = text || '新版已就绪；刷新页面即可更新，你的本机数据会保留。';
     if (notice) notice.hidden = false;
   }
   navigator.serviceWorker.addEventListener('controllerchange', function(){
