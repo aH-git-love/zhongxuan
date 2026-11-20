@@ -2159,7 +2159,7 @@ var UI = (function(){
       <div class="tr-card-meta"><span>${esc(big ? '大阿尔卡纳' : card.suitName)}</span><span class="tr-orientation${rev ? ' tr-rv' : ''}">${rev ? '逆位' : '正位'}</span></div>
       <div class="tr-face">
         <button class="tr-art-trigger" type="button" data-card-art="${esc(card.image)}" data-art-name="${esc(card.name)}" data-art-reversed="${rev ? '1' : '0'}" aria-label="放大查看${esc(card.name)}${rev ? '逆位' : '正位'}牌面">
-          <img class="tr-card-image" src="${esc(card.image)}" alt="${esc(card.imageAlt)}${rev ? '（逆位）' : '（正位）'}" width="480" height="832" loading="lazy" decoding="async">
+          <img class="tr-card-image" src="${esc(card.image)}" alt="${esc(card.imageAlt)}${rev ? '（逆位）' : '（正位）'}" width="480" height="832" loading="eager" decoding="async">
           <span class="tr-art-hint">点击放大</span>
         </button>
         <b>${esc(card.name)}</b>
