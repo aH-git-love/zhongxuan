@@ -22,7 +22,7 @@ async function main(){
   vm.runInNewContext(source,context,{filename:'sw.js'});
   assert.equal(typeof listeners.fetch,'function','fetch listener registered');
   let installed; listeners.install({waitUntil:p=>installed=p}); await installed;
-  assert(precached.length>20 && precached.every(r=>r.cache==='reload' && r.url.startsWith('https://app.test/zhongxuan/')));
+  assert(precached.length>20 && precached.every(r=>r.cache==='reload' && r.url.startsWith('https://app.test/zhongxuan/')));assert(precached.some(r=>new URL(r.url).pathname.endsWith('/js/brain-classics.js')));
   assert.equal(skipped,1); console.log('PASS installation refreshes all app resources within deployment scope');
   listeners.message({data:{type:'SKIP_WAITING'}}); assert.equal(skipped,2); console.log('PASS explicit update activation message');
   let apiIntercepted=false;

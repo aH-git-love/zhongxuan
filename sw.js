@@ -8,7 +8,7 @@ const ASSETS = [
   './css/app.css', './css/landing.css', './js/landing.js', './assets/tarot/rws/sources.json',
   ...CARD_ASSETS,
   './js/core.js', './js/astro.js', './js/bazi.js', './js/almanac.js',
-  './js/methods.js', './js/yishu.js', './js/brain-knowledge.js', './js/qimen.js', './js/brain.js',
+  './js/methods.js', './js/yishu.js', './js/brain-classics.js', './js/brain-knowledge.js', './js/qimen.js', './js/brain.js',
   './js/danao3d.js', './js/ziwei.js', './js/xuankong.js', './js/liuyao.js', './js/tarot.js', './js/cases.js', './js/auth.js', './js/trainer.js', './js/app.js',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png',
   './manifest.webmanifest'
