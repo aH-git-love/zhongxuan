@@ -269,9 +269,16 @@ const TRAINER = (function(){
     return K&&K.genTarotQuiz?K.genTarotQuiz():genMethodPick();
   }
 
+  function genClassicMeaning(){
+    let K=null;
+    try{if(typeof require!=='undefined'&&typeof module!=='undefined')K=require('./brain-knowledge.js').BRAIN_KNOWLEDGE}catch(e){}
+    if(!K&&typeof BRAIN_KNOWLEDGE!=='undefined')K=BRAIN_KNOWLEDGE;
+    return K&&K.genClassicQuiz?K.genClassicQuiz():genMethodPick();
+  }
+
   const GENERATORS = [ genSequence, genGanZhi, genShiShen, genWuXing, genSyllogism,
-                      genTruthTeller, genDaYun, genAnalogy, genOrder, genMatrix, genMethodPick, genTarotMeaning ];
-  const TYPE_NAMES = ['数列推理','干支速算','十神判定','五行生克','三段论','真假话推理','大运推步','类比推理','排序推理','逻辑矩阵','推演方式','塔罗牌义'];
+                      genTruthTeller, genDaYun, genAnalogy, genOrder, genMatrix, genMethodPick, genTarotMeaning, genClassicMeaning ];
+  const TYPE_NAMES = ['数列推理','干支速算','十神判定','五行生克','三段论','真假话推理','大运推步','类比推理','排序推理','逻辑矩阵','推演方式','塔罗牌义','古籍规则辨析'];
 
   function genQuestion(types){
     /* types: 数组（限定题型）或 null（全部） */
