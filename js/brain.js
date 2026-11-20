@@ -16,6 +16,11 @@ const BRAIN = (function(){
     try { if (typeof require !== 'undefined' && typeof module !== 'undefined') return require('./yishu.js').YISHU; } catch (e){}
     return (typeof YISHU !== 'undefined') ? YISHU : null;
   })();
+  const K_LIB = (function(){
+    try { if(typeof require !== 'undefined' && typeof module !== 'undefined') return require('./brain-knowledge.js').BRAIN_KNOWLEDGE; } catch(e){}
+    return typeof BRAIN_KNOWLEDGE !== 'undefined' ? BRAIN_KNOWLEDGE : null;
+  })();
+  function knowledgeStats(){ return K_LIB && K_LIB.stats ? K_LIB.stats() : null; }
   /* 术数条目联动：命中道家术数规则时，附上可直接查的条目（卦/门/星/神/典籍） */
   function collectYishu(matches){
     if (!Y_LIB) return [];
@@ -1288,11 +1293,22 @@ const BRAIN = (function(){
   }
   ];
 
-  const SCENES = ['命理咨询', '排盘异常', '择日冲突', '客户沟通', '自我训练', '特殊事项', '方法论', '道家术数', '紫微斗数', '相宅堪舆', '相学姓名', '择吉合婚'];
+  /* 塔罗流程取自本项目牌库/牌阵与抽牌实现；牌义本身始终检索原始条目。 */
+  RULES.push(
+    {id:'T01',scene:'塔罗解读',keywords:['塔罗怎么问','塔罗问题','塔罗问法','抽牌问题','开放式问题','反复抽牌','重复抽牌','抽牌'],title:'塔罗问法与一次抽牌流程',condition:'准备抽牌或反复抽同一问题，先把问题和牌阵固定',steps:['把问题写成自己可以行动的主题，并注明现实背景和时间范围。','选择合适牌阵，先读各牌位的含义，再由用户实际点击洗牌抽牌。','记录问题、牌阵、牌位、牌名和正逆位；未实际抽牌时只说明流程。','同一问题先阅读与复盘已有结果，出现新的事实或选择后再抽。'],tips:['流程说明不等于已替用户抽牌','牌位和现实背景先于孤立牌义'],weight:10,sourceRefs:['js/tarot.js:SPREADS','js/app.js:doTarotDraw'],quiz:{q:'同一问题连续抽到不同结果，最合适的处理是什么？',options:['一直抽到满意为止','先固定问法和时间范围，回看原结果并记录现实变化','只保留最后一张','把所有牌都当作同一次结果'],answer:1}},
+    {id:'T02',scene:'塔罗解读',keywords:['塔罗逆位','正逆位','逆位一定','逆位全是坏','逆位怎么','逆位','正位','逆位偏多'],title:'正逆位分别取义',condition:'核对正逆位含义，避免简单把正位取反或把逆位一律当作坏事',steps:['确认每张牌实际显示的方向，逐张分别记录正位或逆位。','从牌库读取该牌的 up 或 rev 原文，逆位使用独立字段，不对正位机械取反。','结合对应牌位和问题背景解释受阻、过度、内化或调整等具体线索。','多张牌方向混合时逐张标注，保留可能的不同解释并联系可观察事实。'],tips:['当前知识依据会同时标明原始正位与逆位','方向影响读法，不构成事件发生概率'],weight:10,sourceRefs:['js/tarot.js:ALL.up/rev'],quiz:{q:'解读逆位牌时，应该如何取用牌义？',options:['一律判作坏结果','读取该牌独立逆位字段，并结合牌位和背景','直接把正位所有词语取反','忽略正逆位'],answer:1}},
+    {id:'T03',scene:'塔罗解读',keywords:['牌义','塔罗牌义','牌面含义','牌的意思','卡牌含义','阿尔卡纳','权杖','圣杯','宝剑','星币'],title:'按真实牌名检索牌义',condition:'给出了具体牌名、异名或编号，需要定位原始牌库条目',steps:['先把牌名、异名或编号对应到唯一牌库 ID，区分不同花色与宫廷牌。','分别查看牌库正位、逆位与行动提示，保留原始字段与来源定位。','有牌位时按牌位限定含义；未给牌位时先做条目解释。','把象征线索与已知事实分开记录，再形成下一步行动或需要核对的问题。'],tips:['太阳星等术数名称与塔罗太阳牌分别检索','检索命中不是生成了新的抽牌结果'],weight:10,sourceRefs:['js/tarot.js:ALL','js/tarot.js:byId'],quiz:{q:'用户问“圣杯七逆位”，首先需要核对什么？',options:['把圣杯七当作七张圣杯牌','定位圣杯七的牌库 ID，并读取独立逆位含义','换一副牌直接抽取','只用数字七解释所有牌'],answer:1}},
+    {id:'T04',scene:'塔罗解读',keywords:['塔罗牌阵','三张牌','过去现在未来','凯尔特十字','十张牌','单张指引','五张十字','牌阵选择','月运牌阵','牌位','牌阵'],title:'牌阵与牌位组织解读',condition:'选择牌阵或解释一张牌在特定位置中的作用',steps:['按问题规模从项目现有牌阵中选择，读取牌阵实际位置表。','逐位记录位置名、牌名、正逆位与牌义，避免更换或混用牌位。','按现状、挑战、资源、行动等实际位置角色组织解释，不把每张牌都当最终结果。','综合阅读时保留位置之间的支持与冲突，给出可检查的行动线索。'],tips:['凯尔特十字按完整十位解读','牌位含义以当前牌阵条目为准'],weight:10,sourceRefs:['js/tarot.js:SPREADS'],quiz:{q:'三张牌的第二张处于“现在”位，解读时应先做什么？',options:['直接把第二张视为最终结果','按“现在”的位置角色结合该牌正逆位解释','把它移动到未来位','只按牌的编号判断时间'],answer:1}},
+    {id:'T05',scene:'塔罗解读',keywords:['塔罗感情','关系牌阵','对方想法','关系七张','塔罗复合','恋人牌'],title:'关系问题分清双方与互动',condition:'用塔罗梳理关系互动、自己的选择与双方的现实行为',steps:['先说明关系现状、自己的目标与已经发生的互动。','按关系牌阵实际牌位区分自己、对方和互动线索。','牌义提供的是象征解释，第三方的真实想法需要沟通和行为证据核对。','输出自己可以采取的表达、边界或观察行动，再约定复盘条件。'],tips:['恋人牌还包含选择与价值一致等含义','关系判断同时保留现实行为依据'],weight:10,sourceRefs:['js/tarot.js:SPREADS','js/tarot.js:ALL[M06]'],quiz:{q:'关系牌阵出现恋人牌，合适的解读方式是什么？',options:['断言对方必然爱自己','结合牌位讨论选择、价值与互动，并用现实沟通核对','保证一定复合','忽略其他牌和背景'],answer:1}},
+    {id:'T06',scene:'塔罗解读',keywords:['塔罗是否','是否牌阵','是否三张','是或否','是否阵','反对位','支持位','塔罗能不能','塔罗要不要'],title:'是否牌阵区分支持与反方证据',condition:'对是否类问题进行有条件的牌阵综合',steps:['先把问题转成有明确对象、期限和现实条件的可检验命题。','分清支持位与反对位，反对位按反方证据解释，再按当前引擎位置规则综合。','同时说明促进条件、阻力和仍需补充的信息，保留不确定的结果。','分数只是牌阵内部汇总，不把它当真实成功率，也不据此替代重大现实决策。'],tips:['反对位的正向牌也不能直接当支持加分','最终读取当前牌阵的实际位置语义'],weight:10,sourceRefs:['js/tarot.js:SPREADS','js/tarot.js:analyze/verdict'],quiz:{q:'是否牌阵中反对位出现一张正向牌，应如何处理？',options:['直接给支持结果加分','先按反对位解释为反方证据，再纳入综合','忽略反对位','把这张牌翻成逆位'],answer:1}},
+    {id:'T07',scene:'塔罗解读',keywords:['塔罗元素','塔罗结构','元素分布','大牌占比','逆位占比','花色分布','塔罗重复花色'],title:'用牌组结构补充逐牌解释',condition:'查看大牌、花色、元素或逆位分布等结构信息',steps:['从本次实际抽牌逐张统计大牌、小牌、花色、元素与正逆位。','将统计与牌库字段核对，缺失属性保留为空，不自行补造。','结构只作为逐牌、牌位解释的补充，避免用单一比例替代具体含义。','同时保留相反线索，形成一条主线与一个需要验证的现实条件。'],tips:['牌组内比例不是事情发生的概率','当前抽牌之外的牌不参与统计'],weight:10,sourceRefs:['js/tarot.js:analyze','js/tarot.js:ALL'],quiz:{q:'一组牌中大牌占比很高，合理的用途是什么？',options:['把占比当作成功率','作为整体结构线索，继续结合牌位与具体牌义','忽略全部小牌','直接宣称事情必定发生'],answer:1}},
+    {id:'T08',scene:'塔罗解读',keywords:['塔罗复盘','抽牌复盘','塔罗记录','塔罗训练','牌义训练','塔罗来源','塔罗资料','塔罗文件','韦特牌图','真实牌面','本机抽牌记录'],title:'塔罗资料、训练与原记录复盘',condition:'查资料来源、练牌义或按原抽牌结果复盘',steps:['牌义与牌阵来自项目 js/tarot.js，真实牌图逐张来源记录在 assets/tarot/rws/sources.json。','回看本机历史时按原 ID、原牌位、原方向和原种子恢复，不重新抽牌冒充原记录。','训练先核对正逆位字段，再解释牌位与行动；对照资料指出具体差异。','把已观察事实与原解释并排记录，反馈只有限调整流程规则排序，不改写原始牌库。'],tips:['典籍目录是索引资料，不等于已收录整部原书','项目内置资料与外部新文献分开标注'],weight:10,sourceRefs:['js/tarot.js','assets/tarot/rws/sources.json','docs/tarot-art-sources.md'],quiz:{q:'回看旧抽牌进行复盘，应该使用哪些数据？',options:['临时重抽一组当作原结果','原牌 ID、牌位、正逆位与原种子，并对照现实记录','只保留原结论','把反馈次数当牌义真伪'],answer:1}}
+  );
+  const SCENES = ['命理咨询', '排盘异常', '择日冲突', '客户沟通', '自我训练', '特殊事项', '方法论', '道家术数', '紫微斗数', '相宅堪舆', '相学姓名', '择吉合婚', '塔罗解读'];
 
   /* ---- 权重存取（localStorage，与 TRAINER 同域） ---- */
   const KEY = 'zhongxuan_brain_v1';
-  const ENGINE_VERSION = 'rules-v2';
+  const ENGINE_VERSION = 'rules-v3';
   function normalizeState(value){
     const raw = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
     const st = { w:{}, hits:{}, good:{}, bad:{} };
@@ -1321,11 +1337,21 @@ const BRAIN = (function(){
     const normalized = input.normalize('NFKC').toLowerCase();
     const explicitState = Object.prototype.hasOwnProperty.call(opts,'state');
     const st = explicitState ? normalizeState(opts.state) : loadState();
+    const knowledge = K_LIB && K_LIB.search ? K_LIB.search(input,{scene:scene || '全部',limit:6}) : [];
+    const tarotCards = knowledge.filter(k=>k.kind==='tarot-card');
+    const tarotSpreads = knowledge.filter(k=>k.kind==='tarot-spread');
+    const tarotContext = tarotCards.length>0 || tarotSpreads.length>0 || /塔罗|抽牌|牌义|牌阵|正逆位|正位|逆位|阿尔卡纳|韦特|\btarot\b|\brws\b/i.test(input) || scene==='塔罗解读';
+    const mixedSystems = /八字|四柱|紫微|六爻|奇门|玄空|梅花|六壬|干支|十神/.test(input);
+    const autoScene = !scene || scene==='全部' || scene==='塔罗解读';
     const scored = [];
     for (const r of RULES){
       if (scene && scene !== '全部' && r.scene !== scene) continue;
+      if (r.scene==='塔罗解读' && !tarotContext) continue;
+      if (tarotContext && !mixedSystems && autoScene && r.scene!=='塔罗解读') continue;
       let score = 0;
       const hits = [];
+      if(r.id==='T03' && tarotCards.length){ score+=6; hits.push('牌库：'+tarotCards.map(k=>k.name).join('、')); }
+      if(r.id==='T04' && tarotSpreads.length){ score+=4; hits.push('牌阵库：'+tarotSpreads.map(k=>k.name).join('、')); }
       for (const kw of r.keywords){
         if (normalized.includes(kw.normalize('NFKC').toLowerCase())){ score += kw.length >= 3 ? 3 : 2; hits.push(kw); }
       }
@@ -1347,21 +1373,22 @@ const BRAIN = (function(){
     const top = scored.slice(0, 3);
     const margin = top.length > 1 ? Number((top[0].score-top[1].score).toFixed(3)) : null;
     const ambiguous = top.length > 1 && margin < 1.5 && top[0].rule.scene !== top[1].rule.scene;
-    const retrieval = { strength:!top.length?'none':ambiguous?'ambiguous':top[0].evidenceScore>=6?'strong':'limited', margin, ambiguous, label:'关键词检索强度，非预测概率' };
+    const retrieval = { strength:!top.length?(knowledge.length?'limited':'none'):ambiguous?'ambiguous':top[0].evidenceScore>=6?'strong':'limited', margin, ambiguous, knowledgeHits:knowledge.length, label:'规则与资料检索强度，非预测概率' };
     const clarifications = !top.length
       ? ['你希望解决的具体问题是什么？','问题属于哪个场景，已经掌握哪些事实？']
       : ambiguous ? ['问题同时涉及多个场景，请确认首先要解决哪一件事。'] : [];
-    const chain = buildChain(input,top);
+    const chain = buildChain(input,top,knowledge);
     if (ambiguous) chain.splice(2,0,{step:'场景待确认',detail:clarifications[0]});
-    return { input, scene, matches:top, chain, methods:collectMethods(top), yishu:collectYishu(top), state:st, engineVersion:ENGINE_VERSION, retrieval, clarifications, source:'local' };
+    return { input, scene, matches:top, knowledge, knowledgeStats:knowledgeStats(), chain, methods:collectMethods(top), yishu:collectYishu(top), state:st, engineVersion:ENGINE_VERSION, retrieval, clarifications, source:'local' };
   }
 
-  function buildChain(input, matches){
+  function buildChain(input, matches, knowledge){
     const chain = [];
     chain.push({ step: '读取问题', detail: input || '（空输入）' });
     if (!matches.length){
       chain.push({ step: '匹配规则', detail: '未命中已知规则 → 走通用处理' });
       chain.push({ step: '补充信息', detail: '先明确想解决的具体问题、所属场景和已有事实，再选择适用规则；未命中时暂不套用命理结论。' });
+      if(knowledge && knowledge.length) chain.push({step:'相关资料',detail:knowledge.slice(0,4).map(k=>k.name+'（'+k.source.file+' · '+k.source.locator+'）').join('；')});
       return chain;
     }
     chain.push({ step: '匹配规则', detail: matches.map(m => `${m.rule.id}(${m.rule.title}) 命中[${m.hits.join('、') || '标题'}]`).join('；') });
@@ -1373,6 +1400,7 @@ const BRAIN = (function(){
     const mIds = collectMethods(matches);
     if (mIds.length) chain.push({ step: '推荐推演方式', detail: mIds.map(x => x.id + ' ' + x.name).join('；') + '（方法页可查全文）' });
     if (matches[1]) chain.push({ step: '并行参考', detail: `${matches[1].rule.id}：${matches[1].rule.steps[0]}` });
+    if(knowledge && knowledge.length) chain.push({step:'相关资料',detail:knowledge.slice(0,4).map(k=>k.name+'（'+k.source.file+' · '+k.source.locator+'）').join('；')});
     return chain;
   }
   function conflictCheck(rule){

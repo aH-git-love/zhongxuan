@@ -78,7 +78,7 @@ function readStore(name) { return JSON.parse(fs.readFileSync(accountFile(name), 
 function saveStore(name, value) { fs.writeFileSync(accountFile(name), JSON.stringify(value)); }
 
 (async () => {
-  assert.equal(typeof BRAIN.normalizeState, 'function', 'Real BRAIN must expose the rules-v2 state API');
+  assert.equal(typeof BRAIN.normalizeState, 'function', 'Real BRAIN must expose the rules-v3 state API');
   handler = createHandler();
   server = http.createServer((req, res) => {
     try {
@@ -94,7 +94,7 @@ function saveStore(name, value) { fs.writeFileSync(accountFile(name), JSON.strin
   await test('public status exposes capabilities and rule count without identity/state', async () => {
     const response = await request('/api/brain/status', { token: 'alice-token' });
     assert.equal(response.status, 200);
-    assert.equal(response.body.engineVersion, 'rules-v2');
+    assert.equal(response.body.engineVersion, 'rules-v3');
     assert.equal(response.body.ruleCount, BRAIN.RULES.length);
     assert.ok(response.body.capabilities);
     for (const field of ['name', 'token', 'state', 'counters', 'inferences']) assert.equal(response.body[field], undefined);

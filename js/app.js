@@ -543,10 +543,15 @@ var UI = (function(){
       </div>`;
   }
 
+  function renderBrainKnowledge(hits){
+    if(!hits||!hits.length)return '';
+    return `<div class="panel brain-knowledge" style="margin-top:12px"><h2>资料库命中（${hits.length}）</h2><p class="hint">以下来自项目内置原始条目，不代表独立预测；牌义按正位与逆位分别呈现。</p><div class="grid2">${hits.map(k=>`<article class="card" data-knowledge-id="${esc(k.id)}"><h3>${esc(k.name)} <span class="tag gold" style="float:right">${esc(k.group||k.kind)}</span></h3>${k.kind==='tarot-card'?`<div class="brain-card-reading">${k.image?`<img src="${esc(k.image)}" alt="${esc(k.imageAlt||k.name)}" width="48" height="84" loading="lazy">`:''}<div><div class="kv"><span>正位</span><b>${esc(k.upright)}</b></div><div class="kv"><span>逆位</span><b>${esc(k.reversed)}</b></div><div class="kv"><span>行动提示</span><b>${esc(k.advice)}</b></div></div></div>`:k.kind==='tarot-spread'?`<p>${esc(k.excerpt||'')}</p><p class="hint">牌位：${(k.positions||[]).map(p=>esc(p.name)+'（'+esc(p.desc)+'）').join('；')}</p>`:`<p>${esc(k.excerpt||'')}</p>`}<p class="hint knowledge-source">来源：<code>${esc(k.source.file)} · ${esc(k.source.locator)}</code><br>匹配：${esc((k.matchedTerms||[]).join('、'))}</p></article>`).join('')}</div></div>`;
+  }
+
   function renderDanao(res){
     const sourceLabel = res.source==='server' ? (res.personalized?'后端推理 · 当前账号独立反馈':'后端推理 · 公共基线，登录后可保存反馈') : res.source==='local-fallback' ? '后端暂未响应 · 本地离线推理，反馈存本机' : '本地规则推理 · 反馈存本机';
     const strength = {none:'未命中',limited:'有限',strong:'较强',ambiguous:'多场景待确认'};
-    const metadata = `<p class="hint">${esc(sourceLabel)} · ${esc(res.engineVersion || 'rules-v2')}${res.retrieval ? ' · 检索依据：'+esc(strength[res.retrieval.strength]||'有限')+'（非预测概率）' : ''}</p><p id="dn-feedback-status" class="hint" role="status" aria-live="polite"></p>`;
+    const metadata = `<p class="hint">${esc(sourceLabel)} · ${esc(res.engineVersion || 'rules-v3')}${res.retrieval ? ' · 检索依据：'+esc(strength[res.retrieval.strength]||'有限')+'（非预测概率）' : ''}${res.knowledgeStats ? ' · 可检索资料 '+Number(res.knowledgeStats.total||0)+' 条' : ''}</p><p id="dn-feedback-status" class="hint" role="status" aria-live="polite"></p>`;
     if (!res.matches.length){
       return `
         <div class="panel">
@@ -555,6 +560,7 @@ var UI = (function(){
           <ul class="chain">
             ${res.chain.map(c => `<li><b>${esc(c.step)}</b><br>${esc(c.detail)}</li>`).join('')}
           </ul>
+          ${renderBrainKnowledge(res.knowledge)}
           <p class="hint">未命中规则：请补充想解决的具体问题、所属场景与已有事实，或选择上方相关快捷问题。</p>
         </div>`;
     }
@@ -565,6 +571,7 @@ var UI = (function(){
         <ul class="chain">
           ${res.chain.map(c => `<li><b>${esc(c.step)}</b><br>${esc(c.detail)}</li>`).join('')}
         </ul>
+        ${renderBrainKnowledge(res.knowledge)}
         <div style="margin-top:12px">
           ${res.matches.map(m => `
             <div class="card">
@@ -576,6 +583,7 @@ var UI = (function(){
               <div style="margin-top:6px">
                 ${m.rule.tips.map(t => `<span class="tag gold">${esc(t)}</span>`).join('')}
               </div>
+              ${m.rule.sourceRefs && m.rule.sourceRefs.length ? `<p class="hint knowledge-source">规则依据：${m.rule.sourceRefs.map(s=>esc(s)).join('；')}</p>` : ''}
               <div class="actions" style="margin-top:8px">
                 <button class="btn" data-fb="${m.rule.id}" data-good="1">✓ 这条有用</button>
                 <button class="btn" data-fb="${m.rule.id}" data-good="0">✗ 不合适</button>
@@ -1223,7 +1231,7 @@ var UI = (function(){
       const an = TAROT_LIB.analyze(lastDraw);
       const v = TAROT_LIB.verdict(lastDraw, an);
       const lines = [
-        '【中玄 · 塔罗】' + lastDraw.spread.name + (lastDraw.question ? '｜' + lastDraw.question : ''),
+        '【玄 · 塔罗】' + lastDraw.spread.name + (lastDraw.question ? '｜' + lastDraw.question : ''),
         '结论：' + v.line,
         '推理：' + v.synthesis,
         '加权分 ' + an.score + '｜大牌 ' + an.majorRatio + '%｜逆位 ' + an.revCount + '/' + lastDraw.cards.length + '｜主导元素 ' + an.domEl,
@@ -1650,7 +1658,7 @@ var UI = (function(){
       });
       const ex = $('xl-explain');
       ex.style.display = 'block';
-      ex.textContent = (right ? '✓ 正确 — ' : `✗ 答案是 ${'ABCD'[q.answer]} — `) + q.explain;
+      ex.textContent = (right ? '✓ 正确 — ' : `✗ 答案是 ${'ABCD'[q.answer]} — `) + q.explain + (q.source ? ` · 来源：${q.source.file} · ${q.source.locator}` : '');
       $('xl-next').style.display = 'inline-block';
       renderXunlianStats();
     }
@@ -2318,8 +2326,8 @@ var UI = (function(){
         <li><b>给时间范围</b>：默认三个月内；超过半年的问题，牌面信息会失效。</li>
       </ol>
     </div>
-    <div class="card"><h3>与中玄的分工</h3>
-      <p class="hint">八字/紫微看的是「结构与长期节奏」（一生的旺衰、大运流年）；塔罗看的是「此刻的能量与选择」（一件事、一个月、一段关系）。体系的边界要守住：不混断、不互相背书。中玄那边的四柱、紫微、玄空、六爻结论，和塔罗结论打架时，各自按各自口径说，最后落到「你现在能做什么」。</p>
+    <div class="card"><h3>与玄的分工</h3>
+      <p class="hint">八字/紫微看的是「结构与长期节奏」（一生的旺衰、大运流年）；塔罗看的是「此刻的能量与选择」（一件事、一个月、一段关系）。体系的边界要守住：不混断、不互相背书。玄的四柱、紫微、玄空、六爻结论，和塔罗结论打架时，各自按各自口径说，最后落到「你现在能做什么」。</p>
     </div>`;
   }
 

@@ -154,7 +154,7 @@ function createBrainApi({ BRAIN, dataDir, me, send }) {
       }
       if (pathname === '/api/brain/status') {
         reply(res, 200, {
-          ok: true, engineVersion: 'rules-v2', ruleCount: rules.size,
+          ok: true, engineVersion: BRAIN.ENGINE_VERSION, ruleCount: rules.size,
           capabilities: { analyze: true, feedback: true, userState: true, reset: true, persistence: true }
         });
         return true;

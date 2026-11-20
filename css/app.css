@@ -150,6 +150,8 @@ tbody tr:hover td{ background:var(--panel3); }
   background:var(--gold);
 }
 .chain li b{ color:var(--gold2); }
+.brain-card-reading{display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;align-items:start}.brain-card-reading img{width:52px;height:auto;border:1px solid var(--line2);border-radius:3px;background:var(--panel3)}.brain-card-reading .kv{align-items:flex-start}.brain-card-reading .kv b{text-align:left;line-height:1.7}.knowledge-source{overflow-wrap:anywhere;font-size:11px}.knowledge-source code{white-space:normal;overflow-wrap:anywhere;color:var(--gold2)}
+
 
 .type-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:4px; }
 .stats-bar{ margin-top:14px; display:flex; flex-wrap:wrap; gap:14px; font-size:13px; color:var(--dim); }
