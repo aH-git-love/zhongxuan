@@ -5,7 +5,7 @@ const CARD_ASSETS = [['M',0,22],['W',1,15],['C',1,15],['S',1,15],['P',1,15]].fla
   Array.from({length:end-start},(_,i) => './assets/tarot/rws/'+s+String(i+start).padStart(2,'0')+'.webp'));
 const ASSETS = [
   './', './index.html', './app.html', './art-credits.html',
-  './css/app.css', './css/landing.css', './js/landing.js', './assets/tarot/rws/sources.json',
+  './css/app.css', './css/landing.css', './js/landing.js', './assets/tarot/star-arcana.svg', './assets/tarot/rws/sources.json',
   ...CARD_ASSETS,
   './js/core.js', './js/astro.js', './js/bazi.js', './js/almanac.js',
   './js/methods.js', './js/yishu.js', './js/brain-classics.js', './js/brain-knowledge.js', './js/qimen.js', './js/brain.js',
